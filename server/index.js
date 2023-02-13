@@ -28,17 +28,31 @@ app.get("/", (req, res) => {
 
 app.post("/api/insert", (req, res) => {
 
-    const rating = req.body.rating
+    const rating = convertRatingToNumber(req.body.rating)
     const colour = req.body.colour
+    const hold_type = req.body.holdType
+    const boulder_type = req.body.boulderType
+    const send_attempts = +req.body.sendAttempts
+    const send_status = +req.body.sendStatus
     
-    const values = [rating, colour]
+    const values = [rating, colour, hold_type, boulder_type, send_attempts, send_status]
     // TODO: need to add more data to call
-    const q = "INSERT INTO boulders (rating, colour) VALUES (?,?);"
+    const q = "INSERT INTO boulders (rating, colour, hold_type, boulder_type, send_attempts, send_status) VALUES (?,?,?,?,?,?);"
     
     db.query(q, values, (err, data) => {
         if (err) return res.json("Error" + err)
     })
 })
+
+function convertRatingToNumber(str) {
+    if (str.includes("hex")) {
+        return str.substring(0,1)
+    }
+    // if (str.includes("V")) {
+    //     return str.substring(1)
+    // }
+    return 0
+}
 
 
 app.get("/api/get", (req, res) => {
@@ -48,24 +62,6 @@ app.get("/api/get", (req, res) => {
     db.query(q, (err, data) => {
         if (err) return res.json("Error" + err)
         res.send(data)
-    })
-})
-
-
-
-// app.get("/boulders", (req, res) => {
-//     const q = "SELECT * FROM boulders"
-//     db.query(q, (err, data) => {
-//         if (err) return res.json("Error" + err)
-//         return res.json(data)
-//     }) 
-// })
-
-app.get("/boulders", (req, res) => {
-    const q = "INSERT INTO boulders (rating, colour, type) VALUES (0, 'blue', 'easy');"
-    db.query(q, (err, data) => {
-        if (err) return res.json("Error" + err)
-        return res.json(data)
     })
 })
 

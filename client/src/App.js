@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
 import {v4 as uuidv4} from 'uuid'
 import BoulderList from './components/BoulderList'
@@ -6,14 +6,7 @@ import AddNewBoulder from './components/input/AddNewBoulder'
 
 function App() {
 
-  // const [rating, setRating] = useState(0)
-  // const [colour, setColour] = useState('')
-  // const [type, setType] = useState('')
   const [boulderList, setBoulderList] = useState([])
-  // const ratingRef = useRef(); 
-  const colourRef = useRef();
-  const typeRef = useRef(); 
-  const descriptionRef = useRef();
 
   useEffect(() => {
 
