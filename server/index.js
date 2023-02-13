@@ -30,12 +30,10 @@ app.post("/api/insert", (req, res) => {
 
     const rating = req.body.rating
     const colour = req.body.colour
-    const type = req.body.type
-    const description = req.body.description
     
-    const values = [rating, colour, type, description]
-
-    const q = "INSERT INTO boulders (rating, colour, type) VALUES (?,?,?,?);"
+    const values = [rating, colour]
+    // TODO: need to add more data to call
+    const q = "INSERT INTO boulders (rating, colour) VALUES (?,?);"
     
     db.query(q, values, (err, data) => {
         if (err) return res.json("Error" + err)

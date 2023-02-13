@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react'
 import Axios from 'axios'
-import BoulderList from './BoulderList';
 import {v4 as uuidv4} from 'uuid'
+import BoulderList from './components/BoulderList'
+import AddNewBoulder from './components/input/AddNewBoulder'
 
 function App() {
 
@@ -9,7 +10,7 @@ function App() {
   // const [colour, setColour] = useState('')
   // const [type, setType] = useState('')
   const [boulderList, setBoulderList] = useState([])
-  const ratingRef = useRef(); 
+  // const ratingRef = useRef(); 
   const colourRef = useRef();
   const typeRef = useRef(); 
   const descriptionRef = useRef();
@@ -27,38 +28,40 @@ function App() {
 
   function handleAddBoulder() {
 
-    const rating = ratingRef.current.value
-    const colour = colourRef.current.value
-    const type = typeRef.current.value
-    const description = descriptionRef.current.value
+    const fieldArray = Array.from(document.querySelectorAll('#addBoulderForm select'))
+    const anyNullFields = fieldArray.reduce((acc, field) => (acc || field.value === "null"), false)
+    
+    if (anyNullFields) return
+    
 
-    if (rating === null || colour === null || type === null) return
+    const newBoulder = fieldArray.reduce((acc, input) => ({ ...acc, [input.id]: input.value }), {})
 
-    Axios.post('http://localhost:3001/api/insert', { rating: rating, colour: colour, type: type, description: description})
+    Axios.post('http://localhost:3001/api/insert', newBoulder)
+      .then(() => {
+        alert('Successful Insert')
+      })
       .catch(() => {
         alert('Failed Insert')
       })
     
-    setBoulderList([...boulderList, { id: uuidv4(), rating: rating, colour: colour, type: type, description: description}])
- 
-    ratingRef.current.value = null
-    colourRef.current.value = null
-    typeRef.current.value = null
-    descriptionRef.current.value = null
+    newBoulder.id = uuidv4()
+    setBoulderList([...boulderList, newBoulder])
+    
+    resetDropdownMenus()
+  }
+
+  function resetDropdownMenus() {
+    var options = document.querySelectorAll('#addBoulderForm option');
+    for (var i = 0, l = options.length; i < l; i++) {
+        options[i].selected = options[i].defaultSelected;
+    }
   }
 
   return (
     <>
       <div>Boulder Tracker</div>
-      <div>Rating</div>
-      <input ref={ratingRef} type="number"/>
-      <div>Colour</div>
-      <input ref={colourRef} type="text"/>
-      <div>Type</div>
-      <input ref={typeRef} type="text"/>
-      <div>Description</div>
-      <input ref={descriptionRef} type="text"/>
-      <button onClick={handleAddBoulder}>Submit</button>
+      <AddNewBoulder />
+      <button onClick={handleAddBoulder}>Add</button>
       {/* <button onClick={handleDeleteBoulder}>Delete</button> */}
 
       <BoulderList boulderList={boulderList} />
