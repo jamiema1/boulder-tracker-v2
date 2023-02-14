@@ -5,17 +5,18 @@ import HoldType from './HoldType'
 import BoulderType from './BoulderType'
 import SendAttempts from './SendAttempts'
 import SendStatus from './SendStatus'
+import '../Input.css'
 
 export default function AddNewBoulder() {
   return (
     <>
-        <form id="addBoulderForm">
-            <Rating /><br></br>
-            <Colour /><br></br>
-            <HoldType /><br></br>
-            <BoulderType /><br></br>
-            <SendAttempts /><br></br>
-            <SendStatus /><br></br>
+        <form className="addBoulder" id="addBoulderForm">
+            <Rating />
+            <Colour />
+            <HoldType />
+            <BoulderType />
+            <SendAttempts />
+            <SendStatus />
         </form>
     </>
   )

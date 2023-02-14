@@ -2,13 +2,12 @@ import React from 'react'
 
 export default function SendStatus() {
   return (
-    <>
-        <label for="sendStatus">Send Status: </label>
-        <select name="sendStatus" id="sendStatus">
-            <option value="null">Did you send it?</option>
-            <option value="1">Yes</option>
-            <option value="0">No</option>
-        </select>
-    </>
+    <span>
+        <label>Send Status: </label>
+        <span id ="sendStatus">
+          <input type="radio" id ="sendStatus" name="sendStatus" value="0" defaultChecked></input><label>No</label>
+          <input type="radio" id ="sendStatus" name="sendStatus" value="1"></input><label>Yes</label>
+        </span>
+    </span>
   )
 }
