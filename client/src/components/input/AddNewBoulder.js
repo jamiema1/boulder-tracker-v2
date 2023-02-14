@@ -7,17 +7,17 @@ import SendAttempts from './SendAttempts'
 import SendStatus from './SendStatus'
 import '../Input.css'
 
-export default function AddNewBoulder() {
+export default function AddNewBoulder () {
   return (
     <>
-        <form className="addBoulder" id="addBoulderForm">
-            <Rating />
-            <Colour />
-            <HoldType />
-            <BoulderType />
-            <SendAttempts />
-            <SendStatus />
-        </form>
+      <form className="addBoulder" id="addBoulderForm">
+        <Rating />
+        <Colour />
+        <HoldType />
+        <BoulderType />
+        <SendAttempts />
+        <SendStatus />
+      </form>
     </>
   )
 }

@@ -7,54 +7,51 @@ const app = express()
 const port = 3001
 
 const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "jamiema1",
-    database: "boulder-tracker"
+  host: 'localhost',
+  user: 'root',
+  password: 'jamiema1',
+  database: 'boulder-tracker'
 })
 
-app.use(cors()) 
+app.use(cors())
 app.use(express.json())
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // db.connect(err => {
 //     if (err) throw err
 //     console.log("Successfully connected to the database")
 // })
 
-app.get("/", (req, res) => {
-    res.json("This is the backend")
+app.get('/', (req, res) => {
+  res.json('This is the backend')
 })
 
-app.post("/api/insert", (req, res) => {
+app.post('/api/insert', (req, res) => {
+  const rating = req.body.rating
+  const colour = req.body.colour
+  const holdType = req.body.holdType
+  const boulderType = req.body.boulderType
+  const sendAttempts = req.body.sendAttempts
+  const sendStatus = req.body.sendStatus
 
-    const rating = req.body.rating
-    const colour = req.body.colour
-    const holdType = req.body.holdType
-    const boulderType = req.body.boulderType
-    const sendAttempts = req.body.sendAttempts
-    const sendStatus = req.body.sendStatus
-    
-    const values = [rating, colour, holdType, boulderType, sendAttempts, sendStatus]
+  const values = [rating, colour, holdType, boulderType, sendAttempts, sendStatus]
 
-    const q = "INSERT INTO boulders (rating, colour, holdType, boulderType, sendAttempts, sendStatus) VALUES (?,?,?,?,?,?);"
-    
-    db.query(q, values, (err, data) => {
-        if (err) return res.json("Error" + err)
-    })
+  const q = 'INSERT INTO boulders (rating, colour, holdType, boulderType, sendAttempts, sendStatus) VALUES (?,?,?,?,?,?);'
+
+  db.query(q, values, (err, data) => {
+    if (err) return res.json('Error' + err)
+  })
 })
 
+app.get('/api/get', (req, res) => {
+  const q = 'SELECT * FROM boulders;'
 
-app.get("/api/get", (req, res) => {
-
-    const q = "SELECT * FROM boulders;"
-    
-    db.query(q, (err, data) => {
-        if (err) return res.json("Error" + err)
-        res.send(data)
-    })
+  db.query(q, (err, data) => {
+    if (err) return res.json('Error' + err)
+    res.send(data)
+  })
 })
 
 app.listen(port, () => {
-    console.log('Connected to backend')
+  console.log('Connected to backend')
 })
