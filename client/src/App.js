@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Axios from 'axios'
 // import { v4 as uuidv4 } from 'uuid'
 import BoulderList from './components/BoulderList'
@@ -8,6 +8,16 @@ const ID_KEY = 'id'
 
 function App () {
   const [boulderList, setBoulderList] = useState([])
+
+  const ratingRef = useRef()
+  const colourRef = useRef()
+  const holdTypeRef = useRef()
+  const boulderTypeRef = useRef()
+  const sendAttemptsRef = useRef()
+  const sendStatusRef = useRef()
+  const descriptionRef = useRef() 
+
+  const boulderRef = useRef({ratingRef, colourRef, holdTypeRef, boulderTypeRef, sendAttemptsRef, sendStatusRef, descriptionRef})
 
   useEffect(() => {
     // TODO: not sure what to do here or if I still need it
@@ -21,12 +31,30 @@ function App () {
   }, [])
 
   function handleAddBoulder () {
-    const selectOptionArray = Array.from(document.querySelectorAll('#addBoulderForm select'))
-    const anyNullFields = selectOptionArray.reduce((acc, field) => (acc || field.value === 'null'), false)
+
+    const fields = [
+      ratingRef.current.selectedOptions[0].value, 
+      colourRef.current.selectedOptions[0].value,
+      boulderTypeRef.current.selectedOptions[0].value,
+      sendAttemptsRef.current.selectedOptions[0].value, descriptionRef.current.value
+    ]
+
+    const anyNullFields = fields.reduce((acc, field) => (acc || field.value === 'null'), false)
 
     if (anyNullFields) return
 
-    const newBoulder = makeNewBoulder(selectOptionArray)
+    const newBoulder = { 
+      id: newId(),
+      rating: convertRatingToNumber(fields[0]),
+      colour: fields[1],
+      holdType: Array.from(holdTypeRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked).reduce((acc, field) => (acc.concat(field.value, ' ')), '').trimEnd(),
+      boulderType: fields[2],
+      sendStatus: +Array.from(sendStatusRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked)[0].value,
+      sendAttempts: +fields[3],
+      description: descriptionRef.current.value
+    }
+
+    console.log(newBoulder)
 
     Axios.post('http://localhost:3001/api/insert', newBoulder)
       .then(() => {
@@ -41,35 +69,10 @@ function App () {
     resetDropdownMenus()
   }
 
-  function makeNewBoulder(selectOptionArray) {
-    const holdType = Array.from(document.querySelectorAll('#addBoulderForm #holdType input'))
-      .filter((value) => (value.checked))
-      .reduce((acc, field) => (acc.concat(field.value, ' ')), '')
-      .trimEnd()
-
-    const sendStatus = Array.from(document.querySelectorAll('#addBoulderForm #sendStatus input'))
-      .filter((value) => (value.checked))[0]
-
-    
-    const description = document.querySelector('#addBoulderForm #description input').value
-
-    let newBoulder = selectOptionArray.reduce((acc, input) => ({ ...acc, [input.id]: input.value }), {})
-
+  function newId() {
     const id = JSON.parse(localStorage.getItem(ID_KEY))
-    console.log(id)
     localStorage.setItem(ID_KEY, JSON.stringify(id+1))
-
-    newBoulder = { 
-      id: id,
-      rating: convertRatingToNumber(newBoulder.rating),
-      colour: newBoulder.colour,
-      holdType: holdType,
-      boulderType: newBoulder.boulderType,
-      sendStatus: +sendStatus.value,
-      sendAttempts: +newBoulder.sendAttempts,
-      description: description
-    }
-    return newBoulder
+    return id
   }
 
   function convertRatingToNumber (str) {
@@ -83,33 +86,30 @@ function App () {
   }
 
   function resetDropdownMenus () {
-    const selectOptions = document.querySelectorAll('#addBoulderForm option')
-    for (let i = 0, l = selectOptions.length; i < l; i++) {
-      selectOptions[i].selected = selectOptions[i].defaultSelected
-    }
-
-    const holdType = document.querySelectorAll('#addBoulderForm #holdType input')
-    for (let i = 0, l = holdType.length; i < l; i++) {
-      holdType[i].checked = false
-    }
-
-    const sendStatus = document.querySelectorAll('#addBoulderForm #sendStatus input')
-    sendStatus[0].checked = true
-    sendStatus[1].checked = false
-
     
-    const description = document.querySelector('#addBoulderForm #description input')
-    description.value = ''
+    Array.from(ratingRef.current.options).forEach(resetOption)
+    Array.from(colourRef.current.options).forEach(resetOption)
+    Array.from(holdTypeRef.current.children).filter(e => e.nodeName === 'INPUT').forEach(e => e.checked = false)
+    Array.from(boulderTypeRef.current.options).forEach(resetOption)
+    Array.from(sendAttemptsRef.current.options).forEach(resetOption)
+    Array.from(sendStatusRef.current.children).filter(e => e.nodeName === 'INPUT')[0].checked = true
+    Array.from(sendStatusRef.current.children).filter(e => e.nodeName === 'INPUT')[1].checked = false
+    descriptionRef.current.value = null
+  }
+
+  function resetOption(option) {
+    option.selected = option.defaultSelected
   }
 
   function handleDeleteBoulder () {
 
   }
 
+
   return (
     <>
       <div>Boulder Tracker</div>
-      <AddNewBoulder />
+      <AddNewBoulder ref={ boulderRef }/>
       <button onClick={handleAddBoulder}>Add Boulder</button>
       <button onClick={handleDeleteBoulder}>Delete All Selected</button>
       <button>Update Selected</button>
