@@ -54,6 +54,14 @@ app.get('/api/get', (req, res) => {
   })
 })
 
+app.delete('/api/delete', (req, res) => {
+  const q = 'DELETE FROM boulders WHERE id = ' + req.body.id + ';'
+
+  db.query(q, (err, data) => {
+    if (err) return res.json('Error' + err)
+  })
+})
+
 app.listen(port, () => {
   console.log('Connected to backend')
 })

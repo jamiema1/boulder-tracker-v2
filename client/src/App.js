@@ -58,7 +58,7 @@ function App () {
 
     Axios.post('http://localhost:3001/api/insert', newBoulder)
       .then(() => {
-        // alert('Successful Insert')
+        alert('Successful Insert')
       })
       .catch(() => {
         alert('Failed Insert')
@@ -101,8 +101,21 @@ function App () {
     option.selected = option.defaultSelected
   }
 
-  function handleDeleteBoulder () {
+  function handleDeleteBoulder (e) {
+    
+    const id = e.target.id
 
+    Axios.delete('http://localhost:3001/api/delete', { data: { id: id } })
+      .then(() => {
+        alert('Successful Delete')
+      })
+      .catch(() => {
+        alert('Failed Delete')
+      })
+    
+    const copyOfBoulderList = [...boulderList]
+    copyOfBoulderList.splice(boulderList.findIndex(boulder => (boulder.id === +id)), 1)
+    setBoulderList(copyOfBoulderList)
   }
 
 
@@ -111,10 +124,10 @@ function App () {
       <div>Boulder Tracker</div>
       <AddNewBoulder ref={ boulderRef }/>
       <button onClick={handleAddBoulder}>Add Boulder</button>
-      <button onClick={handleDeleteBoulder}>Delete All Selected</button>
+      {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}
       <button>Update Selected</button>
 
-      <BoulderList boulderList={boulderList} />
+      <BoulderList boulderList={boulderList} handleDeleteBoulder={handleDeleteBoulder} />
     </>
   )
 }
