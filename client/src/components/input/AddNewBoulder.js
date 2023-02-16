@@ -6,6 +6,7 @@ import BoulderType from './BoulderType'
 import SendAttempts from './SendAttempts'
 import SendStatus from './SendStatus'
 import '../Input.css'
+import Description from './Description'
 
 export default function AddNewBoulder () {
   return (
@@ -17,6 +18,7 @@ export default function AddNewBoulder () {
         <BoulderType />
         <SendAttempts />
         <SendStatus />
+        <Description />
       </form>
     </>
   )

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
-import { v4 as uuidv4 } from 'uuid'
+// import { v4 as uuidv4 } from 'uuid'
 import BoulderList from './components/BoulderList'
 import AddNewBoulder from './components/input/AddNewBoulder'
+
+const ID_KEY = 'id'
 
 function App () {
   const [boulderList, setBoulderList] = useState([])
@@ -24,22 +26,7 @@ function App () {
 
     if (anyNullFields) return
 
-    const holdType = Array.from(document.querySelectorAll('#addBoulderForm #holdType input'))
-      .filter((value) => (value.checked))
-      .reduce((acc, field) => (acc.concat(field.value, ' ')), '')
-      .trimEnd()
-
-    const sendStatus = Array.from(document.querySelectorAll('#addBoulderForm #sendStatus input'))
-      .filter((value) => (value.checked))[0]
-
-    const allFieldsArray = selectOptionArray.concat([sendStatus])
-
-    const newBoulder = allFieldsArray.reduce((acc, input) => ({ ...acc, [input.id]: input.value }), {})
-    newBoulder.holdType = holdType
-    newBoulder.id = uuidv4()
-    newBoulder.rating = convertRatingToNumber(newBoulder.rating)
-    newBoulder.sendStatus = +newBoulder.sendStatus
-    newBoulder.sendAttempts = +newBoulder.sendAttempts
+    const newBoulder = makeNewBoulder(selectOptionArray)
 
     Axios.post('http://localhost:3001/api/insert', newBoulder)
       .then(() => {
@@ -52,6 +39,37 @@ function App () {
     setBoulderList([...boulderList, newBoulder])
 
     resetDropdownMenus()
+  }
+
+  function makeNewBoulder(selectOptionArray) {
+    const holdType = Array.from(document.querySelectorAll('#addBoulderForm #holdType input'))
+      .filter((value) => (value.checked))
+      .reduce((acc, field) => (acc.concat(field.value, ' ')), '')
+      .trimEnd()
+
+    const sendStatus = Array.from(document.querySelectorAll('#addBoulderForm #sendStatus input'))
+      .filter((value) => (value.checked))[0]
+
+    
+    const description = document.querySelector('#addBoulderForm #description input').value
+
+    let newBoulder = selectOptionArray.reduce((acc, input) => ({ ...acc, [input.id]: input.value }), {})
+
+    const id = JSON.parse(localStorage.getItem(ID_KEY))
+    console.log(id)
+    localStorage.setItem(ID_KEY, JSON.stringify(id+1))
+
+    newBoulder = { 
+      id: id,
+      rating: convertRatingToNumber(newBoulder.rating),
+      colour: newBoulder.colour,
+      holdType: holdType,
+      boulderType: newBoulder.boulderType,
+      sendStatus: +sendStatus.value,
+      sendAttempts: +newBoulder.sendAttempts,
+      description: description
+    }
+    return newBoulder
   }
 
   function convertRatingToNumber (str) {
@@ -78,6 +96,10 @@ function App () {
     const sendStatus = document.querySelectorAll('#addBoulderForm #sendStatus input')
     sendStatus[0].checked = true
     sendStatus[1].checked = false
+
+    
+    const description = document.querySelector('#addBoulderForm #description input')
+    description.value = ''
   }
 
   function handleDeleteBoulder () {

@@ -27,16 +27,18 @@ app.get('/', (req, res) => {
 })
 
 app.post('/api/insert', (req, res) => {
+  const id = req.body.id
   const rating = req.body.rating
   const colour = req.body.colour
   const holdType = req.body.holdType
   const boulderType = req.body.boulderType
   const sendAttempts = req.body.sendAttempts
   const sendStatus = req.body.sendStatus
+  const description = req.body.description
 
-  const values = [rating, colour, holdType, boulderType, sendAttempts, sendStatus]
+  const values = [id, rating, colour, holdType, boulderType, sendAttempts, sendStatus, description]
 
-  const q = 'INSERT INTO boulders (rating, colour, holdType, boulderType, sendAttempts, sendStatus) VALUES (?,?,?,?,?,?);'
+  const q = 'INSERT INTO boulders (id, rating, colour, holdType, boulderType, sendAttempts, sendStatus, description) VALUES (?,?,?,?,?,?,?,?);'
 
   db.query(q, values, (err, data) => {
     if (err) return res.json('Error' + err)
