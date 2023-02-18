@@ -1,0 +1,42 @@
+.addBoulder {
+    display: flex;
+    background-color:beige;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.addBoulder > div {
+    margin: 10px 10px 10px 10px;
+}
+
+.dropDownOptions {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 120px;
+    min-width: 225px;
+    justify-content: space-around;
+    flex-grow: 1
+}
+
+#holdType {
+    flex-grow: 2;
+}
+
+#holdType > #holdTypeOptions {
+    display: grid;
+    grid-template-columns: 20px 15% 20px 21% 20px 21% 20px 20%;
+    column-gap: 5px;
+}
+
+#description {
+    flex-grow: 1;
+    min-height: 120px;
+    display: flex;
+    align-items: flex-start;
+}
+
+#description > textarea {
+    flex-grow: 1;
+    min-height: 75px;
+    margin: 0px 10px 0px 10px;
+}

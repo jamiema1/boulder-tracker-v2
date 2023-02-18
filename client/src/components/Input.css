@@ -4,19 +4,6 @@
     column-gap: 10px;
 }
 
-.addBoulder {
-    display: grid;
-    grid-template-columns: 15% 15% 50%;
-    gap: 10px 20px;
-    background-color:beige;
-}
-
-#holdType {
-    display: grid;
-    grid-template-columns: 20px 10% 20px 20% 20px 10% 20px 20% 20px 10%;
-    column-gap: 5px;
-}
-
 .boulderList {
     background-color: blanchedalmond;
     display: grid;

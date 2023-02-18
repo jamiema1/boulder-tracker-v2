@@ -54,8 +54,6 @@ function App () {
       description: descriptionRef.current.value
     }
 
-    console.log(newBoulder)
-
     Axios.post('http://localhost:3001/api/insert', newBoulder)
       .then(() => {
         alert('Successful Insert')
@@ -125,7 +123,7 @@ function App () {
       <AddNewBoulder ref={ boulderRef }/>
       <button onClick={handleAddBoulder}>Add Boulder</button>
       {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}
-      <button>Update Selected</button>
+      {/* <button>Update Selected</button> */}
 
       <BoulderList boulderList={boulderList} handleDeleteBoulder={handleDeleteBoulder} />
     </>

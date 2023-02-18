@@ -7,7 +7,7 @@ import SendAttempts from './SendAttempts'
 import SendStatus from './SendStatus'
 import Description from './Description'
 // import PropTypes from 'prop-types'
-import '../Input.css'
+import './InputForm.css'
 
 // AddNewBoulder.propTypes = {
 //   changeDescription: PropTypes.func.isRequired,
@@ -19,12 +19,14 @@ export default forwardRef(
     return (
       <>
         <form className="addBoulder" id="addBoulderForm">
-          <Rating ref={ ref }/>
-          <Colour ref={ ref }/>
+          <div className="dropDownOptions">
+            <Rating ref={ ref }/>
+            <Colour ref={ ref }/>
+            <BoulderType ref={ ref }/>
+            <SendAttempts ref={ ref }/>
+            <SendStatus ref={ ref }/>
+          </div>
           <HoldType ref={ ref }/>
-          <BoulderType ref={ ref }/>
-          <SendAttempts ref={ ref }/>
-          <SendStatus ref={ ref }/>
           <Description ref={ ref }/>
         </form>
       </>

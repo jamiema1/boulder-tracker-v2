@@ -10,9 +10,9 @@ export default forwardRef(
   function Description(props, ref) {
 
     return (
-      <span id="description">
+      <div id="description">
         <label>Description: </label>
-        <input type="text" ref={ref.current.descriptionRef}></input>
-      </span>
+        <textarea ref={ref.current.descriptionRef}></textarea>
+      </div>
     )
   })

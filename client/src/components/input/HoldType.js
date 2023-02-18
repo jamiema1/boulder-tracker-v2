@@ -1,13 +1,13 @@
 import React, {forwardRef } from 'react'
-import '../Input.css'
+import './InputForm.css'
 
 export default forwardRef(
   function HoldType(props, ref) {
 
     return (
-      <span>
+      <div id="holdType">
         <label>Hold Type:</label>
-        <span id ="holdType" ref={ref.current.holdTypeRef}>
+        <div id ="holdTypeOptions" ref={ref.current.holdTypeRef}>
           <input type="checkbox" value="crimp"></input><label>Crimp</label>
           <input type="checkbox" value="edge"></input><label>Edge/Rail/Flake</label>
           <input type="checkbox" value="jug"></input><label>Jug</label>
@@ -19,7 +19,7 @@ export default forwardRef(
           <input type="checkbox" value="undercling"></input><label>Undercling</label>
           {/* <input type="checkbox" value="horn"></input><label>Horn</label> */}
           <input type="checkbox" value="volume"></input><label>Volume</label>
-        </span>
-      </span>
+        </div>
+      </div>
     )
   })
