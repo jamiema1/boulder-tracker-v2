@@ -4,8 +4,8 @@ export default forwardRef(
   function Rating(props, ref){
     return (
       <span>
-        <label htmlFor="rating">Rating: </label>
-        <select name="rating" id="rating" ref={ref.current.ratingRef}>
+        <label className='title'>Rating: </label>
+        <select id="rating" ref={ref.current.ratingRef}>
           <option value="null">-- Select --</option>
           <option value="1 hex">1 Hex</option>
           <option value="2 hex">2 Hex</option>

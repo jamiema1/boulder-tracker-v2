@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Axios from 'axios'
-// import { v4 as uuidv4 } from 'uuid'
 import BoulderList from './components/BoulderList'
 import AddNewBoulder from './components/input/AddNewBoulder'
 
@@ -23,8 +22,25 @@ function App () {
     // TODO: not sure what to do here or if I still need it
   }, [boulderList])
 
+
+  
   useEffect(() => {
-    Axios.get('http://localhost:3001/api/get')
+
+    const queryParams = {
+      id: true,
+      rating: true,
+      colour: true,
+      holdType: true,
+      boulderType: true,
+      sendAttempts: true,
+      sendStatus: true,
+      startDate: true,
+      sendData: true,
+      description: true
+    };
+    const params = new URLSearchParams(queryParams);
+
+    Axios.get('http://localhost:3001/api/get?' + params)
       .then((response) => {
         setBoulderList(response.data)
       })
@@ -32,25 +48,26 @@ function App () {
 
   function handleAddBoulder () {
 
-    const fields = [
+    const fieldValues = [
       ratingRef.current.selectedOptions[0].value, 
       colourRef.current.selectedOptions[0].value,
       boulderTypeRef.current.selectedOptions[0].value,
-      sendAttemptsRef.current.selectedOptions[0].value, descriptionRef.current.value
+      sendAttemptsRef.current.selectedOptions[0].value,
+      descriptionRef.current.value
     ]
 
-    const anyNullFields = fields.reduce((acc, field) => (acc || field.value === 'null'), false)
+    const anyNullFields = fieldValues.reduce((acc, field) => (acc || field === 'null'), false)
 
     if (anyNullFields) return
 
     const newBoulder = { 
       id: newId(),
-      rating: convertRatingToNumber(fields[0]),
-      colour: fields[1],
+      rating: convertRatingToNumber(fieldValues[0]),
+      colour: fieldValues[1],
       holdType: Array.from(holdTypeRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked).reduce((acc, field) => (acc.concat(field.value, ' ')), '').trimEnd(),
-      boulderType: fields[2],
+      boulderType: fieldValues[2],
       sendStatus: +Array.from(sendStatusRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked)[0].value,
-      sendAttempts: +fields[3],
+      sendAttempts: +fieldValues[3],
       description: descriptionRef.current.value
     }
 
@@ -119,7 +136,7 @@ function App () {
 
   return (
     <>
-      <div>Boulder Tracker</div>
+      {/* <div>Boulder Tracker</div> */}
       <AddNewBoulder ref={ boulderRef }/>
       <button onClick={handleAddBoulder}>Add Boulder</button>
       {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}

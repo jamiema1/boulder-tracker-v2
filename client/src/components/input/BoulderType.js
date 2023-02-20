@@ -4,8 +4,8 @@ export default forwardRef(
   function BoulderType(props, ref){
     return (
       <span>
-        <label htmlFor="boulderType">Boulder Type: </label>
-        <select name="boulderType" id="boulderType" ref={ref.current.boulderTypeRef}>
+        <label className="title">Boulder Type: </label>
+        <select id="boulderType" ref={ref.current.boulderTypeRef}>
           <option value="null">-- Select --</option>
           <option value="aretes">Aretes</option>
           <option value="overhang">Overhang</option>

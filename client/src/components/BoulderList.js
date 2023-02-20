@@ -1,6 +1,6 @@
 import React from 'react'
 import Boulder from './Boulder'
-import Header from './Header'
+import Header from './BoulderListHeader'
 import PropTypes from 'prop-types'
 import './Input.css'
 

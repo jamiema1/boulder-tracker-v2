@@ -18,7 +18,7 @@ export default forwardRef(
   function AddNewBoulder (props, ref) {
     return (
       <>
-        <form className="addBoulder" id="addBoulderForm">
+        <form id="addBoulderForm">
           <div className="dropDownOptions">
             <Rating ref={ ref }/>
             <Colour ref={ ref }/>

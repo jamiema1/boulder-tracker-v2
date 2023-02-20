@@ -15,19 +15,17 @@ export default function Boulder ({ boulder, handleDeleteBoulder }) {
   }
 
   return (
-    <div >
-      <span className="boulder">
-        <button onClick={ handleDeleteBoulder } id={boulder.id}>D</button>
-        <span>{boulder.rating}</span>
-        <span>{boulder.colour}</span>
-        <span>{boulder.holdType}</span>
-        <span>{boulder.boulderType}</span>
-        <span>{boulder.sendAttempts}</span>
-        <span>{boulder.sendStatus}</span>
-        <span>{getDate(boulder.startDate)}</span>
-        <span>{getDate(boulder.sendDate)}</span>
-        <span>{boulder.description}</span>
-      </span>
-    </div>
+    <>
+      <button onClick={ handleDeleteBoulder } id={boulder.id}>D</button>
+      <span>{boulder.rating}</span>
+      <span>{boulder.colour}</span>
+      <span>{boulder.holdType}</span>
+      <span>{boulder.boulderType}</span>
+      <span>{boulder.sendAttempts}</span>
+      <span>{boulder.sendStatus}</span>
+      <span>{getDate(boulder.startDate)}</span>
+      <span>{getDate(boulder.sendDate)}</span>
+      <span>{boulder.description}</span>
+    </>
   )
 }

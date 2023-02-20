@@ -4,8 +4,8 @@ export default forwardRef (
   function Colour (props, ref){
     return (
       <span>
-        <label htmlFor="colour">Colour: </label>
-        <select name="colour" id="colour" ref={ref.current.colourRef}>
+        <label className='title'>Colour: </label>
+        <select id="colour" ref={ref.current.colourRef}>
           <option value="null">-- Select --</option>
           <option value="black">Black</option>
           <option value="blue">Blue</option>

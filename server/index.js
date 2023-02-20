@@ -22,10 +22,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 //     console.log("Successfully connected to the database")
 // })
 
-app.get('/', (req, res) => {
-  res.json('This is the backend')
-})
-
 app.post('/api/insert', (req, res) => {
   const id = req.body.id
   const rating = req.body.rating
@@ -46,6 +42,7 @@ app.post('/api/insert', (req, res) => {
 })
 
 app.get('/api/get', (req, res) => {
+  // req.query
   const q = 'SELECT * FROM boulders;'
 
   db.query(q, (err, data) => {

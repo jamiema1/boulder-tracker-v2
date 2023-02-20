@@ -4,8 +4,8 @@ export default forwardRef(
   function SendAttempts(props, ref){
     return (
       <span>
-        <label htmlFor="sendAttempts">Send Attempts: </label>
-        <select name="sendAttempts" id="sendAttempts" ref={ref.current.sendAttemptsRef}>
+        <label className='title'>Send Attempts: </label>
+        <select id="sendAttempts" ref={ref.current.sendAttemptsRef}>
           <option value="null">-- Select --</option>
           <option value="1">Flash</option>
           <option value="2">2</option>

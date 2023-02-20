@@ -1,11 +1,22 @@
-.boulder {
+.boulderList {
     display: grid;
-    grid-template-columns: 20px 5% 5% 10% 10% 5% 5% 7% 7% 35%;
-    column-gap: 10px;
+    grid-template-columns: 30px 75px 75px 175px 120px 100px 80px 120px 120px 500px;
+    overflow-x: scroll;
 }
 
-.boulderList {
-    background-color: blanchedalmond;
-    display: grid;
-    row-gap: 10px;
+.boulderList > :nth-child(even) {
+    padding: 5px;
+    background-color: rgba(139, 220, 221, 0.5);
+}
+
+.boulderList > :nth-child(odd) {
+    padding: 5px;
+    background-color: rgba(253, 210, 145, 0.548);
+}
+
+.boulderListHeader {
+    font-weight: 700;
+    font-size: medium;
+    text-align: center;
+    border-bottom: 2px solid black;
 }

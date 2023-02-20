@@ -6,7 +6,7 @@ export default forwardRef(
 
     return (
       <div id="holdType">
-        <label>Hold Type:</label>
+        <label className='title'>Hold Type:</label>
         <div id ="holdTypeOptions" ref={ref.current.holdTypeRef}>
           <input type="checkbox" value="crimp"></input><label>Crimp</label>
           <input type="checkbox" value="edge"></input><label>Edge/Rail/Flake</label>
