@@ -12,6 +12,7 @@ export default forwardRef (
           <option value="green">Green</option>
           <option value="orange">Orange</option>
           <option value="pink">Pink</option>
+          <option value="purple">Purple</option>
           <option value="red">Red</option>
           <option value="white">White</option>
           <option value="yellow">Yellow</option>

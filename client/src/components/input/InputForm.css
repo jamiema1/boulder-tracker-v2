@@ -23,21 +23,22 @@
 
 #holdType > #holdTypeOptions {
     display: grid;
-    grid-template-columns: 20px 100px 20px 150px 20px 150px 20px 120px;
+    grid-template-columns: 20px 100px 20px 140px 20px 75px;
     /* column-gap: 5px; */
 }
 
 #description {
     flex-grow: 3;
-    min-height: 120px;
+    min-height: 100px;
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
 }
 
 #description > textarea {
     flex-grow: 1;
-    min-height: 75px;
-    margin: 0px 10px 0px 10px;
+    height: 100%;
+    width: 100%
 }
 
 .title {

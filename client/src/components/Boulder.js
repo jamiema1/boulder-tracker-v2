@@ -13,19 +13,21 @@ export default function Boulder ({ boulder, handleDeleteBoulder }) {
     }
     return datetime.toString().split('T')[0]
   }
-
+  
   return (
-    <>
-      <button onClick={ handleDeleteBoulder } id={boulder.id}>D</button>
-      <span>{boulder.rating}</span>
-      <span>{boulder.colour}</span>
-      <span>{boulder.holdType}</span>
-      <span>{boulder.boulderType}</span>
-      <span>{boulder.sendAttempts}</span>
-      <span>{boulder.sendStatus}</span>
-      <span>{getDate(boulder.startDate)}</span>
-      <span>{getDate(boulder.sendDate)}</span>
-      <span>{boulder.description}</span>
-    </>
+    <tbody>
+      <tr>
+        <td><button onClick={ handleDeleteBoulder } id={boulder.id}>D</button></td>
+        {boulder.rating !== undefined && <td>{boulder.rating}</td>}
+        {boulder.colour !== undefined && <td>{boulder.colour}</td>}
+        {boulder.holdType !== undefined && <td>{boulder.holdType}</td>}
+        {boulder.boulderType !== undefined && <td>{boulder.boulderType}</td>}
+        {boulder.sendAttempts !== undefined && <td>{boulder.sendAttempts}</td>}
+        {boulder.sendStatus !== undefined && <td>{boulder.sendStatus}</td>}
+        {boulder.startDate !== undefined && <td>{getDate(boulder.startDate)}</td>}
+        {boulder.sendDate !== undefined && <td>{getDate(boulder.sendDate)}</td>}
+        {boulder.description !== undefined && <td>{boulder.description}</td>}
+      </tr>
+    </tbody>
   )
 }

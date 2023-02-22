@@ -38,18 +38,36 @@ app.post('/api/insert', (req, res) => {
 
   db.query(q, values, (err, data) => {
     if (err) return res.json('Error' + err)
+    res.send(data)
   })
 })
 
 app.get('/api/get', (req, res) => {
-  // req.query
-  const q = 'SELECT * FROM boulders;'
-
+  const q = makeQueryString(req.query)
   db.query(q, (err, data) => {
     if (err) return res.json('Error' + err)
     res.send(data)
   })
 })
+
+function makeQueryString (query) {
+  let q = 'SELECT '
+
+  Object.keys(query).forEach(column => { q = q.concat(column + ', ') })
+
+  if (q.substring(q.length - 2) === ', ') {
+    q = q.substring(0, q.length - 2)
+  } else {
+    q = q.concat('null')
+  }
+
+  q = q.concat(' FROM boulders LIMIT ')
+
+  const limit = 100
+  q = q.concat(limit + ';')
+
+  return q
+}
 
 app.delete('/api/delete', (req, res) => {
   const q = 'DELETE FROM boulders WHERE id = ' + req.body.id + ';'

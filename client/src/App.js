@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Axios from 'axios'
 import BoulderList from './components/BoulderList'
+import ColumnSelector from './components/ColumnSelector'
 import AddNewBoulder from './components/input/AddNewBoulder'
 
 const ID_KEY = 'id'
 
 function App () {
   const [boulderList, setBoulderList] = useState([])
+  const [columns, setColumns] = useState([])
+
+  const columnRef = useRef()
 
   const ratingRef = useRef()
   const colourRef = useRef()
@@ -18,32 +22,18 @@ function App () {
 
   const boulderRef = useRef({ratingRef, colourRef, holdTypeRef, boulderTypeRef, sendAttemptsRef, sendStatusRef, descriptionRef})
 
+
   useEffect(() => {
-    // TODO: not sure what to do here or if I still need it
+    // placeholder if necessary
   }, [boulderList])
 
 
   
   useEffect(() => {
-
-    const queryParams = {
-      id: true,
-      rating: true,
-      colour: true,
-      holdType: true,
-      boulderType: true,
-      sendAttempts: true,
-      sendStatus: true,
-      startDate: true,
-      sendData: true,
-      description: true
-    };
-    const params = new URLSearchParams(queryParams);
-
-    Axios.get('http://localhost:3001/api/get?' + params)
-      .then((response) => {
-        setBoulderList(response.data)
-      })
+    
+    const allFields =  ['id', 'rating', 'colour', 'holdType','boulderType','sendAttempts','sendStatus','startDate','sendDate','description']
+    const queryParams = allFields.reduce((acc, f) => ({ ...acc, [f]: f}), {});
+    updateColumns(queryParams)
   }, [])
 
   function handleAddBoulder () {
@@ -133,6 +123,25 @@ function App () {
     setBoulderList(copyOfBoulderList)
   }
 
+  function changeColumns() {
+    
+    const cols = Array.from(columnRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked).map(e => (e.value))
+    const queryParams = cols.reduce((acc, f) => ({ ...acc, [f]: f}), {}) 
+    updateColumns(queryParams)
+  }
+
+  function updateColumns(cols) {
+    
+    const params = new URLSearchParams(cols);
+    setColumns([])
+    Object.keys(cols).forEach(column => setColumns(columns => ([...columns, column])))
+
+    Axios.get('http://localhost:3001/api/get?' + params)
+      .then((response) => {
+        setBoulderList(response.data)
+      })
+  }
+
 
   return (
     <>
@@ -141,8 +150,8 @@ function App () {
       <button onClick={handleAddBoulder}>Add Boulder</button>
       {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}
       {/* <button>Update Selected</button> */}
-
-      <BoulderList boulderList={boulderList} handleDeleteBoulder={handleDeleteBoulder} />
+      <ColumnSelector changeColumns={changeColumns} ref={ columnRef } />
+      <BoulderList boulderList={boulderList} columns={columns} handleDeleteBoulder={handleDeleteBoulder} />
     </>
   )
 }

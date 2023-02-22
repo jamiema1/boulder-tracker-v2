@@ -6,13 +6,8 @@ import BoulderType from './BoulderType'
 import SendAttempts from './SendAttempts'
 import SendStatus from './SendStatus'
 import Description from './Description'
-// import PropTypes from 'prop-types'
 import './InputForm.css'
 
-// AddNewBoulder.propTypes = {
-//   changeDescription: PropTypes.func.isRequired,
-//   descriptionRef: PropTypes.object.isRequired
-// }
 
 export default forwardRef(
   function AddNewBoulder (props, ref) {

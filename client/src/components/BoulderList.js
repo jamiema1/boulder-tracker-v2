@@ -1,21 +1,22 @@
 import React from 'react'
 import Boulder from './Boulder'
-import Header from './BoulderListHeader'
+import TableHeader from './TableHeader'
 import PropTypes from 'prop-types'
-import './Input.css'
+import './BoulderListTable.css'
 
 BoulderList.propTypes = {
   boulderList: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
   handleDeleteBoulder: PropTypes.func.isRequired
 }
 
-export default function BoulderList ({ boulderList, handleDeleteBoulder }) {
+export default function BoulderList ({ boulderList, columns, handleDeleteBoulder }) {
   return (
-    <span className="boulderList">
-      <Header />
+    <table className="boulderList">
+      <TableHeader columns={columns} />
       {boulderList.map((boulder) => {
         return <Boulder key={boulder.id} boulder={boulder} handleDeleteBoulder={handleDeleteBoulder} />
       })}
-    </span>
+    </table>
   )
 }

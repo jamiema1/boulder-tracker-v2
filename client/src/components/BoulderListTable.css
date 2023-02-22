@@ -1,0 +1,37 @@
+.boulderList {
+/* 
+    --button-width: 30px;
+    --rating-width: 75px;
+    --colour-width: 75px;
+    --holdType-width: 175px;
+    --boulderType-width: 120px;
+    --sendAttempts-width: 100px;
+    --sendStatus-width: 80px;
+    --startDate-width: 120px;
+    --sendDate-width: 120px;
+    --description-width: 500px; */
+/* 
+    grid-template-columns: var(--button-width) var(--rating-width) var(--colour-width) var(--holdType-width)
+                           var(--boulderType-width) var(--sendAttempts-width) var(--sendStatus-width)
+                           var(--startDate-width) var(--sendDate-width) var(--description-width); */
+    overflow-x: scroll;
+}
+
+.boulderList > * {
+    /* padding: 50px 10px 5px 10px; */
+}
+
+.boulderList > :nth-child(even) {
+    background-color: rgba(162, 222, 223, 0.5);
+}
+
+.boulderList > :nth-child(odd) {
+    background-color: rgba(255, 231, 192, 0.548);
+}
+
+.boulderListHeader {
+    font-weight: 700;
+    font-size: medium;
+    text-align: center;
+    border-bottom: 2px solid black;
+}
