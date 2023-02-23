@@ -15,19 +15,17 @@ export default function Boulder ({ boulder, handleDeleteBoulder }) {
   }
   
   return (
-    <tbody>
-      <tr>
-        <td><button onClick={ handleDeleteBoulder } id={boulder.id}>D</button></td>
-        {boulder.rating !== undefined && <td>{boulder.rating}</td>}
-        {boulder.colour !== undefined && <td>{boulder.colour}</td>}
-        {boulder.holdType !== undefined && <td>{boulder.holdType}</td>}
-        {boulder.boulderType !== undefined && <td>{boulder.boulderType}</td>}
-        {boulder.sendAttempts !== undefined && <td>{boulder.sendAttempts}</td>}
-        {boulder.sendStatus !== undefined && <td>{boulder.sendStatus}</td>}
-        {boulder.startDate !== undefined && <td>{getDate(boulder.startDate)}</td>}
-        {boulder.sendDate !== undefined && <td>{getDate(boulder.sendDate)}</td>}
-        {boulder.description !== undefined && <td>{boulder.description}</td>}
-      </tr>
-    </tbody>
+    <tr>
+      <td><button onClick={ handleDeleteBoulder } id={boulder.id}><img src="https://cdn-icons-png.flaticon.com/512/3141/3141684.png"></img></button></td>
+      {boulder.rating !== undefined && <td>{boulder.rating}</td>}
+      {boulder.colour !== undefined && <td>{boulder.colour}</td>}
+      {boulder.holdType !== undefined && <td>{boulder.holdType}</td>}
+      {boulder.boulderType !== undefined && <td>{boulder.boulderType}</td>}
+      {boulder.sendAttempts !== undefined && <td>{boulder.sendAttempts}</td>}
+      {boulder.sendStatus !== undefined && <td>{boulder.sendStatus}</td>}
+      {boulder.startDate !== undefined && <td>{getDate(boulder.startDate)}</td>}
+      {boulder.sendDate !== undefined && <td>{getDate(boulder.sendDate)}</td>}
+      {boulder.description !== undefined && <td>{boulder.description}</td>}
+    </tr>
   )
 }

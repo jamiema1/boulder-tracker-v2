@@ -63,7 +63,7 @@ function makeQueryString (query) {
 
   q = q.concat(' FROM boulders LIMIT ')
 
-  const limit = 100
+  const limit = 10
   q = q.concat(limit + ';')
 
   return q

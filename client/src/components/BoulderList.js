@@ -12,11 +12,15 @@ BoulderList.propTypes = {
 
 export default function BoulderList ({ boulderList, columns, handleDeleteBoulder }) {
   return (
-    <table className="boulderList">
-      <TableHeader columns={columns} />
-      {boulderList.map((boulder) => {
-        return <Boulder key={boulder.id} boulder={boulder} handleDeleteBoulder={handleDeleteBoulder} />
-      })}
-    </table>
+    <div className='boulderListTableWrapper'>
+      <table className="boulderList">
+        <TableHeader columns={columns} />
+        <tbody>
+          {boulderList.map((boulder) => {
+            return <Boulder key={boulder.id} boulder={boulder} handleDeleteBoulder={handleDeleteBoulder} />
+          })}
+        </tbody>
+      </table>
+    </div>
   )
 }
