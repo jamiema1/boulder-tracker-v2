@@ -30,11 +30,13 @@ app.post('/api/insert', (req, res) => {
   const boulderType = req.body.boulderType
   const sendAttempts = req.body.sendAttempts
   const sendStatus = req.body.sendStatus
+  const startDate = req.body.startDate
+  const sendDate = req.body.sendDate
   const description = req.body.description
 
-  const values = [id, rating, colour, holdType, boulderType, sendAttempts, sendStatus, description]
+  const values = [id, rating, colour, holdType, boulderType, sendAttempts, sendStatus, startDate, sendDate, description]
 
-  const q = 'INSERT INTO boulders (id, rating, colour, holdType, boulderType, sendAttempts, sendStatus, description) VALUES (?,?,?,?,?,?,?,?);'
+  const q = 'INSERT INTO boulders (id, rating, colour, holdType, boulderType, sendAttempts, sendStatus, startDate, sendDate, description) VALUES (?,?,?,?,?,?,?,?,?,?);'
 
   db.query(q, values, (err, data) => {
     if (err) return res.json('Error' + err)

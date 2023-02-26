@@ -17,6 +17,11 @@
     flex-grow: 1;
 }
 
+
+#startDate > input, #sendDate > input {
+    width: 75px;
+}
+
 #holdType {
     flex-grow: 1;
 }

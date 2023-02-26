@@ -18,9 +18,11 @@ function App () {
   const boulderTypeRef = useRef()
   const sendAttemptsRef = useRef()
   const sendStatusRef = useRef()
+  const startDateRef = useRef()
+  const sendDateRef = useRef()
   const descriptionRef = useRef() 
 
-  const boulderRef = useRef({ratingRef, colourRef, holdTypeRef, boulderTypeRef, sendAttemptsRef, sendStatusRef, descriptionRef})
+  const boulderRef = useRef({ratingRef, colourRef, holdTypeRef, boulderTypeRef, sendAttemptsRef, sendStatusRef, startDateRef, sendDateRef, descriptionRef})
 
 
   useEffect(() => {
@@ -58,6 +60,8 @@ function App () {
       boulderType: fieldValues[2],
       sendStatus: +Array.from(sendStatusRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked)[0].value,
       sendAttempts: +fieldValues[3],
+      startDate: startDateRef.current.value,
+      sendDate: sendDateRef.current.value,
       description: descriptionRef.current.value
     }
 
@@ -99,6 +103,8 @@ function App () {
     Array.from(sendAttemptsRef.current.options).forEach(resetOption)
     Array.from(sendStatusRef.current.children).filter(e => e.nodeName === 'INPUT')[0].checked = true
     Array.from(sendStatusRef.current.children).filter(e => e.nodeName === 'INPUT')[1].checked = false
+    startDateRef.current.value = null
+    sendDateRef.current.value = null
     descriptionRef.current.value = null
   }
 

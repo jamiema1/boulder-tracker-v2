@@ -7,6 +7,8 @@ import SendAttempts from './SendAttempts'
 import SendStatus from './SendStatus'
 import Description from './Description'
 import './InputForm.css'
+import StartDate from './StartDate'
+import SendDate from './SendDate'
 
 
 export default forwardRef(
@@ -20,6 +22,8 @@ export default forwardRef(
             <BoulderType ref={ ref }/>
             <SendAttempts ref={ ref }/>
             <SendStatus ref={ ref }/>
+            <StartDate ref={ ref }/>
+            <SendDate ref={ ref }/>
           </div>
           <HoldType ref={ ref }/>
           <Description ref={ ref }/>
