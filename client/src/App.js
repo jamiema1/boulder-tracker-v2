@@ -6,6 +6,19 @@ import AddNewBoulder from './components/input/AddNewBoulder'
 
 const ID_KEY = 'id'
 
+const sortColumns = new Map([
+  ['id', 'DESC'],
+  ['rating', 'NONE'],
+  ['colour', 'NONE'],
+  ['holdType', 'NONE'],
+  ['boulderType', 'NONE'],
+  ['sendAttempts', 'NONE'],
+  ['sendStatus', 'NONE'],
+  ['startDate', 'NONE'],
+  ['sendDate', 'NONE'],
+  ['description', 'NONE']
+])
+
 function App () {
   const [boulderList, setBoulderList] = useState([])
   const [columns, setColumns] = useState([])
@@ -33,9 +46,8 @@ function App () {
   
   useEffect(() => {
     
-    const allFields =  ['id', 'rating', 'colour', 'holdType','boulderType','sendAttempts','sendStatus','startDate','sendDate','description']
-    const queryParams = allFields.reduce((acc, f) => ({ ...acc, [f]: f}), {});
-    updateColumns(queryParams)
+    const allFields =  ['id','rating', 'colour', 'holdType','boulderType','sendAttempts','sendStatus','startDate','sendDate','description']
+    updateColumns(allFields)
   }, [])
 
   function handleAddBoulder () {
@@ -73,7 +85,7 @@ function App () {
         alert('Failed Insert')
       })
 
-    setBoulderList([...boulderList, newBoulder])
+    setBoulderList([newBoulder, ...boulderList])
 
     resetDropdownMenus()
   }
@@ -132,12 +144,16 @@ function App () {
   function changeColumns() {
     
     const cols = Array.from(columnRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked).map(e => (e.value))
-    const queryParams = cols.reduce((acc, f) => ({ ...acc, [f]: f}), {}) 
-    updateColumns(queryParams)
+    updateColumns([...cols, 'id'])
   }
 
-  function updateColumns(cols) {
-    
+  function makeColumnObject(column) {
+    return sortColumns.get(column)
+  }
+
+  function updateColumns(queryParams) {
+
+    const cols = queryParams.reduce((acc, f) => ({ ...acc, [f]: makeColumnObject(f)}), {})
     const params = new URLSearchParams(cols);
     setColumns([])
     Object.keys(cols).forEach(column => setColumns(columns => ([...columns, column])))
@@ -148,16 +164,20 @@ function App () {
       })
   }
 
+  function toggleSortColumn(column, value) {
+    sortColumns.set(column, value)
+    changeColumns()
+  }
+
 
   return (
     <>
-      {/* <div>Boulder Tracker</div> */}
       <AddNewBoulder ref={ boulderRef }/>
       <button onClick={handleAddBoulder}>Add Boulder</button>
       {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}
       {/* <button>Update Selected</button> */}
       <ColumnSelector changeColumns={changeColumns} ref={ columnRef } />
-      <BoulderList boulderList={boulderList} columns={columns} handleDeleteBoulder={handleDeleteBoulder} />
+      <BoulderList boulderList={boulderList} columns={columns} toggleSortColumn={toggleSortColumn} handleDeleteBoulder={handleDeleteBoulder} />
     </>
   )
 }

@@ -53,6 +53,11 @@ app.get('/api/get', (req, res) => {
 })
 
 function makeQueryString (query) {
+  const q = ''
+  return q.concat(SELECT(query), ' ', FROM(query), ' ', WHERE(query), ' ', ORDERBY(query), ' ', LIMIT(query), ';')
+}
+
+function SELECT (query) {
   let q = 'SELECT '
 
   Object.keys(query).forEach(column => { q = q.concat(column + ', ') })
@@ -62,13 +67,31 @@ function makeQueryString (query) {
   } else {
     q = q.concat('null')
   }
-
-  q = q.concat(' FROM boulders LIMIT ')
-
-  const limit = 100
-  q = q.concat(limit + ';')
-
   return q
+}
+
+function FROM (query) {
+  return 'FROM boulders'
+}
+
+function WHERE (query) {
+  return ''
+}
+
+function ORDERBY (query) {
+  let q = 'ORDER BY '
+  Object.entries(query).forEach(colpair => {
+    const col = colpair[0]
+    const value = colpair[1]
+    if (value !== 'NONE') {
+      q = q.concat(col, ' ', value, ', ')
+    }
+  })
+  return q.substring(0, q.length - 2)
+}
+
+function LIMIT (query) {
+  return 'LIMIT 100'
 }
 
 app.delete('/api/delete', (req, res) => {
