@@ -16,7 +16,7 @@ export default function Boulder ({ boulder, handleDeleteBoulder }) {
   
   return (
     <tr>
-      <td><button onClick={ handleDeleteBoulder } id={boulder.id}><img id={boulder.id} src="https://cdn-icons-png.flaticon.com/512/3141/3141684.png"></img></button></td>
+      <td><button onClick={ handleDeleteBoulder } type="button" id={boulder.id}><img id={boulder.id} src="https://cdn-icons-png.flaticon.com/512/3141/3141684.png"></img></button></td>
       {boulder.rating !== undefined && <td>{boulder.rating}</td>}
       {boulder.colour !== undefined && <td>{boulder.colour}</td>}
       {boulder.holdType !== undefined && <td>{boulder.holdType}</td>}

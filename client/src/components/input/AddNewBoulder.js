@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { forwardRef } from 'react'
 import Rating from './Rating'
 import Colour from './Colour'
@@ -27,6 +28,9 @@ export default forwardRef(
           </div>
           <HoldType ref={ ref }/>
           <Description ref={ ref }/>
+          <div>
+            <button onClick={props.handleAddBoulder} type="button">Add Boulder</button>
+          </div>
         </form>
       </>
     )

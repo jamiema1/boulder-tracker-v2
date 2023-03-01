@@ -3,8 +3,7 @@ import Axios from 'axios'
 import BoulderList from './components/BoulderList'
 import ColumnSelector from './components/ColumnSelector'
 import AddNewBoulder from './components/input/AddNewBoulder'
-
-const ID_KEY = 'id'
+import LimitSelector from './components/LimitSelector'
 
 const sortColumns = new Map([
   ['id', 'DESC'],
@@ -19,11 +18,19 @@ const sortColumns = new Map([
   ['description', 'NONE']
 ])
 
+const ID_KEY = 'id'
+function nextId() {
+  const id = JSON.parse(localStorage.getItem(ID_KEY))
+  localStorage.setItem(ID_KEY, JSON.stringify(id + 1))
+  return id
+}
+
 function App () {
   const [boulderList, setBoulderList] = useState([])
   const [columns, setColumns] = useState([])
 
   const columnRef = useRef()
+  const limitSelectorRef = useRef(15)
 
   const ratingRef = useRef()
   const colourRef = useRef()
@@ -41,11 +48,8 @@ function App () {
   useEffect(() => {
     // placeholder if necessary
   }, [boulderList])
-
-
   
   useEffect(() => {
-    
     const allFields =  ['id','rating', 'colour', 'holdType','boulderType','sendAttempts','sendStatus','startDate','sendDate','description']
     updateColumns(allFields)
   }, [])
@@ -65,7 +69,7 @@ function App () {
     if (anyNullFields) return
 
     const newBoulder = { 
-      id: newId(),
+      id: nextId(),
       rating: convertRatingToNumber(fieldValues[0]),
       colour: fieldValues[1],
       holdType: Array.from(holdTypeRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked).reduce((acc, field) => (acc.concat(field.value, ' ')), '').trimEnd(),
@@ -79,35 +83,31 @@ function App () {
 
     Axios.post('http://localhost:3001/api/insert', newBoulder)
       .then(() => {
-        alert('Successful Insert')
+        // alert('Successful Insert')
+        setBoulderList([newBoulder, ...boulderList])
+        updateBoulderList();
+
+        resetDropdownMenus()
       })
       .catch(() => {
         alert('Failed Insert')
       })
 
-    setBoulderList([newBoulder, ...boulderList])
-
-    resetDropdownMenus()
-  }
-
-  function newId() {
-    const id = JSON.parse(localStorage.getItem(ID_KEY))
-    localStorage.setItem(ID_KEY, JSON.stringify(id+1))
-    return id
   }
 
   function convertRatingToNumber (str) {
     if (str.includes('hex')) {
       return +str.substring(0, 1)
     }
-    // if (str.includes("V")) {
-    //     return str.substring(1)
-    // }
     return -1
   }
 
   function resetDropdownMenus () {
     
+    function resetOption(option) {
+      option.selected = option.defaultSelected
+    }
+
     Array.from(ratingRef.current.options).forEach(resetOption)
     Array.from(colourRef.current.options).forEach(resetOption)
     Array.from(holdTypeRef.current.children).filter(e => e.nodeName === 'INPUT').forEach(e => e.checked = false)
@@ -120,9 +120,7 @@ function App () {
     descriptionRef.current.value = null
   }
 
-  function resetOption(option) {
-    option.selected = option.defaultSelected
-  }
+
 
   function handleDeleteBoulder (e) {
     
@@ -130,19 +128,15 @@ function App () {
 
     Axios.delete('http://localhost:3001/api/delete', { data: { id: id } })
       .then(() => {
-        alert('Successful Delete')
+        // alert('Successful Delete')
+        updateBoulderList();
       })
       .catch(() => {
         alert('Failed Delete')
       })
-    
-    const copyOfBoulderList = [...boulderList]
-    copyOfBoulderList.splice(boulderList.findIndex(boulder => (boulder.id === +id)), 1)
-    setBoulderList(copyOfBoulderList)
   }
 
-  function changeColumns() {
-    
+  function updateBoulderList() {
     const cols = Array.from(columnRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked).map(e => (e.value))
     updateColumns([...cols, 'id'])
   }
@@ -151,12 +145,13 @@ function App () {
     return sortColumns.get(column)
   }
 
-  function updateColumns(queryParams) {
-
-    const cols = queryParams.reduce((acc, f) => ({ ...acc, [f]: makeColumnObject(f)}), {})
-    const params = new URLSearchParams(cols);
+  function updateColumns(cols) {
     setColumns([])
-    Object.keys(cols).forEach(column => setColumns(columns => ([...columns, column])))
+    cols.forEach(column => setColumns(columns => ([...columns, column])))
+
+    let param = cols.reduce((acc, f) => ({ ...acc, [f]: makeColumnObject(f)}), {});
+    param = { ...param, limit: limitSelectorRef.current.value }    
+    const params = new URLSearchParams(param);
 
     Axios.get('http://localhost:3001/api/get?' + params)
       .then((response) => {
@@ -166,17 +161,17 @@ function App () {
 
   function toggleSortColumn(column, value) {
     sortColumns.set(column, value)
-    changeColumns()
+    updateBoulderList()
   }
 
 
   return (
     <>
-      <AddNewBoulder ref={ boulderRef }/>
-      <button onClick={handleAddBoulder}>Add Boulder</button>
+      <AddNewBoulder handleAddBoulder={handleAddBoulder} ref={ boulderRef }/>
       {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}
       {/* <button>Update Selected</button> */}
-      <ColumnSelector changeColumns={changeColumns} ref={ columnRef } />
+      <LimitSelector changeLimit={updateBoulderList} ref={ limitSelectorRef } />
+      <ColumnSelector changeColumns={updateBoulderList} ref={ columnRef } />
       <BoulderList boulderList={boulderList} columns={columns} toggleSortColumn={toggleSortColumn} handleDeleteBoulder={handleDeleteBoulder} />
     </>
   )
