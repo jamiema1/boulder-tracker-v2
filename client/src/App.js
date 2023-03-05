@@ -42,7 +42,8 @@ function App () {
   const sendDateRef = useRef()
   const descriptionRef = useRef() 
 
-  const boulderRef = useRef({ratingRef, colourRef, holdTypeRef, boulderTypeRef, sendAttemptsRef, sendStatusRef, startDateRef, sendDateRef, descriptionRef})
+  const boulderRef = useRef({ratingRef, colourRef, holdTypeRef, boulderTypeRef,
+    sendAttemptsRef, sendStatusRef, startDateRef, sendDateRef, descriptionRef})
 
 
   useEffect(() => {
@@ -50,7 +51,8 @@ function App () {
   }, [boulderList])
   
   useEffect(() => {
-    const allFields =  ['id','rating', 'colour', 'holdType','boulderType','sendAttempts','sendStatus','startDate','sendDate','description']
+    const allFields =  ['id','rating', 'colour', 'holdType','boulderType',
+      'sendAttempts','sendStatus','startDate','sendDate','description']
     updateColumns(allFields)
   }, [])
 
@@ -64,7 +66,8 @@ function App () {
       descriptionRef.current.value
     ]
 
-    const anyNullFields = fieldValues.reduce((acc, field) => (acc || field === 'null'), false)
+    const anyNullFields = fieldValues
+      .reduce((acc, field) => (acc || field === 'null'), false)
 
     if (anyNullFields) return
 
@@ -72,9 +75,12 @@ function App () {
       id: nextId(),
       rating: convertRatingToNumber(fieldValues[0]),
       colour: fieldValues[1],
-      holdType: Array.from(holdTypeRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked).reduce((acc, field) => (acc.concat(field.value, ' ')), '').trimEnd(),
+      holdType: Array.from(holdTypeRef.current.children)
+        .filter(e => e.nodeName === 'INPUT' && e.checked)
+        .reduce((acc, field) => (acc.concat(field.value, ' ')), '').trimEnd(),
       boulderType: fieldValues[2],
-      sendStatus: +Array.from(sendStatusRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked)[0].value,
+      sendStatus: +Array.from(sendStatusRef.current.children)
+        .filter(e => e.nodeName === 'INPUT' && e.checked)[0].value,
       sendAttempts: +fieldValues[3],
       startDate: startDateRef.current.value,
       sendDate: sendDateRef.current.value,
@@ -110,11 +116,14 @@ function App () {
 
     Array.from(ratingRef.current.options).forEach(resetOption)
     Array.from(colourRef.current.options).forEach(resetOption)
-    Array.from(holdTypeRef.current.children).filter(e => e.nodeName === 'INPUT').forEach(e => e.checked = false)
+    Array.from(holdTypeRef.current.children)
+      .filter(e => e.nodeName === 'INPUT').forEach(e => e.checked = false)
     Array.from(boulderTypeRef.current.options).forEach(resetOption)
     Array.from(sendAttemptsRef.current.options).forEach(resetOption)
-    Array.from(sendStatusRef.current.children).filter(e => e.nodeName === 'INPUT')[0].checked = true
-    Array.from(sendStatusRef.current.children).filter(e => e.nodeName === 'INPUT')[1].checked = false
+    Array.from(sendStatusRef.current.children)
+      .filter(e => e.nodeName === 'INPUT')[0].checked = true
+    Array.from(sendStatusRef.current.children)
+      .filter(e => e.nodeName === 'INPUT')[1].checked = false
     startDateRef.current.value = null
     sendDateRef.current.value = null
     descriptionRef.current.value = null
@@ -137,7 +146,8 @@ function App () {
   }
 
   function updateBoulderList() {
-    const cols = Array.from(columnRef.current.children).filter(e => e.nodeName === 'INPUT' && e.checked).map(e => (e.value))
+    const cols = Array.from(columnRef.current.children).filter(e =>
+      e.nodeName === 'INPUT' && e.checked).map(e => (e.value))
     updateColumns([...cols, 'id'])
   }
 
@@ -149,7 +159,8 @@ function App () {
     setColumns([])
     cols.forEach(column => setColumns(columns => ([...columns, column])))
 
-    let param = cols.reduce((acc, f) => ({ ...acc, [f]: makeColumnObject(f)}), {});
+    let param = cols.reduce((acc, f) =>
+      ({ ...acc, [f]: makeColumnObject(f)}), {});
     param = { ...param, limit: limitSelectorRef.current.value }    
     const params = new URLSearchParams(param);
 
@@ -167,12 +178,26 @@ function App () {
 
   return (
     <>
-      <AddNewBoulder handleAddBoulder={handleAddBoulder} ref={ boulderRef }/>
+      <AddNewBoulder 
+        handleAddBoulder={handleAddBoulder}
+        ref={ boulderRef }
+      />
       {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}
       {/* <button>Update Selected</button> */}
-      <LimitSelector changeLimit={updateBoulderList} ref={ limitSelectorRef } />
-      <ColumnSelector changeColumns={updateBoulderList} ref={ columnRef } />
-      <BoulderList boulderList={boulderList} columns={columns} toggleSortColumn={toggleSortColumn} handleDeleteBoulder={handleDeleteBoulder} />
+      <LimitSelector
+        changeLimit={updateBoulderList} 
+        ref={ limitSelectorRef } 
+      />
+      <ColumnSelector 
+        changeColumns={updateBoulderList}
+        ref={ columnRef } 
+      />
+      <BoulderList 
+        boulderList={boulderList}
+        columns={columns} 
+        toggleSortColumn={toggleSortColumn}
+        handleDeleteBoulder={handleDeleteBoulder}
+      />
     </>
   )
 }

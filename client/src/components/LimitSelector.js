@@ -6,7 +6,8 @@ export default forwardRef (
     return (
       <span>
         <label>Number of Rows: </label>
-        <select id="limitSelector" onChange={props.changeLimit} ref={ref} defaultValue={15}>
+        <select id="limitSelector" onChange={props.changeLimit} ref={ref} 
+          defaultValue={15}>
           <option value="5">5</option>
           <option value="15" >15</option>
           <option value="25">25</option>

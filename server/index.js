@@ -34,9 +34,12 @@ app.post('/api/insert', (req, res) => {
   const sendDate = req.body.sendDate
   const description = req.body.description
 
-  const values = [id, rating, colour, holdType, boulderType, sendAttempts, sendStatus, startDate, sendDate, description]
+  const values = [id, rating, colour, holdType, boulderType, sendAttempts,
+    sendStatus, startDate, sendDate, description]
 
-  const q = 'INSERT INTO boulders (id, rating, colour, holdType, boulderType, sendAttempts, sendStatus, startDate, sendDate, description) VALUES (?,?,?,?,?,?,?,?,?,?);'
+  const q = 'INSERT INTO boulders (id, rating, colour, holdType, boulderType,' +
+     ' sendAttempts, sendStatus, startDate, sendDate, description) VALUES' +
+     ' (?,?,?,?,?,?,?,?,?,?);'
 
   db.query(q, values, (err, data) => {
     if (err) return res.json('Error' + err)
@@ -63,7 +66,8 @@ function makeQueryString (query) {
       columns = { ...columns, [key[0]]: key[1] }
     }
   }
-  return q.concat(SELECT(columns), ' ', FROM(query), ' ', WHERE(query), ' ', ORDERBY(columns), ' ', LIMIT(limit), ';')
+  return q.concat(SELECT(columns), ' ', FROM(query), ' ', WHERE(query), ' ',
+    ORDERBY(columns), ' ', LIMIT(limit), ';')
 }
 
 function SELECT (columns) {

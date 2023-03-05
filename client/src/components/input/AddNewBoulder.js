@@ -29,7 +29,8 @@ export default forwardRef(
           <HoldType ref={ ref }/>
           <Description ref={ ref }/>
           <div>
-            <button onClick={props.handleAddBoulder} type="button">Add Boulder</button>
+            <button onClick={props.handleAddBoulder}
+              type="button">Add Boulder</button>
           </div>
         </form>
       </>

@@ -17,6 +17,8 @@
         "react"
     ],
     "rules": {
-        "indent": ["error", 2]
+        "indent": ["error", 2],
+        "max-lines": ["error", 300],
+        "max-len": ["error", 80]
     }
 }

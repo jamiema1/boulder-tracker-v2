@@ -11,14 +11,16 @@ BoulderList.propTypes = {
   toggleSortColumn: PropTypes.func.isRequired
 }
 
-export default function BoulderList ({ boulderList, columns, toggleSortColumn, handleDeleteBoulder }) {
+export default function BoulderList (
+  { boulderList, columns, toggleSortColumn, handleDeleteBoulder }) {
   return (
     <div className='boulderListTableWrapper'>
       <table className="boulderList">
         <TableHeader columns={columns} toggleSortColumn={toggleSortColumn} />
         <tbody>
           {boulderList.map((boulder) => {
-            return <Boulder key={boulder.id} boulder={boulder} handleDeleteBoulder={handleDeleteBoulder} />
+            return <Boulder key={boulder.id} boulder={boulder} 
+              handleDeleteBoulder={handleDeleteBoulder} />
           })}
         </tbody>
       </table>
