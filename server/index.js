@@ -45,7 +45,6 @@ app.post('/api/insert', (req, res) => {
 })
 
 app.get('/api/get', (req, res) => {
-  console.log(req.query)
   const q = makeQueryString(req.query)
   db.query(q, (err, data) => {
     if (err) return res.json('Error' + err)
