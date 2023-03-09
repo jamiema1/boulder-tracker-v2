@@ -6,7 +6,7 @@ TableHeader.propTypes = {
   toggleSortColumn: PropTypes.func.isRequired
 }
 
-export default function TableHeader ({columns, toggleSortColumn}) {
+export default function TableHeader ({ columns, toggleSortColumn }) {
   function changeValue(e) {
     let [column, value] = e.target.value.split(' ')
     switch (value) {

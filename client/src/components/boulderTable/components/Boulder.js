@@ -6,7 +6,7 @@ Boulder.propTypes = {
   handleDeleteBoulder: PropTypes.func.isRequired
 }
 
-export default function Boulder ({ boulder, handleDeleteBoulder }) {
+export default function Boulder ({boulder, handleDeleteBoulder}) {
   function getDate (datetime) {
     if (datetime === null || datetime === undefined) {
       return 'Unfinished'

@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import Axios from 'axios'
-import BoulderList from './components/BoulderList'
-import ColumnSelector from './components/ColumnSelector'
-import AddNewBoulder from './components/input/AddNewBoulder'
-import LimitSelector from './components/LimitSelector'
+import BoulderTable from './components/boulderTable/BoulderTable'
+import AddBoulder from './components/addBoulder/AddBoulder'
 
 const sortColumns = new Map([
   ['id', 'DESC'],
@@ -31,6 +29,7 @@ function App () {
 
   const columnRef = useRef()
   const limitSelectorRef = useRef(15)
+  const boulderTableRef = useRef({columnRef, limitSelectorRef})
 
   const ratingRef = useRef()
   const colourRef = useRef()
@@ -81,17 +80,13 @@ function App () {
       id: nextId(),
       rating: convertRatingToNumber(fieldValues[0]),
       colour: fieldValues[1],
-      holdType: Array.from(holdTypeRef.current.children)
-        .filter(e => e.nodeName === 'INPUT' && e.checked)
-        .reduce((acc, field) => (acc.concat(field.value, ' ')), '').trimEnd(),
+      holdType: fieldValues[6],
       boulderType: fieldValues[2],
       sendAttempts: +fieldValues[3],
-      startDate: startDateRef.current.value,
+      startDate: fieldValues[4],
       sendDate: sendDate,
-      description: descriptionRef.current.value
+      description: fieldValues[5]
     }
-
-    console.log(newBoulder)
 
     Axios.post('http://localhost:3001/api/insert', newBoulder)
       .then(() => {
@@ -137,7 +132,7 @@ function App () {
     
     const id = e.target.id
 
-    Axios.delete('http://localhost:3001/api/delete', { data: { id: id } })
+    Axios.delete('http://localhost:3001/api/delete', {data: {id: id}})
       .then(() => {
         // alert('Successful Delete')
         updateBoulderList();
@@ -162,8 +157,8 @@ function App () {
     cols.forEach(column => setColumns(columns => ([...columns, column])))
 
     let param = cols.reduce((acc, f) =>
-      ({ ...acc, [f]: makeColumnObject(f)}), {});
-    param = { ...param, limit: limitSelectorRef.current.value }    
+      ({...acc, [f]: makeColumnObject(f)}), {});
+    param = {...param, limit: limitSelectorRef.current.value}    
     const params = new URLSearchParams(param);
 
     Axios.get('http://localhost:3001/api/get?' + params)
@@ -180,25 +175,19 @@ function App () {
 
   return (
     <>
-      <AddNewBoulder 
+      <AddBoulder 
         handleAddBoulder={handleAddBoulder}
         ref={ boulderRef }
       />
       {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}
       {/* <button>Update Selected</button> */}
-      <LimitSelector
-        changeLimit={updateBoulderList} 
-        ref={ limitSelectorRef } 
-      />
-      <ColumnSelector 
-        changeColumns={updateBoulderList}
-        ref={ columnRef } 
-      />
-      <BoulderList 
+      <BoulderTable
         boulderList={boulderList}
         columns={columns} 
         toggleSortColumn={toggleSortColumn}
         handleDeleteBoulder={handleDeleteBoulder}
+        update = { updateBoulderList }
+        ref = { boulderTableRef }
       />
     </>
   )

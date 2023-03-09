@@ -1,5 +1,4 @@
 import React, {forwardRef } from 'react'
-import './InputForm.css'
 
 export default forwardRef(
   function HoldType(props, ref) {
