@@ -5,7 +5,7 @@ export default forwardRef(
     return (
       <div id="startDate">
         <label className='title'>Start Date: </label>
-        <input type='text' ref={ref.current.startDateRef}></input>
+        <input type='date' ref={ref.current.startDateRef}></input>
       </div>
     )
   })

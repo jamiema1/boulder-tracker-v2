@@ -20,8 +20,6 @@ export default forwardRef(
           <input type="checkbox" onClick={props.changeColumns} 
             value="sendAttempts" defaultChecked></input>
           <label>Send Attempts</label>
-          <input type="checkbox" onClick={props.changeColumns}
-            value="sendStatus" defaultChecked></input><label>Send Status</label>
           <input type="checkbox" onClick={props.changeColumns} 
             value="startDate" defaultChecked></input><label>Start Date</label>
           <input type="checkbox" onClick={props.changeColumns} 

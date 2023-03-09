@@ -37,13 +37,12 @@ function App () {
   const holdTypeRef = useRef()
   const boulderTypeRef = useRef()
   const sendAttemptsRef = useRef()
-  const sendStatusRef = useRef()
   const startDateRef = useRef()
   const sendDateRef = useRef()
   const descriptionRef = useRef() 
 
   const boulderRef = useRef({ratingRef, colourRef, holdTypeRef, boulderTypeRef,
-    sendAttemptsRef, sendStatusRef, startDateRef, sendDateRef, descriptionRef})
+    sendAttemptsRef, startDateRef, sendDateRef, descriptionRef})
 
 
   useEffect(() => {
@@ -52,7 +51,7 @@ function App () {
   
   useEffect(() => {
     const allFields =  ['id','rating', 'colour', 'holdType','boulderType',
-      'sendAttempts','sendStatus','startDate','sendDate','description']
+      'sendAttempts','startDate','sendDate','description']
     updateColumns(allFields)
   }, [])
 
@@ -63,13 +62,20 @@ function App () {
       colourRef.current.selectedOptions[0].value,
       boulderTypeRef.current.selectedOptions[0].value,
       sendAttemptsRef.current.selectedOptions[0].value,
-      descriptionRef.current.value
+      startDateRef.current.value,
+      descriptionRef.current.value,
+      Array.from(holdTypeRef.current.children)
+        .filter(e => e.nodeName === 'INPUT' && e.checked)
+        .reduce((acc, field) => (acc.concat(field.value, ' ')), '').trimEnd()
     ]
 
     const anyNullFields = fieldValues
-      .reduce((acc, field) => (acc || field === 'null'), false)
+      .reduce((acc, field) => (acc || field === 'null' || field === ''), false)
 
     if (anyNullFields) return
+
+    const sendDate = sendDateRef.current.value === '' ? null :
+      sendDateRef.current.value
 
     const newBoulder = { 
       id: nextId(),
@@ -79,13 +85,13 @@ function App () {
         .filter(e => e.nodeName === 'INPUT' && e.checked)
         .reduce((acc, field) => (acc.concat(field.value, ' ')), '').trimEnd(),
       boulderType: fieldValues[2],
-      sendStatus: +Array.from(sendStatusRef.current.children)
-        .filter(e => e.nodeName === 'INPUT' && e.checked)[0].value,
       sendAttempts: +fieldValues[3],
       startDate: startDateRef.current.value,
-      sendDate: sendDateRef.current.value,
+      sendDate: sendDate,
       description: descriptionRef.current.value
     }
+
+    console.log(newBoulder)
 
     Axios.post('http://localhost:3001/api/insert', newBoulder)
       .then(() => {
@@ -120,10 +126,6 @@ function App () {
       .filter(e => e.nodeName === 'INPUT').forEach(e => e.checked = false)
     Array.from(boulderTypeRef.current.options).forEach(resetOption)
     Array.from(sendAttemptsRef.current.options).forEach(resetOption)
-    Array.from(sendStatusRef.current.children)
-      .filter(e => e.nodeName === 'INPUT')[0].checked = true
-    Array.from(sendStatusRef.current.children)
-      .filter(e => e.nodeName === 'INPUT')[1].checked = false
     startDateRef.current.value = null
     sendDateRef.current.value = null
     descriptionRef.current.value = null

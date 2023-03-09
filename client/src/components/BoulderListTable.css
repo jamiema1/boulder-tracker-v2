@@ -44,19 +44,15 @@ tbody tr:nth-child(odd) {
 }
          
 .holdTypeColumn {
-    width: 175px;
+    width: 200px;
 }
 
 .boulderTypeColumn {
-    width: 120px;
+    width: 100px;
 }
 
 .sendAttemptsColumn {
     width: 100px;
-}
-
-.sendStatusColumn {
-    width: 80px;
 }
 
 .startDateColumn {

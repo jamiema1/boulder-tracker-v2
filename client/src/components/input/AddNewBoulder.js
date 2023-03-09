@@ -5,7 +5,6 @@ import Colour from './Colour'
 import HoldType from './HoldType'
 import BoulderType from './BoulderType'
 import SendAttempts from './SendAttempts'
-import SendStatus from './SendStatus'
 import Description from './Description'
 import './InputForm.css'
 import StartDate from './StartDate'
@@ -22,7 +21,6 @@ export default forwardRef(
             <Colour ref={ ref }/>
             <BoulderType ref={ ref }/>
             <SendAttempts ref={ ref }/>
-            <SendStatus ref={ ref }/>
             <StartDate ref={ ref }/>
             <SendDate ref={ ref }/>
           </div>
