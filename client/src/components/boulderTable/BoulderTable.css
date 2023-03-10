@@ -45,8 +45,18 @@ td, th {
     font-weight: 700;
     font-size: medium;
     text-align: center;
-    border-bottom: 3px solid black;
     background-color: rgba(162, 222, 223, 0.5);
+}
+
+.boulderListHeadTitle > * {
+    border-bottom: 3px hidden;
+    padding-bottom: 0px;
+}
+
+.boulderListHeadSelector > * {
+    border-bottom: 3px solid black;
+    padding-top: 10px;
+    padding-bottom: 5px;
 }
 
 tbody tr:nth-child(even) {
@@ -70,7 +80,7 @@ tbody tr:nth-child(odd) {
 }
          
 .holdTypeColumn {
-    width: 200px;
+    width: 150px;
 }
 
 .boulderTypeColumn {

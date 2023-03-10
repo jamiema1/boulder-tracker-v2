@@ -71,7 +71,10 @@ function App () {
     const anyNullFields = fieldValues
       .reduce((acc, field) => (acc || field === 'null' || field === ''), false)
 
-    if (anyNullFields) return
+    if (anyNullFields) {
+      alert('Missing required information')
+      return
+    }
 
     const sendDate = sendDateRef.current.value === '' ? null :
       sendDateRef.current.value
