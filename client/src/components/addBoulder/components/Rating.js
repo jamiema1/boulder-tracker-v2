@@ -1,9 +1,9 @@
-import React, { forwardRef } from 'react'
+import React, {forwardRef} from 'react'
 
 export default forwardRef(
   function Rating(props, ref){
     return (
-      <span>
+      <div>
         <label className='title'>Rating: </label>
         <select id="rating" ref={ref.current.ratingRef}>
           <option value="null">-- Select --</option>
@@ -15,6 +15,6 @@ export default forwardRef(
           <option value="6 hex">6 Hex</option>
           <option value="unrated">Unrated</option>
         </select>
-      </span>
+      </div>
     )
   })

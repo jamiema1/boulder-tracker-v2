@@ -15,13 +15,16 @@ function AddBoulder (props, ref) {
     <div className='addBoulder'>
       <div className='componentTitle'>Add Boulder</div>
       <form id="addBoulderForm">
-        <div className="dropDownOptions">
-          <Rating ref={ ref }/>
-          <Colour ref={ ref }/>
-          <BoulderType ref={ ref }/>
-          <SendAttempts ref={ ref }/>
-          <StartDate ref={ ref }/>
-          <SendDate ref={ ref }/>
+        <div className="dropDownOptionsWrapper">
+          <div className="dropDownOptions">
+            <Rating ref={ ref }/>
+            <Colour ref={ ref }/>
+            <BoulderType ref={ ref }/>
+            <SendAttempts ref={ ref }/>
+            <StartDate ref={ ref }/>
+            <SendDate ref={ ref }/>
+          </div>
+          <div></div>
         </div>
         <HoldType ref={ ref }/>
         <Description ref={ ref }/>

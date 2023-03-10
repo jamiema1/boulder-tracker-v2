@@ -13,15 +13,23 @@
     padding: 15px
 }
 
+.dropDownOptionsWrapper {
+    flex-grow: 1;
+    display: flex;
+}
+
 .dropDownOptions {
     display: flex;
     flex-flow: column nowrap;
-    height: 120px;
-    min-width: 225px;
-    justify-content: space-around;
-    flex-grow: 1;
+    height: 125px;
+    width: 240px; 
+    justify-content: space-between;
 }
 
+.dropDownOptions > * {
+    display: flex;
+    justify-content: space-between;
+}
 
 #startDate > input, #sendDate > input {
     width: 100px;
@@ -57,7 +65,7 @@
 }
 
 .addBoulderButton {
-    min-height: 120px;
+    height: 125px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
