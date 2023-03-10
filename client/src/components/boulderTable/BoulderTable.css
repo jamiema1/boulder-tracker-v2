@@ -1,5 +1,31 @@
+.boulderTable {
+    background-color: azure;
+    border: 5px ridge rgb(208, 255, 255);
+    margin: 50px 0px;
+}
 
-.boulderListTableWrapper {
+.boulderTableSelectors {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 25px;
+}
+
+.columnSelector {
+    display: flex;   
+}
+
+.option {
+    font-size: small;
+    font-weight: 700;
+    padding: 0px 10px 0px 0px;
+}
+
+
+
+
+.boulderTableWrapper {
+    padding-left: 25px;
+    padding-right: 25px;
     overflow-x: scroll;
 }
 
@@ -7,11 +33,11 @@ table {
     table-layout: fixed;
     border-collapse: collapse;
     width: 0px;
-    border: 3px solid white;
+    border: 3px hidden;
 }
 
 td, th {
-    border: 3px solid white;
+    border: 3px solid azure;
     padding: 5px;
 }
 

@@ -12,7 +12,8 @@ import SendDate from './components/SendDate'
 
 function AddBoulder (props, ref) {
   return (
-    <>
+    <div className='addBoulder'>
+      <div className='componentTitle'>Add Boulder</div>
       <form id="addBoulderForm">
         <div className="dropDownOptions">
           <Rating ref={ ref }/>
@@ -24,12 +25,12 @@ function AddBoulder (props, ref) {
         </div>
         <HoldType ref={ ref }/>
         <Description ref={ ref }/>
-        <div>
+        <div className='addBoulderButton'>
           <button onClick={props.handleAddBoulder}
             type="button">Add Boulder</button>
         </div>
       </form>
-    </>
+    </div>
   )
 }
 

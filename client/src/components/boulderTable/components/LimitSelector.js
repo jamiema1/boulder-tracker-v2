@@ -4,8 +4,8 @@ import React, {forwardRef} from 'react'
 export default forwardRef (
   function LimitSelector (props, ref){
     return (
-      <span>
-        <label>Number of Rows: </label>
+      <span className='limitSelector'>
+        <label className='title'>Number of Rows: </label>
         <select id="limitSelector" onChange={props.changeLimit} ref={ref} 
           defaultValue={15}>
           <option value="5">5</option>

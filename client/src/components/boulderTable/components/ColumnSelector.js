@@ -1,32 +1,38 @@
 /* eslint-disable react/prop-types */
-import React, { forwardRef } from 'react'
+import React, {forwardRef} from 'react'
 
 
 export default forwardRef(
   function ColumnSelector(props, ref) {
+    const change = props.changeColumns
     return (
-      <div id="holdType">
+      <div className='columnSelector'>
         <label className='title'>Show Columns:</label>
-        <div id ="columnSelector" ref={ref}>
-          <input type="checkbox" onClick={props.changeColumns} 
-            value="rating" defaultChecked></input><label>Rating</label>
-          <input type="checkbox" onClick={props.changeColumns} 
-            value="colour" defaultChecked></input><label>Colour</label>
-          <input type="checkbox" onClick={props.changeColumns} 
-            value="holdType" defaultChecked></input><label>Hold Type</label>
-          <input type="checkbox" onClick={props.changeColumns} 
+        <div ref={ref}>
+          <input type="checkbox" onClick={change}
+            value="rating" defaultChecked></input>
+          <label className='option'>Rating</label>
+          <input type="checkbox" onClick={change}
+            value="colour" defaultChecked></input>
+          <label className='option'>Colour</label>
+          <input type="checkbox" onClick={change} 
+            value="holdType" defaultChecked></input>
+          <label className='option'>Hold Type</label>
+          <input type="checkbox" onClick={change}
             value="boulderType" defaultChecked></input>
-          <label>Boulder Type</label>
-          <input type="checkbox" onClick={props.changeColumns} 
+          <label className='option'>Boulder Type</label>
+          <input type="checkbox" onClick={change}
             value="sendAttempts" defaultChecked></input>
-          <label>Send Attempts</label>
-          <input type="checkbox" onClick={props.changeColumns} 
-            value="startDate" defaultChecked></input><label>Start Date</label>
-          <input type="checkbox" onClick={props.changeColumns} 
-            value="sendDate" defaultChecked></input><label>Send Date</label>
-          <input type="checkbox" onClick={props.changeColumns} 
+          <label className='option'>Send Attempts</label>
+          <input type="checkbox" onClick={change}
+            value="startDate" defaultChecked></input>
+          <label className='option'>Start Date</label>
+          <input type="checkbox" onClick={change}
+            value="sendDate" defaultChecked></input>
+          <label className='option'>Send Date</label>
+          <input type="checkbox" onClick={change}
             value="description" defaultChecked></input>
-          <label>Description</label>
+          <label className='option'>Description</label>
         </div>
       </div>
     )

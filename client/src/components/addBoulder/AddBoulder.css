@@ -1,6 +1,11 @@
+.addBoulder {
+    background-color:beige;
+    border: 5px ridge rgb(245, 245, 204);
+    margin: 50px 0px;
+}
+
 #addBoulderForm {
     display: flex;
-    background-color:beige;
     align-items: flex-start;
 }
 
@@ -43,10 +48,17 @@
 #description > textarea {
     flex-grow: 1;
     height: 100%;
-    width: 100%
+    width: 90%
 }
 
 .title {
     font-weight: 700;
     font-size: medium;
+}
+
+.addBoulderButton {
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
