@@ -6,16 +6,7 @@ import BarChart from './components/BarChart'
 import 'chart.js'
 
 const sortColumns = new Map([
-  ['id', 'DESC'],
-  ['rating', 'NONE'],
-  ['colour', 'NONE'],
-  ['holdType', 'NONE'],
-  ['boulderType', 'NONE'],
-  ['sendAttempts', 'NONE'],
-  ['sendStatus', 'NONE'],
-  ['startDate', 'NONE'],
-  ['sendDate', 'NONE'],
-  ['description', 'NONE']
+  ['id', 'DESC']
 ])
 
 const ID_KEY = 'id'
@@ -185,18 +176,20 @@ function App () {
     updateColumns([...cols, 'id'])
   }
 
-  function makeColumnObject(column) {
-    return sortColumns.get(column)
-  }
-
   function updateColumns(cols) {
-    setColumns([])
-    cols.forEach(column => setColumns(columns => ([...columns, column])))
+    setColumns(cols)
 
-    let param = cols.reduce((acc, f) =>
-      ({...acc, [f]: makeColumnObject(f)}), {});
-    param = {...param, limit: limitSelectorRef.current.value}    
-    const params = new URLSearchParams(param);
+    let orderColumns = []
+    for (const key of sortColumns.keys()) {
+      orderColumns.push({[key]: sortColumns.get(key)})
+    }
+
+    let params = {
+      select: cols,
+      orderby: orderColumns,
+      limit: limitSelectorRef.current.value
+    }
+    params = encodeURIComponent(JSON.stringify(params))
 
     Axios.get('http://localhost:3001/api/get?' + params)
       .then((response) => {
@@ -205,7 +198,14 @@ function App () {
   }
 
   function toggleSortColumn(column, value) {
-    sortColumns.set(column, value)
+    if (value === "NONE") {
+      sortColumns.delete(column)
+    } else {
+      sortColumns.set(column, value)
+    }
+    sortColumns.delete("id")
+    sortColumns.set("id", "DESC")
+    console.log(sortColumns)
     updateBoulderList()
   }
 

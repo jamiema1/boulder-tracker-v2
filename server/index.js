@@ -46,7 +46,10 @@ app.post('/api/insert', (req, res) => {
 })
 
 app.get('/api/get', (req, res) => {
-  const q = makeQueryString(req.query)
+  const url = decodeURIComponent(req.url.substring(9))
+  const query = JSON.parse(url)
+  const q = makeQueryString(query)
+
   db.query(q, (err, data) => {
     if (err) return res.json('Error' + err)
     res.send(data)
@@ -55,23 +58,14 @@ app.get('/api/get', (req, res) => {
 
 function makeQueryString (query) {
   const q = ''
-  let columns
-  let limit
-  for (const key of Object.entries(query)) {
-    if (key[0] === 'limit') {
-      limit = key[1]
-    } else {
-      columns = { ...columns, [key[0]]: key[1] }
-    }
-  }
-  return q.concat(SELECT(columns), ' ', FROM(query), ' ', WHERE(query), ' ',
-    ORDERBY(columns), ' ', LIMIT(limit), ';')
+  return q.concat(SELECT(query.select), ' ', FROM(query), ' ', WHERE(query),
+    ' ', ORDERBY(query.orderby), ' ', LIMIT(query.limit), ';')
 }
 
 function SELECT (columns) {
   let q = 'SELECT '
 
-  Object.keys(columns).forEach(column => { q = q.concat(column + ', ') })
+  columns.forEach(column => { q = q.concat(column + ', ') })
 
   if (q.substring(q.length - 2) === ', ') {
     q = q.substring(0, q.length - 2)
@@ -91,12 +85,10 @@ function WHERE (query) {
 
 function ORDERBY (columns) {
   let q = 'ORDER BY '
-  Object.entries(columns).forEach(colpair => {
-    const col = colpair[0]
-    const value = colpair[1]
-    if (value !== 'NONE') {
-      q = q.concat(col, ' ', value, ', ')
-    }
+  columns.forEach(column => {
+    const col = Object.keys(column)[0]
+    const value = Object.values(column)[0]
+    q = q.concat(col, ' ', value, ', ')
   })
   return q.substring(0, q.length - 2)
 }

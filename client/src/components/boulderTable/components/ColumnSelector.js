@@ -5,6 +5,7 @@ import React, {forwardRef} from 'react'
 export default forwardRef(
   function ColumnSelector(props, ref) {
     const change = props.changeColumns
+
     return (
       <div className='columnSelector'>
         <label className='title'>Show Columns:</label>
