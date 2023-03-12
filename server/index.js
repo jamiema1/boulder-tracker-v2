@@ -98,7 +98,6 @@ function ORDERBY (columns) {
       q = q.concat(col, ' ', value, ', ')
     }
   })
-  console.log(q)
   return q.substring(0, q.length - 2)
 }
 

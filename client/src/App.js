@@ -2,6 +2,8 @@ import React, {useState, useEffect, useRef} from 'react'
 import Axios from 'axios'
 import BoulderTable from './components/boulderTable/BoulderTable'
 import AddBoulder from './components/addBoulder/AddBoulder'
+import BarChart from './components/BarChart'
+import 'chart.js'
 
 const sortColumns = new Map([
   ['id', 'DESC'],
@@ -26,6 +28,7 @@ function nextId() {
 function App () {
   const [boulderList, setBoulderList] = useState([])
   const [columns, setColumns] = useState([])
+  const [chartData, setChartData] = useState({labels: [], datasets: []})
 
   const columnRef = useRef()
   const limitSelectorRef = useRef(15)
@@ -45,7 +48,38 @@ function App () {
 
 
   useEffect(() => {
-    // placeholder if necessary
+
+    // TODO: clean this section up and move it to a seperate helper function
+    
+    const pairs = boulderList.map(boulder => {
+      return {sendDate: boulder.sendDate, sendAttempts: boulder.sendAttempts}
+    })
+
+    const pairMap = new Map()
+
+    pairs.forEach(pair => {
+      if (pairMap.has(pair.sendDate)) {
+        pairMap.set(pair.sendDate, 
+          pairMap.get(pair.sendDate) + pair.sendAttempts)
+      } else {
+        pairMap.set(pair.sendDate, pair.sendAttempts)
+      }
+    })
+
+    const c1 = []
+    const c2 = []
+    pairMap.forEach((value, key) => c1.push(key))
+    pairMap.forEach((value) => c2.push(value))
+
+    setChartData({
+      labels: c1,
+      datasets: [
+        {
+          label: "send Attempts",
+          data: c2
+        }
+      ]
+    })
   }, [boulderList])
   
   useEffect(() => {
@@ -175,7 +209,6 @@ function App () {
     updateBoulderList()
   }
 
-
   return (
     <>
       <AddBoulder 
@@ -192,6 +225,7 @@ function App () {
         update = { updateBoulderList }
         ref = { boulderTableRef }
       />
+      <BarChart data={chartData}/>
     </>
   )
 }
