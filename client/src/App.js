@@ -5,9 +5,7 @@ import AddBoulder from './components/addBoulder/AddBoulder'
 import BarChart from './components/BarChart'
 import 'chart.js'
 
-const sortColumns = new Map([
-  ['id', 'DESC']
-])
+const sortColumns = new Map([['id', 'DESC']])
 
 const ID_KEY = 'id'
 function nextId() {
@@ -23,7 +21,8 @@ function App () {
 
   const columnRef = useRef()
   const limitSelectorRef = useRef(15)
-  const boulderTableRef = useRef({columnRef, limitSelectorRef})
+  const filterRef = useRef()
+  const boulderTableRef = useRef({filterRef, columnRef, limitSelectorRef})
 
   const ratingRef = useRef()
   const colourRef = useRef()
@@ -166,7 +165,7 @@ function App () {
         updateBoulderList();
       })
       .catch(() => {
-        alert('Failed Delete')
+        alert('Failed to Delete')
       })
   }
 
@@ -186,6 +185,7 @@ function App () {
 
     let params = {
       select: cols,
+      where: filterRef.current.value,
       orderby: orderColumns,
       limit: limitSelectorRef.current.value
     }
@@ -193,7 +193,11 @@ function App () {
 
     Axios.get('http://localhost:3001/api/get?' + params)
       .then((response) => {
-        setBoulderList(response.data)
+        if (response.data.includes("Error")) {
+          alert('Failed to retrieve data with ' + response.data)
+        } else {
+          setBoulderList(response.data)
+        }
       })
   }
 
@@ -205,7 +209,6 @@ function App () {
     }
     sortColumns.delete("id")
     sortColumns.set("id", "DESC")
-    console.log(sortColumns)
     updateBoulderList()
   }
 

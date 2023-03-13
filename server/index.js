@@ -49,17 +49,25 @@ app.get('/api/get', (req, res) => {
   const url = decodeURIComponent(req.url.substring(9))
   const query = JSON.parse(url)
   const q = makeQueryString(query)
+  // console.log(q)
 
   db.query(q, (err, data) => {
-    if (err) return res.json('Error' + err)
+    if (err) {
+      return res.json('Error - ' + err)
+    }
     res.send(data)
   })
 })
 
 function makeQueryString (query) {
   const q = ''
-  return q.concat(SELECT(query.select), ' ', FROM(query), ' ', WHERE(query),
-    ' ', ORDERBY(query.orderby), ' ', LIMIT(query.limit), ';')
+  return q.concat(
+    SELECT(query.select), ' ',
+    FROM(query), ' ',
+    WHERE(query.where), ' ',
+    ORDERBY(query.orderby), ' ',
+    LIMIT(query.limit), ';'
+  )
 }
 
 function SELECT (columns) {
@@ -80,7 +88,10 @@ function FROM (query) {
 }
 
 function WHERE (query) {
-  return ''
+  if (query === '') {
+    return ''
+  }
+  return 'WHERE ' + query
 }
 
 function ORDERBY (columns) {
@@ -107,7 +118,7 @@ app.delete('/api/delete', (req, res) => {
   const q = 'DELETE FROM boulders WHERE id = ' + req.body.id + ';'
 
   db.query(q, (err, data) => {
-    if (err) return res.json('Error' + err)
+    if (err) return res.json('Error - ' + err)
     res.send(data)
   })
 })

@@ -6,8 +6,25 @@
 
 .boulderTableSelectors {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     padding: 10px 25px;
+}
+
+.filterSelector {
+    display: flex;
+}
+
+.filterSelector > textarea {
+    margin: 0px 10px;
+    width: 50%;
+    height: 15px;
+}
+
+.columnLimitSelectors {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
 }
 
 .columnSelector {
@@ -24,37 +41,38 @@
 
 
 .boulderTableWrapper {
-    padding-left: 25px;
-    padding-right: 25px;
+    margin: 25px;
+    margin-top: 0px;
     overflow-x: scroll;
+    border: 4px ridge rgb(208, 255, 255);
 }
 
 table {
     table-layout: fixed;
     border-collapse: collapse;
     width: 0px;
-    border: 3px hidden;
+    border: 1px hidden;
 }
 
 td, th {
-    border: 3px solid azure;
+    border: 1px solid azure;
     padding: 5px;
 }
 
 .boulderListHead > * {
     font-weight: 700;
-    font-size: medium;
+    font-size: 16px;
     text-align: center;
     background-color: rgba(162, 222, 223, 0.5);
 }
 
 .boulderListHeadTitle > * {
-    border-bottom: 3px hidden;
+    border-bottom: 1px hidden;
     padding-bottom: 0px;
 }
 
 .boulderListHeadSelector > * {
-    border-bottom: 3px solid black;
+    border-bottom: 2px solid black;
     padding-top: 10px;
     padding-bottom: 5px;
 }
@@ -102,7 +120,6 @@ tbody tr:nth-child(odd) {
 .descriptionColumn {
     width: 500px;
 }  
-
 
 td button {
     width: 25px;
