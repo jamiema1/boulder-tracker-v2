@@ -40,7 +40,40 @@ app.post('/api/insert', (req, res) => {
      ' sendAttempts, startDate, sendDate, description) VALUES' +
      ' (?,?,?,?,?,?,?,?,?);'
   db.query(q, values, (err, data) => {
-    if (err) return res.json('Error' + err)
+    if (err) return res.json('Error - ' + err)
+    res.send(data)
+  })
+})
+
+app.put('/api/update', (req, res) => {
+  const values = new Map([
+    ['id', req.body.id],
+    ['rating', req.body.rating],
+    ['colour', req.body.colour],
+    ['holdType', req.body.holdType],
+    ['boulderType', req.body.boulderType],
+    ['sendAttempts', req.body.sendAttempts],
+    ['startDate', req.body.startDate],
+    ['sendDate', req.body.sendDate],
+    ['description', req.body.description]
+  ])
+
+  let q = 'UPDATE boulders SET '
+
+  values.forEach((value, key) => {
+    if (key === 'id' || key === 'rating' || key === 'sendAttempts') {
+      q = q.concat(key + ' = ' + value + ', ')
+    } else {
+      q = q.concat(key + ' = \'' + value + '\', ')
+    }
+  })
+  q = q.substring(0, q.length - 2)
+
+  q = q.concat(' WHERE id = ' + values.get('id') + ';')
+  console.log(q)
+
+  db.query(q, (err, data) => {
+    if (err) return res.json('Error - ' + err)
     res.send(data)
   })
 })
@@ -48,7 +81,7 @@ app.post('/api/insert', (req, res) => {
 app.get('/api/get', (req, res) => {
   const url = decodeURIComponent(req.url.substring(9))
   const query = JSON.parse(url)
-  const q = makeQueryString(query)
+  const q = makeGetQueryString(query)
   // console.log(q)
 
   db.query(q, (err, data) => {
@@ -59,7 +92,7 @@ app.get('/api/get', (req, res) => {
   })
 })
 
-function makeQueryString (query) {
+function makeGetQueryString (query) {
   const q = ''
   return q.concat(
     SELECT(query.select), ' ',
@@ -73,7 +106,9 @@ function makeQueryString (query) {
 function SELECT (columns) {
   let q = 'SELECT '
 
-  columns.forEach(column => { q = q.concat(column + ', ') })
+  columns.forEach(column => {
+    q = q.concat(column + ', ')
+  })
 
   if (q.substring(q.length - 2) === ', ') {
     q = q.substring(0, q.length - 2)

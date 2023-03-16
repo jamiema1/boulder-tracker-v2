@@ -42,7 +42,7 @@ function App () {
     // TODO: clean this section up and move it to a seperate helper function
     
     const pairs = boulderList.map(boulder => {
-      return {sendDate: boulder.sendDate, sendAttempts: boulder.sendAttempts}
+      return {sendDate: boulder.sendDate, rating: boulder.rating}
     })
 
     const pairMap = new Map()
@@ -50,9 +50,9 @@ function App () {
     pairs.forEach(pair => {
       if (pairMap.has(pair.sendDate)) {
         pairMap.set(pair.sendDate, 
-          pairMap.get(pair.sendDate) + pair.sendAttempts)
+          pairMap.get(pair.sendDate) + pair.rating)
       } else {
-        pairMap.set(pair.sendDate, pair.sendAttempts)
+        pairMap.set(pair.sendDate, pair.rating)
       }
     })
 
@@ -65,7 +65,7 @@ function App () {
       labels: c1,
       datasets: [
         {
-          label: "send Attempts",
+          label: "rating",
           data: c2
         }
       ]
@@ -212,6 +212,68 @@ function App () {
     updateBoulderList()
   }
 
+  function handleUpdateBoulder(e) {
+    const row = e.target.parentElement.parentElement.parentElement
+    const tds = row.getElementsByTagName('td')
+
+    let [rating, colour, holdType, boulderType, sendAttempts,
+      startDate, sendDate, description] = 
+        [
+          tds[1].childNodes[0].data, 
+          tds[2].childNodes[0].data,
+          tds[3].childNodes[0].data,
+          tds[4].childNodes[0].data,
+          tds[5].childNodes[0].data,
+          tds[6].childNodes[0].data,
+          tds[7].childNodes[0].data,
+          tds[8].childNodes[0].data
+        ]
+
+    console.log(rating, colour, holdType, boulderType, sendAttempts, startDate, 
+      sendDate, description)
+
+    rating = rating === '-1' ? "unrated" : rating + " hex"
+    sendDate = sendDate === "Unfinished" ? null : sendDate
+
+    function setOption(option, value) {
+      // console.log(option.value, value)
+      if (option.value === value) {
+        option.selected = 'selected'
+      }
+    }
+
+    resetDropdownMenus()
+
+    Array.from(ratingRef.current.options)
+      .forEach(option => setOption(option, rating))
+    Array.from(colourRef.current.options)
+      .forEach(option => setOption(option, colour))
+    Array.from(holdTypeRef.current.children)
+      .filter(e => e.nodeName === 'INPUT').forEach(e => {
+        if (holdType.includes(e.value)) {
+          e.checked = true
+        } else {
+          e.check = false
+        }
+      })
+    Array.from(boulderTypeRef.current.options)
+      .forEach(option => setOption(option, boulderType))
+    Array.from(sendAttemptsRef.current.options)
+      .forEach(option => setOption(option, sendAttempts))
+    startDateRef.current.value = startDate
+    sendDateRef.current.value = sendDate
+    descriptionRef.current.value = description
+
+    // Axios.put('http://localhost:3001/api/update', updatedBoulder)
+    //   .then(() => {
+    //     updateBoulderList();
+    //     alert('Successful Update')
+    //   })
+    //   .catch(() => {
+    //     alert('Failed Update')
+    //   })
+  }
+
   return (
     <>
       <AddBoulder 
@@ -219,12 +281,13 @@ function App () {
         ref={ boulderRef }
       />
       {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}
-      {/* <button>Update Selected</button> */}
+      <button onClick={handleUpdateBoulder}>Update Selected</button>
       <BoulderTable
         boulderList={boulderList}
         columns={columns} 
         toggleSortColumn={toggleSortColumn}
         handleDeleteBoulder={handleDeleteBoulder}
+        handleUpdateBoulder={handleUpdateBoulder}
         update = { updateBoulderList }
         ref = { boulderTableRef }
       />

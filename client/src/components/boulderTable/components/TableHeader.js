@@ -64,6 +64,7 @@ export default function TableHeader ({columns, toggleSortColumn}) {
         {showColumn('startDate') && <col className='startDateColumn'></col>}
         {showColumn('sendDate') && <col className='sendDateColumn'></col>}
         {showColumn('description') && <col className='descriptionColumn'></col>}
+        <col className='buttonColumn'></col>
       </colgroup>
         
       <thead>
@@ -78,6 +79,7 @@ export default function TableHeader ({columns, toggleSortColumn}) {
           {showColumn('startDate') && <th>Start Date</th>}
           {showColumn('sendDate') && <th>Send Date</th>}
           {showColumn('description') && <th>Description</th>}
+          <th></th>
         </tr>
         <tr className='boulderListHead boulderListHeadSelector'>
           <th><button onClick={resetValues} id='reset'>R</button></th>
@@ -99,6 +101,7 @@ export default function TableHeader ({columns, toggleSortColumn}) {
             onClick={changeValue}>NONE</button></th>}
           {showColumn('description') && <th><button value="description NONE" 
             onClick={changeValue}>NONE</button></th>}
+          <th></th>
         </tr>
       </thead>
     </>

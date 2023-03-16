@@ -34,8 +34,11 @@ function BoulderTable (props, ref) {
             toggleSortColumn={props.toggleSortColumn}/>
           <tbody>
             {props.boulderList.map((boulder) => {
-              return <Boulder key={boulder.id} boulder={boulder} 
-                handleDeleteBoulder={props.handleDeleteBoulder} />
+              return <Boulder
+                key={boulder.id}
+                boulder={boulder} 
+                handleDeleteBoulder={props.handleDeleteBoulder}
+                handleUpdateBoulder={props.handleUpdateBoulder} />
             })}
           </tbody>
         </table>

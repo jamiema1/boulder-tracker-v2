@@ -1,12 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-Boulder.propTypes = {
-  boulder: PropTypes.object.isRequired,
-  handleDeleteBoulder: PropTypes.func.isRequired
-}
-
-export default function Boulder ({boulder, handleDeleteBoulder}) {
+export default function Boulder ({boulder, handleDeleteBoulder,
+  handleUpdateBoulder}) {
   function getDate (datetime) {
     if (datetime === null || datetime === undefined) {
       return 'Unfinished'
@@ -18,8 +13,9 @@ export default function Boulder ({boulder, handleDeleteBoulder}) {
     <tr>
       <td>
         <button onClick={ handleDeleteBoulder } type="button" id={boulder.id}>
-          <img id={boulder.id}
-            src="https://cdn-icons-png.flaticon.com/512/3141/3141684.png">
+          <img 
+            id={boulder.id}
+            src="./images/delete.png">
           </img>
         </button>
       </td>
@@ -32,6 +28,13 @@ export default function Boulder ({boulder, handleDeleteBoulder}) {
       {boulder.startDate !== undefined && <td>{getDate(boulder.startDate)}</td>}
       {boulder.sendDate !== undefined && <td>{getDate(boulder.sendDate)}</td>}
       {boulder.description !== undefined && <td>{boulder.description}</td>}
+      <td>
+        <button onClick={ handleUpdateBoulder } type="button" id={boulder.id}>
+          <img id={boulder.id}
+            src="./images/edit.png">
+          </img>
+        </button>
+      </td>
     </tr>
   )
 }
