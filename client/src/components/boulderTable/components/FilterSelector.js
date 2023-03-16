@@ -6,7 +6,7 @@ export default forwardRef (
       <span className='filterSelector'>
         <label className='title'>Filter: </label>
         <textarea ref={ref}></textarea>
-        <button onClick={props.applyFilter}>Apply</button>
+        <button onClick={props.updateBoulderList}>Apply</button>
       </span>
     )
   })

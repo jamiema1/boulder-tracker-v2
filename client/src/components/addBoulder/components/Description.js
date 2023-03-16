@@ -5,7 +5,7 @@ export default forwardRef(
     return (
       <div id="description">
         <label className='title'>Description: </label>
-        <textarea ref={ref.current.descriptionRef}></textarea>
+        <textarea ref={ref}></textarea>
       </div>
     )
   })

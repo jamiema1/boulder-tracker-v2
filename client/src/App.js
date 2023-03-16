@@ -5,36 +5,13 @@ import AddBoulder from './components/addBoulder/AddBoulder'
 import BarChart from './components/BarChart'
 import 'chart.js'
 
-const sortColumns = new Map([['id', 'DESC']])
-
-const ID_KEY = 'id'
-function nextId() {
-  const id = JSON.parse(localStorage.getItem(ID_KEY))
-  localStorage.setItem(ID_KEY, JSON.stringify(id + 1))
-  return id
-}
 
 function App () {
   const [boulderList, setBoulderList] = useState([])
-  const [columns, setColumns] = useState([])
   const [chartData, setChartData] = useState({labels: [], datasets: []})
 
-  const columnRef = useRef()
-  const limitSelectorRef = useRef(15)
-  const filterRef = useRef()
-  const boulderTableRef = useRef({filterRef, columnRef, limitSelectorRef})
-
-  const ratingRef = useRef()
-  const colourRef = useRef()
-  const holdTypeRef = useRef()
-  const boulderTypeRef = useRef()
-  const sendAttemptsRef = useRef()
-  const startDateRef = useRef()
-  const sendDateRef = useRef()
-  const descriptionRef = useRef() 
-
-  const boulderRef = useRef({ratingRef, colourRef, holdTypeRef, boulderTypeRef,
-    sendAttemptsRef, startDateRef, sendDateRef, descriptionRef})
+  const tableRef = useRef()
+  const addBoulderRef = useRef()
 
 
   useEffect(() => {
@@ -71,57 +48,15 @@ function App () {
       ]
     })
   }, [boulderList])
-  
-  useEffect(() => {
-    const allFields =  ['id','rating', 'colour', 'holdType','boulderType',
-      'sendAttempts','startDate','sendDate','description']
-    updateColumns(allFields)
-  }, [])
 
-  function handleAddBoulder () {
 
-    const fieldValues = [
-      ratingRef.current.selectedOptions[0].value, 
-      colourRef.current.selectedOptions[0].value,
-      boulderTypeRef.current.selectedOptions[0].value,
-      sendAttemptsRef.current.selectedOptions[0].value,
-      startDateRef.current.value,
-      descriptionRef.current.value,
-      Array.from(holdTypeRef.current.children)
-        .filter(e => e.nodeName === 'INPUT' && e.checked)
-        .reduce((acc, field) => (acc.concat(field.value, ' ')), '').trimEnd()
-    ]
-
-    const anyNullFields = fieldValues
-      .reduce((acc, field) => (acc || field === 'null' || field === ''), false)
-
-    if (anyNullFields) {
-      alert('Missing required information')
-      return
-    }
-
-    const sendDate = sendDateRef.current.value === '' ? null :
-      sendDateRef.current.value
-
-    const newBoulder = { 
-      id: nextId(),
-      rating: convertRatingToNumber(fieldValues[0]),
-      colour: fieldValues[1],
-      holdType: fieldValues[6],
-      boulderType: fieldValues[2],
-      sendAttempts: +fieldValues[3],
-      startDate: fieldValues[4],
-      sendDate: sendDate,
-      description: fieldValues[5]
-    }
+  function addBoulderToDB (newBoulder) {
 
     Axios.post('http://localhost:3001/api/insert', newBoulder)
       .then(() => {
         // alert('Successful Insert')
         setBoulderList([newBoulder, ...boulderList])
-        updateBoulderList();
-
-        resetDropdownMenus()
+        tableRef.current.updateBoulderList()
       })
       .catch(() => {
         alert('Failed Insert')
@@ -129,69 +64,20 @@ function App () {
 
   }
 
-  function convertRatingToNumber (str) {
-    if (str.includes('hex')) {
-      return +str.substring(0, 1)
-    }
-    return -1
-  }
-
-  function resetDropdownMenus () {
-    
-    function resetOption(option) {
-      option.selected = option.defaultSelected
-    }
-
-    Array.from(ratingRef.current.options).forEach(resetOption)
-    Array.from(colourRef.current.options).forEach(resetOption)
-    Array.from(holdTypeRef.current.children)
-      .filter(e => e.nodeName === 'INPUT').forEach(e => e.checked = false)
-    Array.from(boulderTypeRef.current.options).forEach(resetOption)
-    Array.from(sendAttemptsRef.current.options).forEach(resetOption)
-    startDateRef.current.value = null
-    sendDateRef.current.value = null
-    descriptionRef.current.value = null
-  }
-
-
-
-  function handleDeleteBoulder (e) {
-    
-    const id = e.target.id
-
+  function deleteBoulderFromDB (id) {
     Axios.delete('http://localhost:3001/api/delete', {data: {id: id}})
       .then(() => {
         // alert('Successful Delete')
-        updateBoulderList();
+        tableRef.current.updateBoulderList();
       })
       .catch(() => {
         alert('Failed to Delete')
       })
   }
 
-  function updateBoulderList() {
-    const cols = Array.from(columnRef.current.children).filter(e =>
-      e.nodeName === 'INPUT' && e.checked).map(e => (e.value))
-    updateColumns([...cols, 'id'])
-  }
+  function getBoulderListFromDB (uri) {
 
-  function updateColumns(cols) {
-    setColumns(cols)
-
-    let orderColumns = []
-    for (const key of sortColumns.keys()) {
-      orderColumns.push({[key]: sortColumns.get(key)})
-    }
-
-    let params = {
-      select: cols,
-      where: filterRef.current.value,
-      orderby: orderColumns,
-      limit: limitSelectorRef.current.value
-    }
-    params = encodeURIComponent(JSON.stringify(params))
-
-    Axios.get('http://localhost:3001/api/get?' + params)
+    Axios.get('http://localhost:3001/api/get?' + uri)
       .then((response) => {
         if (response.data.includes("Error")) {
           alert('Failed to retrieve data with ' + response.data)
@@ -201,95 +87,25 @@ function App () {
       })
   }
 
-  function toggleSortColumn(column, value) {
-    if (value === "NONE") {
-      sortColumns.delete(column)
-    } else {
-      sortColumns.set(column, value)
-    }
-    sortColumns.delete("id")
-    sortColumns.set("id", "DESC")
-    updateBoulderList()
-  }
-
-  function handleUpdateBoulder(e) {
-    const row = e.target.parentElement.parentElement.parentElement
-    const tds = row.getElementsByTagName('td')
-
-    let [rating, colour, holdType, boulderType, sendAttempts,
-      startDate, sendDate, description] = 
-        [
-          tds[1].childNodes[0].data, 
-          tds[2].childNodes[0].data,
-          tds[3].childNodes[0].data,
-          tds[4].childNodes[0].data,
-          tds[5].childNodes[0].data,
-          tds[6].childNodes[0].data,
-          tds[7].childNodes[0].data,
-          tds[8].childNodes[0].data
-        ]
-
-    console.log(rating, colour, holdType, boulderType, sendAttempts, startDate, 
-      sendDate, description)
-
-    rating = rating === '-1' ? "unrated" : rating + " hex"
-    sendDate = sendDate === "Unfinished" ? null : sendDate
-
-    function setOption(option, value) {
-      // console.log(option.value, value)
-      if (option.value === value) {
-        option.selected = 'selected'
-      }
-    }
-
-    resetDropdownMenus()
-
-    Array.from(ratingRef.current.options)
-      .forEach(option => setOption(option, rating))
-    Array.from(colourRef.current.options)
-      .forEach(option => setOption(option, colour))
-    Array.from(holdTypeRef.current.children)
-      .filter(e => e.nodeName === 'INPUT').forEach(e => {
-        if (holdType.includes(e.value)) {
-          e.checked = true
-        } else {
-          e.check = false
-        }
-      })
-    Array.from(boulderTypeRef.current.options)
-      .forEach(option => setOption(option, boulderType))
-    Array.from(sendAttemptsRef.current.options)
-      .forEach(option => setOption(option, sendAttempts))
-    startDateRef.current.value = startDate
-    sendDateRef.current.value = sendDate
-    descriptionRef.current.value = description
-
-    // Axios.put('http://localhost:3001/api/update', updatedBoulder)
-    //   .then(() => {
-    //     updateBoulderList();
-    //     alert('Successful Update')
-    //   })
-    //   .catch(() => {
-    //     alert('Failed Update')
-    //   })
+  function setOptions(options) {
+    addBoulderRef.current.setOptions(options)
   }
 
   return (
     <>
       <AddBoulder 
-        handleAddBoulder={handleAddBoulder}
-        ref={ boulderRef }
+        addBoulderToDB={addBoulderToDB}
+        ref = {addBoulderRef}
+
       />
       {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}
-      <button onClick={handleUpdateBoulder}>Update Selected</button>
       <BoulderTable
         boulderList={boulderList}
-        columns={columns} 
-        toggleSortColumn={toggleSortColumn}
-        handleDeleteBoulder={handleDeleteBoulder}
-        handleUpdateBoulder={handleUpdateBoulder}
-        update = { updateBoulderList }
-        ref = { boulderTableRef }
+        setOptions={setOptions}
+        deleteBoulderFromDB={deleteBoulderFromDB}
+        getBoulderListFromDB = { getBoulderListFromDB }
+        // handleUpdateBoulder={handleUpdateBoulder}
+        ref = {tableRef}
       />
       <BarChart data={chartData}/>
     </>

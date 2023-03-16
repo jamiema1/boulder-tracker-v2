@@ -5,7 +5,7 @@ export default forwardRef (
     return (
       <span className='limitSelector'>
         <label className='title'>Number of Rows: </label>
-        <select id="limitSelector" onChange={props.changeLimit} ref={ref} 
+        <select id="limitSelector" onChange={props.updateBoulderList} ref={ref} 
           defaultValue={15}>
           <option value="5">5</option>
           <option value="15" >15</option>

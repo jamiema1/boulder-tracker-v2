@@ -4,7 +4,7 @@ import React, {forwardRef} from 'react'
 
 export default forwardRef(
   function ColumnSelector(props, ref) {
-    const change = props.changeColumns
+    const change = props.updateBoulderList
 
     return (
       <div className='columnSelector'>

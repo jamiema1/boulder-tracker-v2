@@ -5,7 +5,7 @@ export default forwardRef(
     return (
       <span>
         <label className="title">Boulder Type: </label>
-        <select id="boulderType" ref={ref.current.boulderTypeRef}>
+        <select id="boulderType" ref={ref}>
           <option value="null">-- Select --</option>
           <option value="aretes">Aretes</option>
           <option value="overhang">Overhang</option>

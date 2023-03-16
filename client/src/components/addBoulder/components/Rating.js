@@ -5,7 +5,7 @@ export default forwardRef(
     return (
       <div>
         <label className='title'>Rating: </label>
-        <select id="rating" ref={ref.current.ratingRef}>
+        <select id="rating" ref={ref}>
           <option value="null">-- Select --</option>
           <option value="1 hex">1 Hex</option>
           <option value="2 hex">2 Hex</option>

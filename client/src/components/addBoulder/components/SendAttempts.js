@@ -5,7 +5,7 @@ export default forwardRef(
     return (
       <span>
         <label className='title'>Send Attempts: </label>
-        <select id="sendAttempts" ref={ref.current.sendAttemptsRef}>
+        <select id="sendAttempts" ref={ref}>
           <option value="null">-- Select --</option>
           <option value="1">Flash</option>
           <option value="2">2</option>
