@@ -19,6 +19,7 @@
     margin: 0px 10px;
     width: 50%;
     height: 15px;
+    resize: none;
 }
 
 .columnLimitSelectors {
@@ -98,7 +99,7 @@ tbody tr:nth-child(odd) {
 }
          
 .holdTypeColumn {
-    width: 150px;
+    width: 100px;
 }
 
 .boulderTypeColumn {
@@ -110,11 +111,11 @@ tbody tr:nth-child(odd) {
 }
 
 .startDateColumn {
-    width: 120px;
+    width: 110px;
 }
 
 .sendDateColumn {
-    width: 120px;
+    width: 110px;
 }
 
 .descriptionColumn {

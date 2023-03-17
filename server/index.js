@@ -61,7 +61,8 @@ app.put('/api/update', (req, res) => {
   let q = 'UPDATE boulders SET '
 
   values.forEach((value, key) => {
-    if (key === 'id' || key === 'rating' || key === 'sendAttempts') {
+    if (key === 'id' || key === 'rating' || key === 'sendAttempts' ||
+    (key === 'sendDate' && value === null)) {
       q = q.concat(key + ' = ' + value + ', ')
     } else {
       q = q.concat(key + ' = \'' + value + '\', ')
@@ -70,7 +71,6 @@ app.put('/api/update', (req, res) => {
   q = q.substring(0, q.length - 2)
 
   q = q.concat(' WHERE id = ' + values.get('id') + ';')
-  console.log(q)
 
   db.query(q, (err, data) => {
     if (err) return res.json('Error - ' + err)
@@ -85,9 +85,7 @@ app.get('/api/get', (req, res) => {
   // console.log(q)
 
   db.query(q, (err, data) => {
-    if (err) {
-      return res.json('Error - ' + err)
-    }
+    if (err) return res.json('Error - ' + err)
     res.send(data)
   })
 })

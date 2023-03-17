@@ -56,7 +56,8 @@
 #description > textarea {
     flex-grow: 1;
     height: 100%;
-    width: 90%
+    width: 90%;
+    resize: none;
 }
 
 .title {
@@ -64,9 +65,9 @@
     font-size: medium;
 }
 
-.addBoulderButton {
+.addBoulderButtons {
     height: 125px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-}
+    justify-content: space-between;
+}   
