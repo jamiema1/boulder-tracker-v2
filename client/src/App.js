@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useRef} from 'react'
 import Axios from 'axios'
 import BoulderTable from './components/boulderTable/BoulderTable'
 import AddBoulder from './components/addBoulder/AddBoulder'
@@ -8,53 +8,10 @@ import 'chart.js'
 
 function App () {
   const [boulderList, setBoulderList] = useState([])
-  const [chartData, setChartData] = useState({labels: [], datasets: []})
 
   const boulderTableRef = useRef()
   const addBoulderRef = useRef()
-
-
-  useEffect(() => {
-
-    // TODO: clean this section up and move it to a seperate helper function
-    const pairs = boulderList.map(boulder => {
-      if (boulder.sendDate === null) 
-        return {sendDate: 'Unfinished', rating: boulder.rating} 
-      return {sendDate: boulder.sendDate.split('T')[0], rating: boulder.rating}
-    })
-
-    console.log(pairs)
-    const pairMap = new Map()
-
-    pairs.forEach(pair => {
-      if (pairMap.has(pair.sendDate.split('T')[0])) {
-        pairMap.set(pair.sendDate.split('T')[0], 
-          pairMap.get(pair.sendDate.split('T')[0]) + pair.rating)
-      } else {
-        pairMap.set(pair.sendDate.split('T')[0], pair.rating)
-      }
-    })
-    console.log(pairMap)
-    pairMap.delete('Unfinished')
-
-    const sorted = new Map([...pairMap.entries()].sort())
-
-    const c1 = []
-    const c2 = []
-    sorted.forEach((value, key) => c1.push(key))
-    sorted.forEach((value) => c2.push(value))
-
-    setChartData({
-      labels: c1,
-      datasets: [
-        {
-          label: "rating",
-          data: c2
-        }
-      ]
-    })
-  }, [boulderList])
-
+  
 
   function addBoulderToDB (newBoulder) {
     Axios.post('http://localhost:3001/api/insert', newBoulder)
@@ -106,9 +63,7 @@ function App () {
         addBoulderToDB={addBoulderToDB}
         updateBoulderFromDB={updateBoulderFromDB}
         ref = {addBoulderRef}
-
       />
-      {/* <button onClick={handleDeleteBoulder}>Delete All Selected</button> */}
       <BoulderTable
         boulderList={boulderList}
         setOptions={options => addBoulderRef.current.setOptions(options)}
@@ -116,7 +71,7 @@ function App () {
         getBoulderListFromDB = { getBoulderListFromDB }
         ref = {boulderTableRef}
       />
-      <BarChart data={chartData}/>
+      <BarChart boulderList={boulderList}/>
     </>
   )
 }

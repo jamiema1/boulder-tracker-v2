@@ -7,7 +7,7 @@ export default function Boulder ({boulder, deleteBoulderFromDB, setOptions}) {
   const colour = boulder.colour
   const holdType = boulder.holdType
   const boulderType = boulder.boulderType
-  const sendAttempts = boulder.sendAttempts
+  const sendAttempts = boulder.sendAttempts + ''
   const startDate = boulder.startDate
   const sendDate = boulder.sendDate
   const description = boulder.description

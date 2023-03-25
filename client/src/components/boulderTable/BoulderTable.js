@@ -69,8 +69,6 @@ export default forwardRef(
     }
 
 
-  
-
     return (
       <div className='boulderTable'>
         <div className='componentTitle'>Boulder Table</div>
