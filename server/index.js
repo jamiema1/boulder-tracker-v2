@@ -7,10 +7,10 @@ const app = express()
 const port = 3001
 
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
+  host: 'boulder-tracker-db.cn7nz4spdrrn.us-west-2.rds.amazonaws.com',
+  user: 'jamiema1',
   password: 'jamiema1',
-  database: 'boulder-tracker'
+  database: 'boulderTracker'
 })
 
 app.use(cors())
@@ -76,6 +76,10 @@ app.put('/api/update', (req, res) => {
     if (err) return res.json('Error - ' + err)
     res.send(data)
   })
+})
+
+app.get('/', (req, res) => {
+  res.json('We did it')
 })
 
 app.get('/api/get', (req, res) => {
@@ -158,4 +162,5 @@ app.delete('/api/delete', (req, res) => {
 
 app.listen(port, () => {
   console.log('Connected to backend')
+  console.log('Running on port: ' + port)
 })
