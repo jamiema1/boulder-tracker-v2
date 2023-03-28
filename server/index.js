@@ -162,4 +162,5 @@ app.delete('/api/delete', (req, res) => {
 
 app.listen(port, () => {
   console.log('Connected to backend')
+  console.log('Running on port: ' + port)
 })
