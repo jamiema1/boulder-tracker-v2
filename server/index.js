@@ -6,7 +6,15 @@ import cors from 'cors'
 const app = express()
 const port = 3001
 
-const db = mysql.createConnection({
+// const db = mysql.createConnection({
+//   host: 'boulder-tracker-db.cn7nz4spdrrn.us-west-2.rds.amazonaws.com',
+//   user: 'jamiema1',
+//   password: 'jamiema1',
+//   database: 'boulderTracker'
+// })
+
+const db = mysql.createPool({
+  connectionLimit: 10,
   host: 'boulder-tracker-db.cn7nz4spdrrn.us-west-2.rds.amazonaws.com',
   user: 'jamiema1',
   password: 'jamiema1',
