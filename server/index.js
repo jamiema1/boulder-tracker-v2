@@ -13,6 +13,11 @@ const port = 3001
 //   database: 'boulderTracker'
 // })
 
+// db.connect(err => {
+//   if (err) throw err
+//   console.log('Successfully connected to the database')
+// })
+
 const db = mysql.createPool({
   connectionLimit: 10,
   host: 'boulder-tracker-db.cn7nz4spdrrn.us-west-2.rds.amazonaws.com',
@@ -25,13 +30,7 @@ app.use(cors())
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// db.connect(err => {
-//     if (err) throw err
-//     console.log("Successfully connected to the database")
-// })
-
 app.post('/api/insert', (req, res) => {
-  const id = req.body.id
   const rating = req.body.rating
   const colour = req.body.colour
   const holdType = req.body.holdType
@@ -41,12 +40,12 @@ app.post('/api/insert', (req, res) => {
   const sendDate = req.body.sendDate
   const description = req.body.description
 
-  const values = [id, rating, colour, holdType, boulderType, sendAttempts,
+  const values = [rating, colour, holdType, boulderType, sendAttempts,
     startDate, sendDate, description]
 
-  const q = 'INSERT INTO boulders (id, rating, colour, holdType, boulderType,' +
+  const q = 'INSERT INTO boulders (rating, colour, holdType, boulderType,' +
      ' sendAttempts, startDate, sendDate, description) VALUES' +
-     ' (?,?,?,?,?,?,?,?,?);'
+     ' (?,?,?,?,?,?,?,?);'
   db.query(q, values, (err, data) => {
     if (err) return res.json('Error - ' + err)
     res.send(data)

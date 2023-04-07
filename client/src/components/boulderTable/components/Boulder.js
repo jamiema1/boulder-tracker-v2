@@ -32,13 +32,12 @@ export default function Boulder ({boulder, deleteBoulderFromDB, setOptions}) {
       return
     }
 
-    let r = rating === '-1' ? "unrated" : rating + " hex"
+    let r = rating === -1 ? "unrated" : (rating + " hex")
     let start = getDate(startDate)
     let send = getDate(sendDate) === "Unfinished" ? null : getDate(sendDate)
-
-    setOptions(
-      [id, r, colour, holdType, boulderType, sendAttempts + '', 
-        start, send, description])
+    
+    setOptions([id, r, colour, holdType, boulderType, sendAttempts + '', 
+      start, send, description])
   }
   
   return (

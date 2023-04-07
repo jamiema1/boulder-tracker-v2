@@ -9,13 +9,6 @@ import './AddBoulder.css'
 import StartDate from './components/StartDate'
 import SendDate from './components/SendDate'
 
-const ID_KEY = 'id'
-function nextId() {
-  const id = JSON.parse(localStorage.getItem(ID_KEY))
-  localStorage.setItem(ID_KEY, JSON.stringify(id + 1))
-  return id
-}
-
 function convertRatingToNumber (str) {
   if (str.includes('hex')) {
     return +str.substring(0, 1)
@@ -75,7 +68,9 @@ export default forwardRef(
       const startDate = startDateRef.current.value
       const sendDate = sendDateRef.current.value === '' ? null :
         sendDateRef.current.value
-      const description = descriptionRef.current.value
+      const description = descriptionRef.current.value.replace('\'', '\\\'')
+      // TODO: may need to be generalized to other special characters as well
+
 
       const anyNullFields = [rating, colour, holdType, boulderType, 
         sendAttempts, startDate, description].reduce((acc, field) => 
@@ -103,7 +98,6 @@ export default forwardRef(
 
       let newBoulder = getInputFields()
       if (newBoulder === undefined) return
-      newBoulder.id = nextId()
       addBoulderToDB(newBoulder)
       resetInputFields()
     }
@@ -145,7 +139,7 @@ export default forwardRef(
     }
 
     function updateBoulder() {
-      console.log(updateBoulderId)
+
       const updatedBoulder = getInputFields()
       if (updatedBoulder === undefined) return
       updatedBoulder.id = updateBoulderId
