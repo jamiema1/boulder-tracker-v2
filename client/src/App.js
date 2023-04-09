@@ -1,29 +1,14 @@
 import React, {useState, useRef} from 'react'
-import Axios from 'axios'
+import Axios from './api/Axios'
 import BoulderTable from './components/boulderTable/BoulderTable'
 import AddBoulder from './components/addBoulder/AddBoulder'
 import Introduction from './components/introduction/Introduction'
 import Login from './components/login/Login'
-import BarChart from './components/BarChart'
+import Register from './components/login/Register'
+import BarChart from './components/charts/BarChart'
 import 'chart.js'
 
-// TODO: need to make the serverhost name start with https
-const serverhost = 'http://35.163.119.158:3001'
-const localhost = 'http://localhost:3001'
-
-let hostname
-
-// TODO: automate this variable so that it automatically toggles when the
-//       npm run deploy command is run
-const local = true
-
-if (local) {
-  localStorage.setItem('adminStatus', 'true')
-  hostname = localhost
-} else {
-  localStorage.setItem('adminStatus', 'false')
-  hostname = serverhost
-}
+const ADMIN_STATUS = 'adminStatus'
 
 function App () {
   const [boulderList, setBoulderList] = useState([])
@@ -32,8 +17,8 @@ function App () {
   const addBoulderRef = useRef()
   
   function addBoulderToDB (newBoulder) {
-    if (localStorage.getItem('adminStatus') == 'true') {
-      Axios.post(hostname + '/api/insert', newBoulder)
+    if (localStorage.getItem(ADMIN_STATUS) == 'true') {
+      Axios.post('/boulder', newBoulder)
         .then((response) => {
           if (response.status != 200) {
             alert('Failed to insert data with ' + response.data)
@@ -48,8 +33,8 @@ function App () {
   }
 
   function deleteBoulderFromDB (id) {
-    if (localStorage.getItem('adminStatus') == 'true') {
-      Axios.delete(hostname + '/api/delete', {data: {id: id}})
+    if (localStorage.getItem(ADMIN_STATUS) == 'true') {
+      Axios.delete('/boulder/' + id)
         .then((response) => {
           if (response.status != 200) {
             alert('Failed to delete data with ' + response.data)
@@ -63,10 +48,9 @@ function App () {
   }
 
   function getBoulderListFromDB (uri) {
-    
-    if (localStorage.getItem('adminStatus') == 'true' || 
-      localStorage.getItem('adminStatus') == 'false') {
-      Axios.get(hostname + '/api/get?' + uri)
+    if (localStorage.getItem(ADMIN_STATUS) == 'true' || 
+      localStorage.getItem(ADMIN_STATUS) == 'false') {
+      Axios.get('/boulders?' + uri)
         .then((response) => {
           if (response.status != 200) {
             alert('Failed to get data with ' + response.data)
@@ -80,8 +64,8 @@ function App () {
   }
 
   function updateBoulderFromDB (updatedBoulder) {
-    if (localStorage.getItem('adminStatus') == 'true') {
-      Axios.put(hostname + '/api/update', updatedBoulder)
+    if (localStorage.getItem(ADMIN_STATUS) == 'true') {
+      Axios.put('/boulder', updatedBoulder)
         .then(() => {
           boulderTableRef.current.updateBoulderList();
         })
@@ -94,6 +78,7 @@ function App () {
   }
   return (
     <>
+      <Register />
       <Login />
       <Introduction />
       <AddBoulder 

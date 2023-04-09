@@ -33,11 +33,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // Register/Signin Page APIs
 
-app.get('/register', (req, res) => {
+app.get('/users', (req, res) => {
   return res.status(200).send(JSON.parse(fs.readFileSync('./data/users.json')))
 })
 
-app.post('/register/:username/:password', (req, res) => {
+app.post('/user/:username/:password', (req, res) => {
   const username = req.params.username
   const password = req.params.password
 
@@ -54,22 +54,7 @@ app.post('/register/:username/:password', (req, res) => {
   return res.status(200).send(newuser)
 })
 
-app.delete('/register/:username', (req, res) => {
-  const username = req.params.username
-
-  const userMap = JSON.parse(fs.readFileSync('./data/users.json'))
-
-  const value = userMap.find((user) => user.username === username)
-  if (value === undefined) {
-    return res.status(404).send('User not found')
-  }
-  userMap.splice(userMap.indexOf(value), 1)
-  fs.writeFileSync('./data/users.json', JSON.stringify(userMap),
-    { spaces: '\t', EOL: '\n' })
-  return res.status(200).send(username)
-})
-
-app.post('/signin/:username/:password', (req, res) => {
+app.put('/user/:username/:password', (req, res) => {
   const username = req.params.username
   const password = req.params.password
 
@@ -77,6 +62,43 @@ app.post('/signin/:username/:password', (req, res) => {
   const value = userMap.find((user) => user.username === username)
   if (value === undefined) {
     return res.status(404).send('User does not exist')
+  }
+  value.password = password
+
+  fs.writeFileSync('./data/users.json', JSON.stringify(userMap),
+    { spaces: '\t', EOL: '\n' })
+
+  return res.status(200).send({ username, password })
+})
+
+app.delete('/user/:username/:password', (req, res) => {
+  const username = req.params.username
+  const password = req.params.password
+
+  const userMap = JSON.parse(fs.readFileSync('./data/users.json'))
+
+  const value = userMap.find((user) => user.username === username)
+  if (value === undefined) {
+    return res.status(404).send('User not found')
+  }
+  if (value.password !== password) {
+    return res.status(400).send('Incorrect password')
+  }
+
+  userMap.splice(userMap.indexOf(value), 1)
+  fs.writeFileSync('./data/users.json', JSON.stringify(userMap),
+    { spaces: '\t', EOL: '\n' })
+  return res.status(200).send(username)
+})
+
+app.post('/user/:username/:password/signin', (req, res) => {
+  const username = req.params.username
+  const password = req.params.password
+
+  const userMap = JSON.parse(fs.readFileSync('./data/users.json'))
+  const value = userMap.find((user) => user.username === username)
+  if (value === undefined) {
+    return res.status(404).send('User not found')
   }
   if (value.password !== password) {
     return res.status(400).send('Incorrect password')
@@ -87,7 +109,7 @@ app.post('/signin/:username/:password', (req, res) => {
 
 // Boulder List APIs
 
-app.post('/api/insert', (req, res) => {
+app.post('/boulder', (req, res) => {
   const rating = req.body.rating
   const colour = req.body.colour
   const holdType = req.body.holdType
@@ -109,7 +131,7 @@ app.post('/api/insert', (req, res) => {
   })
 })
 
-app.put('/api/update', (req, res) => {
+app.put('/boulder', (req, res) => {
   const values = new Map([
     ['id', req.body.id],
     ['rating', req.body.rating],
@@ -142,12 +164,8 @@ app.put('/api/update', (req, res) => {
   })
 })
 
-app.get('/', (req, res) => {
-  res.json('We did it')
-})
-
-app.get('/api/get', (req, res) => {
-  const url = decodeURIComponent(req.url.substring(9))
+app.get('/boulders', (req, res) => {
+  const url = decodeURIComponent(req.url.substring(10))
   const query = JSON.parse(url)
   const q = makeGetQueryString(query)
 
@@ -214,14 +232,18 @@ function LIMIT (limit) {
   return 'LIMIT ' + limit
 }
 
-app.delete('/api/delete', (req, res) => {
-  const q = 'DELETE FROM boulders WHERE id = ' + req.body.id + ';'
+app.delete('/boulder/:id', (req, res) => {
+  const q = 'DELETE FROM boulders WHERE id = ' + req.params.id + ';'
 
   db.query(q, (err, data) => {
     if (err) return res.json('Error - ' + err)
     res.send(data)
   })
 })
+
+// app.get('/', (req, res) => {
+//   res.json('We did it')
+// })
 
 app.listen(port, () => {
   console.log('Connected to backend')
