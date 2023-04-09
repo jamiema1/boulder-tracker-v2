@@ -6,6 +6,12 @@ import Introduction from './components/introduction/Introduction'
 import Login from './components/login/Login'
 import Register from './components/login/Register'
 import BarChart from './components/charts/BarChart'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from 'react-router-dom';
 import 'chart.js'
 
 const ADMIN_STATUS = 'adminStatus'
@@ -76,25 +82,42 @@ function App () {
       alert('You do not have access to updating')
     }
   }
+
+  function logout() {
+    localStorage.setItem('adminStatus', 'false')
+  }
+
   return (
-    <>
-      <Register />
-      <Login />
-      <Introduction />
-      <AddBoulder 
-        addBoulderToDB={addBoulderToDB}
-        updateBoulderFromDB={updateBoulderFromDB}
-        ref = {addBoulderRef}
-      />
-      <BoulderTable
-        boulderList={boulderList}
-        setOptions={options => addBoulderRef.current.setOptions(options)}
-        deleteBoulderFromDB={deleteBoulderFromDB}
-        getBoulderListFromDB = { getBoulderListFromDB }
-        ref = {boulderTableRef}
-      />
-      <BarChart boulderList={boulderList}/>
-    </>
+    <Router>
+      <ul>
+        <li><Link to='/user/login'>Login</Link></li>
+        <li><Link to='/user/register'>Register</Link></li>
+        <li><Link to='/user/:username/data'>Boulder Data</Link></li>
+        <li><Link to='/user/login' onClick={logout}>Log Out</Link></li>
+      </ul>
+      <Routes>
+        <Route exact path='/user/login' element={<Login />}></Route>
+        <Route exact path='/user/register' element={<Register />}></Route>
+        <Route exact path='/user/:username/data' element={
+          <>
+            <Introduction />
+            <AddBoulder 
+              addBoulderToDB={addBoulderToDB}
+              updateBoulderFromDB={updateBoulderFromDB}
+              ref = {addBoulderRef}
+            />
+            <BoulderTable
+              boulderList={boulderList}
+              setOptions={options => addBoulderRef.current.setOptions(options)}
+              deleteBoulderFromDB={deleteBoulderFromDB}
+              getBoulderListFromDB = { getBoulderListFromDB }
+              ref = {boulderTableRef}
+            />
+            <BarChart boulderList={boulderList}/>
+          </>
+        }></Route>
+      </Routes>
+    </Router>
   )
 }
 

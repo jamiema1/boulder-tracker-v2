@@ -1,12 +1,13 @@
 /* eslint-disable max-len */
 import React, {useState} from 'react'
 import Axios from '../../api/Axios'
+import {useNavigate} from 'react-router-dom'
 
 const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9_]{3,23}$/
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
 
 export default function Register() {
-
+  const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -39,6 +40,8 @@ export default function Register() {
         setUsername('')
         setPassword('')
         setConfirmPassword('')
+        navigate('/user/' + username + '/data')
+        localStorage.setItem('adminStatus', 'true')
       })
       .catch((error) => {
         alert(error.response.data)
