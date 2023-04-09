@@ -2,6 +2,7 @@ import express from 'express'
 import mysql from 'mysql'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import * as fs from 'fs'
 
 const app = express()
 const port = 3001
@@ -29,6 +30,62 @@ const db = mysql.createPool({
 app.use(cors())
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+// Register/Signin Page APIs
+
+app.get('/register', (req, res) => {
+  return res.status(200).send(JSON.parse(fs.readFileSync('./data/users.json')))
+})
+
+app.post('/register/:username/:password', (req, res) => {
+  const username = req.params.username
+  const password = req.params.password
+
+  const userMap = JSON.parse(fs.readFileSync('./data/users.json'))
+  if (userMap.find((user) => user.username === username) !== undefined) {
+    return res.status(400).send('User already exists')
+  }
+
+  const newuser = { username, password }
+  userMap.push(newuser)
+  fs.writeFileSync('./data/users.json', JSON.stringify(userMap),
+    { spaces: '\t', EOL: '\n' })
+
+  return res.status(200).send(newuser)
+})
+
+app.delete('/register/:username', (req, res) => {
+  const username = req.params.username
+
+  const userMap = JSON.parse(fs.readFileSync('./data/users.json'))
+
+  const value = userMap.find((user) => user.username === username)
+  if (value === undefined) {
+    return res.status(404).send('User not found')
+  }
+  userMap.splice(userMap.indexOf(value), 1)
+  fs.writeFileSync('./data/users.json', JSON.stringify(userMap),
+    { spaces: '\t', EOL: '\n' })
+  return res.status(200).send(username)
+})
+
+app.post('/signin/:username/:password', (req, res) => {
+  const username = req.params.username
+  const password = req.params.password
+
+  const userMap = JSON.parse(fs.readFileSync('./data/users.json'))
+  const value = userMap.find((user) => user.username === username)
+  if (value === undefined) {
+    return res.status(404).send('User does not exist')
+  }
+  if (value.password !== password) {
+    return res.status(400).send('Incorrect password')
+  }
+
+  return res.status(200).send(username)
+})
+
+// Boulder List APIs
 
 app.post('/api/insert', (req, res) => {
   const rating = req.body.rating
