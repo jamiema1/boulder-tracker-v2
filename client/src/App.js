@@ -3,20 +3,26 @@ import Axios from 'axios'
 import BoulderTable from './components/boulderTable/BoulderTable'
 import AddBoulder from './components/addBoulder/AddBoulder'
 import Introduction from './components/introduction/Introduction'
+import Login from './components/login/Login'
 import BarChart from './components/BarChart'
 import 'chart.js'
 
+// TODO: need to make the serverhost name start with https
 const serverhost = 'http://35.163.119.158:3001'
 const localhost = 'http://localhost:3001'
 
-let hostname = localhost
+let hostname
 
+// TODO: automate this variable so that it automatically toggles when the
+//       npm run deploy command is run
 const local = true
 
 if (local) {
   localStorage.setItem('adminStatus', 'true')
+  hostname = localhost
 } else {
   localStorage.setItem('adminStatus', 'false')
+  hostname = serverhost
 }
 
 function App () {
@@ -25,10 +31,6 @@ function App () {
   const boulderTableRef = useRef()
   const addBoulderRef = useRef()
   
-  if (!local) {
-    hostname = serverhost
-  }
-
   function addBoulderToDB (newBoulder) {
     if (localStorage.getItem('adminStatus') == 'true') {
       Axios.post(hostname + '/api/insert', newBoulder)
@@ -92,6 +94,7 @@ function App () {
   }
   return (
     <>
+      <Login />
       <Introduction />
       <AddBoulder 
         addBoulderToDB={addBoulderToDB}

@@ -44,7 +44,7 @@ export default function Boulder ({boulder, deleteBoulderFromDB, setOptions}) {
     <tr>
       <td>
         <button onClick={ handleUpdateBoulder } type="button" id={id}>
-          <img id={id} src="./images/edit.png">
+          <img id={id} src="/images/delete.png">
           </img>
         </button>
       </td>
@@ -58,7 +58,7 @@ export default function Boulder ({boulder, deleteBoulderFromDB, setOptions}) {
       {description !== undefined && <td>{description}</td>}
       <td>
         <button onClick={ handleDeleteBoulder } type="button" id={id}>
-          <img id={id} src="./images/delete.png"></img>
+          <img id={id} src="/images/delete.png"></img>
         </button>
       </td>
     </tr>

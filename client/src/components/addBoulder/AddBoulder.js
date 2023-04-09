@@ -1,4 +1,4 @@
-import React, {useRef, useState, useImperativeHandle, forwardRef} from 'react'
+import React, {useState, useImperativeHandle, forwardRef} from 'react'
 import Rating from './components/Rating'
 import Colour from './components/Colour'
 import HoldType from './components/HoldType'
@@ -22,14 +22,29 @@ let updateBoulderId
 export default forwardRef(
   function AddBoulder (props, ref) {
 
-    const ratingRef = useRef()
-    const colourRef = useRef()
-    const holdTypeRef = useRef()
-    const boulderTypeRef = useRef()
-    const sendAttemptsRef = useRef()
-    const startDateRef = useRef()
-    const sendDateRef = useRef()
-    const descriptionRef = useRef() 
+    const [rating, setRating] = useState('null')
+    const [colour, setColour] = useState('null')
+    const [holdType, setHoldType] = useState('null')
+    const [holdTypeCheckedState, setHoldTypeCheckedState] = useState(
+      new Map([
+        ["crimp", false],
+        ["edge", false],
+        ["horn", false],
+        ["jug", false],
+        ["mini-jug", false],
+        ["pinch", false],
+        ["pocket", false],
+        ["side-pull", false],
+        ["sloper", false],
+        ["undercling", false],
+        ["volume", false],
+      ])
+    )
+    const [boulderType, setBoulderType] = useState('null')
+    const [sendAttempts, setSendAttempts] = useState('null')
+    const [startDate, setStartDate] = useState('')
+    const [sendDate, setSendDate] = useState('')
+    const [description, setDescription] = useState('')
 
     const addBoulderToDB = props.addBoulderToDB
     const updateBoulderFromDB = props.updateBoulderFromDB
@@ -41,40 +56,25 @@ export default forwardRef(
     }));
 
     function resetInputFields () {
-    
-      function resetOption(option) {
-        option.selected = option.defaultSelected
-      }
   
-      Array.from(ratingRef.current.options).forEach(resetOption)
-      Array.from(colourRef.current.options).forEach(resetOption)
-      Array.from(holdTypeRef.current.children)
-        .filter(e => e.nodeName === 'INPUT').forEach(e => e.checked = false)
-      Array.from(boulderTypeRef.current.options).forEach(resetOption)
-      Array.from(sendAttemptsRef.current.options).forEach(resetOption)
-      startDateRef.current.value = null
-      sendDateRef.current.value = null
-      descriptionRef.current.value = null
+      setRating('null')
+      setColour('null')
+      setHoldType('')
+      const newCheckedState = new Map(holdTypeCheckedState)
+      newCheckedState.forEach((value, key) => newCheckedState.set(key, false))
+      setHoldTypeCheckedState(newCheckedState)
+      setBoulderType('null')
+      setSendAttempts('null')
+      setStartDate('')
+      setSendDate('')
+      setDescription('')
     }
 
     function getInputFields() {
-      const rating = ratingRef.current.selectedOptions[0].value
-      const colour = colourRef.current.selectedOptions[0].value
-      const holdType = Array.from(holdTypeRef.current.children)
-        .filter(e => e.nodeName === 'INPUT' && e.checked)
-        .reduce((acc, field) => (acc.concat(field.value, ' ')), '').trimEnd()
-      const boulderType = boulderTypeRef.current.selectedOptions[0].value
-      const sendAttempts = sendAttemptsRef.current.selectedOptions[0].value
-      const startDate = startDateRef.current.value
-      const sendDate = sendDateRef.current.value === '' ? null :
-        sendDateRef.current.value
-      const description = descriptionRef.current.value.replace('\'', '\\\'')
-      // TODO: may need to be generalized to other special characters as well
-
 
       const anyNullFields = [rating, colour, holdType, boulderType, 
-        sendAttempts, startDate, description].reduce((acc, field) => 
-        (acc || field === 'null' || field === ''), false)
+        sendAttempts, startDate, description]
+        .reduce((acc, val) => (acc || val === 'null' || val === ''), false)
 
       if (anyNullFields) {
         alert('Missing required information')
@@ -88,9 +88,10 @@ export default forwardRef(
         boulderType: boulderType,
         sendAttempts: sendAttempts,
         startDate: startDate,
-        sendDate: sendDate,
+        sendDate: sendDate === '' ? null : sendDate,
         description: description
       }
+
       return boulder
     }
 
@@ -102,36 +103,33 @@ export default forwardRef(
       resetInputFields()
     }
     
+
+
     const [updating, setUpdating] = useState(false)
 
 
     function setOptions([id, rating, colour, holdType, boulderType, 
       sendAttempts, startDate, sendDate, description]) {
-      resetInputFields()
-      function setOption(option, value) {
-        if (option.value === value) {
-          option.selected = 'selected'
+
+      setRating(rating)
+      setColour(colour)
+      setHoldType(holdType)
+      
+      const newCheckedState = new Map(holdTypeCheckedState)
+      newCheckedState.forEach((value, key) => {
+        if (holdType.includes(key)) {
+          newCheckedState.set(key, true)
+        } else {
+          newCheckedState.set(key, false)
         }
-      }
-      Array.from(ratingRef.current.options)
-        .forEach(option => setOption(option, rating))
-      Array.from(colourRef.current.options)
-        .forEach(option => setOption(option, colour))
-      Array.from(holdTypeRef.current.children)
-        .filter(e => e.nodeName === 'INPUT').forEach(e => {
-          if (holdType.includes(e.value)) {
-            e.checked = true
-          } else {
-            e.check = false
-          }
-        })
-      Array.from(boulderTypeRef.current.options)
-        .forEach(option => setOption(option, boulderType))
-      Array.from(sendAttemptsRef.current.options)
-        .forEach(option => setOption(option, sendAttempts))
-      startDateRef.current.value = startDate
-      sendDateRef.current.value = sendDate
-      descriptionRef.current.value = description
+      })
+      setHoldTypeCheckedState(newCheckedState)
+
+      setBoulderType(boulderType)
+      setSendAttempts(sendAttempts)
+      setStartDate(startDate)
+      setSendDate(sendDate === null ? '' : sendDate)
+      setDescription(description)
       
       // TODO: move to a separate function
       updateBoulderId = id
@@ -159,32 +157,68 @@ export default forwardRef(
         <form id="addBoulderForm">
           <div className="dropDownOptionsWrapper">
             <div className="dropDownOptions">
-              <Rating ref={ ratingRef }/>
-              <Colour ref={ colourRef }/>
-              <BoulderType ref={ boulderTypeRef }/>
-              <SendAttempts ref={ sendAttemptsRef }/>
-              <StartDate ref={ startDateRef }/>
-              <SendDate ref={ sendDateRef }/>
+              <Rating
+                rating={rating} 
+                setRating={setRating}
+              />
+              <Colour 
+                colour={colour}
+                setColour={setColour}
+              />
+              <BoulderType
+                boulderType={boulderType} 
+                setBoulderType={setBoulderType}
+              />
+              <SendAttempts 
+                sendAttempts={sendAttempts} 
+                setSendAttempts={setSendAttempts}
+              />
+              <StartDate
+                startDate={startDate} 
+                setStartDate={setStartDate}
+              />
+              <SendDate 
+                sendDate={sendDate} 
+                setSendDate={setSendDate}
+              />
             </div>
-            <div></div>
           </div>
-          <HoldType ref={ holdTypeRef }/>
-          <Description ref={ descriptionRef }/>
+          <HoldType 
+            holdType={holdType}
+            setHoldType={setHoldType}
+            holdTypeCheckedState={holdTypeCheckedState}
+            setHoldTypeCheckedState={setHoldTypeCheckedState}
+          />
+          <Description
+            description={description} 
+            setDescription={setDescription}
+          />
           <div className='addBoulderButtons'>
             <div className='clearFieldsButton'>
-              <button type="button" onClick={resetInputFields}>
+              <button
+                type="button" 
+                onClick={resetInputFields}>
                 Clear Fields</button>
             </div>
             <div className='cancelUpdateButton'>
-              <button type="button" onClick={cancelUpdate} disabled={!updating}>
+              <button 
+                type="button"
+                onClick={cancelUpdate} 
+                disabled={!updating}>
                 Cancel Update</button>
             </div>
             <div className='updateBoulderButton'>
-              <button type="button" onClick={updateBoulder} 
-                disabled={!updating}>Update Boulder</button>
+              <button 
+                type="button" 
+                onClick={updateBoulder} 
+                disabled={!updating}>
+                Update Boulder</button>
             </div>
             <div className='addBoulderButton'>
-              <button onClick={addBoulder} type="button" disabled={updating}>
+              <button 
+                onClick={addBoulder} 
+                type="button"
+                disabled={updating}>
                 Add Boulder</button>
             </div>
           </div>

@@ -93,7 +93,6 @@ app.get('/api/get', (req, res) => {
   const url = decodeURIComponent(req.url.substring(9))
   const query = JSON.parse(url)
   const q = makeGetQueryString(query)
-  // console.log(q)
 
   db.query(q, (err, data) => {
     if (err) return res.json('Error - ' + err)
