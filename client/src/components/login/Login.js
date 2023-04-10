@@ -24,7 +24,7 @@ export default function Login() {
         alert('Successfully logged in ' + response.data)
         setUsername('')
         setPassword('')
-        navigate('/user/'+ username +'/data')
+        navigate('/user/' + username + '/data')
         localStorage.setItem('adminStatus', 'true')
       })
       .catch((error) => {

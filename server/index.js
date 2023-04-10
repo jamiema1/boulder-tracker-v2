@@ -3,9 +3,14 @@ import mysql from 'mysql'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as fs from 'fs'
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 const app = express()
-const port = 3001
+app.use(cors())
+app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // const db = mysql.createConnection({
 //   host: 'boulder-tracker-db.cn7nz4spdrrn.us-west-2.rds.amazonaws.com',
@@ -21,15 +26,11 @@ const port = 3001
 
 const db = mysql.createPool({
   connectionLimit: 10,
-  host: 'boulder-tracker-db.cn7nz4spdrrn.us-west-2.rds.amazonaws.com',
-  user: 'jamiema1',
-  password: 'jamiema1',
+  host: process.env.DATABASE_HOSTNAME,
+  user: process.env.DATABASE_USERNAME,
+  password: process.env.DATABASE_PASSWORD,
   database: 'boulderTracker'
 })
-
-app.use(cors())
-app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: true }))
 
 // Register/Signin Page APIs
 
@@ -241,11 +242,7 @@ app.delete('/boulder/:id', (req, res) => {
   })
 })
 
-// app.get('/', (req, res) => {
-//   res.json('We did it')
-// })
-
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
   console.log('Connected to backend')
-  console.log('Running on port: ' + port)
+  console.log('Running on port: ' + process.env.PORT)
 })
