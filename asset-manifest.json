@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/boulder-tracker/static/css/main.4506ce30.css",
-    "main.js": "/boulder-tracker/static/js/main.29b4ba11.js",
+    "main.js": "/boulder-tracker/static/js/main.f4634224.js",
     "index.html": "/boulder-tracker/index.html",
     "main.4506ce30.css.map": "/boulder-tracker/static/css/main.4506ce30.css.map",
-    "main.29b4ba11.js.map": "/boulder-tracker/static/js/main.29b4ba11.js.map"
+    "main.f4634224.js.map": "/boulder-tracker/static/js/main.f4634224.js.map"
   },
   "entrypoints": [
     "static/css/main.4506ce30.css",
-    "static/js/main.29b4ba11.js"
+    "static/js/main.f4634224.js"
   ]
 }
