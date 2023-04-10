@@ -2,9 +2,15 @@ import express from 'express'
 import mysql from 'mysql'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import * as fs from 'fs'
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 const app = express()
-const port = 3001
+app.use(cors())
+app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // const db = mysql.createConnection({
 //   host: 'boulder-tracker-db.cn7nz4spdrrn.us-west-2.rds.amazonaws.com',
@@ -13,25 +19,98 @@ const port = 3001
 //   database: 'boulderTracker'
 // })
 
+// db.connect(err => {
+//   if (err) throw err
+//   console.log('Successfully connected to the database')
+// })
+
 const db = mysql.createPool({
   connectionLimit: 10,
-  host: 'boulder-tracker-db.cn7nz4spdrrn.us-west-2.rds.amazonaws.com',
-  user: 'jamiema1',
-  password: 'jamiema1',
+  host: process.env.DATABASE_HOSTNAME,
+  user: process.env.DATABASE_USERNAME,
+  password: process.env.DATABASE_PASSWORD,
   database: 'boulderTracker'
 })
 
-app.use(cors())
-app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+// Register/Signin Page APIs
 
-// db.connect(err => {
-//     if (err) throw err
-//     console.log("Successfully connected to the database")
-// })
+app.get('/users', (req, res) => {
+  return res.status(200).send(JSON.parse(fs.readFileSync('./data/users.json')))
+})
 
-app.post('/api/insert', (req, res) => {
-  const id = req.body.id
+app.post('/user/:username/:password', (req, res) => {
+  const username = req.params.username
+  const password = req.params.password
+
+  const userMap = JSON.parse(fs.readFileSync('./data/users.json'))
+  if (userMap.find((user) => user.username === username) !== undefined) {
+    return res.status(400).send('User already exists')
+  }
+
+  const newuser = { username, password }
+  userMap.push(newuser)
+  fs.writeFileSync('./data/users.json', JSON.stringify(userMap),
+    { spaces: '\t', EOL: '\n' })
+
+  return res.status(200).send(newuser)
+})
+
+app.put('/user/:username/:password', (req, res) => {
+  const username = req.params.username
+  const password = req.params.password
+
+  const userMap = JSON.parse(fs.readFileSync('./data/users.json'))
+  const value = userMap.find((user) => user.username === username)
+  if (value === undefined) {
+    return res.status(404).send('User does not exist')
+  }
+  value.password = password
+
+  fs.writeFileSync('./data/users.json', JSON.stringify(userMap),
+    { spaces: '\t', EOL: '\n' })
+
+  return res.status(200).send({ username, password })
+})
+
+app.delete('/user/:username/:password', (req, res) => {
+  const username = req.params.username
+  const password = req.params.password
+
+  const userMap = JSON.parse(fs.readFileSync('./data/users.json'))
+
+  const value = userMap.find((user) => user.username === username)
+  if (value === undefined) {
+    return res.status(404).send('User not found')
+  }
+  if (value.password !== password) {
+    return res.status(400).send('Incorrect password')
+  }
+
+  userMap.splice(userMap.indexOf(value), 1)
+  fs.writeFileSync('./data/users.json', JSON.stringify(userMap),
+    { spaces: '\t', EOL: '\n' })
+  return res.status(200).send(username)
+})
+
+app.post('/user/:username/:password/signin', (req, res) => {
+  const username = req.params.username
+  const password = req.params.password
+
+  const userMap = JSON.parse(fs.readFileSync('./data/users.json'))
+  const value = userMap.find((user) => user.username === username)
+  if (value === undefined) {
+    return res.status(404).send('User not found')
+  }
+  if (value.password !== password) {
+    return res.status(400).send('Incorrect password')
+  }
+
+  return res.status(200).send(username)
+})
+
+// Boulder List APIs
+
+app.post('/boulder', (req, res) => {
   const rating = req.body.rating
   const colour = req.body.colour
   const holdType = req.body.holdType
@@ -41,19 +120,19 @@ app.post('/api/insert', (req, res) => {
   const sendDate = req.body.sendDate
   const description = req.body.description
 
-  const values = [id, rating, colour, holdType, boulderType, sendAttempts,
+  const values = [rating, colour, holdType, boulderType, sendAttempts,
     startDate, sendDate, description]
 
-  const q = 'INSERT INTO boulders (id, rating, colour, holdType, boulderType,' +
+  const q = 'INSERT INTO boulders (rating, colour, holdType, boulderType,' +
      ' sendAttempts, startDate, sendDate, description) VALUES' +
-     ' (?,?,?,?,?,?,?,?,?);'
+     ' (?,?,?,?,?,?,?,?);'
   db.query(q, values, (err, data) => {
     if (err) return res.json('Error - ' + err)
     res.send(data)
   })
 })
 
-app.put('/api/update', (req, res) => {
+app.put('/boulder', (req, res) => {
   const values = new Map([
     ['id', req.body.id],
     ['rating', req.body.rating],
@@ -86,15 +165,10 @@ app.put('/api/update', (req, res) => {
   })
 })
 
-app.get('/', (req, res) => {
-  res.json('We did it')
-})
-
-app.get('/api/get', (req, res) => {
-  const url = decodeURIComponent(req.url.substring(9))
+app.get('/boulders', (req, res) => {
+  const url = decodeURIComponent(req.url.substring(10))
   const query = JSON.parse(url)
   const q = makeGetQueryString(query)
-  // console.log(q)
 
   db.query(q, (err, data) => {
     if (err) return res.json('Error - ' + err)
@@ -159,8 +233,8 @@ function LIMIT (limit) {
   return 'LIMIT ' + limit
 }
 
-app.delete('/api/delete', (req, res) => {
-  const q = 'DELETE FROM boulders WHERE id = ' + req.body.id + ';'
+app.delete('/boulder/:id', (req, res) => {
+  const q = 'DELETE FROM boulders WHERE id = ' + req.params.id + ';'
 
   db.query(q, (err, data) => {
     if (err) return res.json('Error - ' + err)
@@ -168,7 +242,7 @@ app.delete('/api/delete', (req, res) => {
   })
 })
 
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
   console.log('Connected to backend')
-  console.log('Running on port: ' + port)
+  console.log('Running on port: ' + process.env.PORT)
 })
