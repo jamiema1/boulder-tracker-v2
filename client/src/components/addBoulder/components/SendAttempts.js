@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 
-export default function SendAttempts(props){
+export default function SendAttempts(props) {
   return (
     <span>
-      <label className='title'>Send Attempts: </label>
-      <select 
-        id="sendAttempts" 
+      <label className="title">Send Attempts: </label>
+      <select
+        id="sendAttempts"
         value={props.sendAttempts}
         onChange={(e) => props.setSendAttempts(e.target.value)}
       >
@@ -22,5 +22,5 @@ export default function SendAttempts(props){
         <option value="10">10+</option>
       </select>
     </span>
-  )
+  );
 }

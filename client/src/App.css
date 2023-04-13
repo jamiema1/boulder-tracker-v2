@@ -1,5 +1,5 @@
 html {
-  font-family: 'Courier New', Courier, monospace; 
+  font-family: "Courier New", Courier, monospace;
   font-size: small;
   background-color: rgb(230, 230, 230);
 }
@@ -10,4 +10,9 @@ html {
   padding: 10px 0px 25px 0px;
   display: flex;
   justify-content: center;
+}
+
+.title {
+  font-weight: 700;
+  font-size: large;
 }

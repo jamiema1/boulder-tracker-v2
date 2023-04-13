@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 
-export default function BoulderType(props){
+export default function BoulderType(props) {
   return (
     <span>
       <label className="title">Boulder Type: </label>
       <select
-        id="boulderType" 
+        id="boulderType"
         value={props.boulderType}
         onChange={(e) => props.setBoulderType(e.target.value)}
       >
@@ -16,5 +16,5 @@ export default function BoulderType(props){
         <option value="roof">Roof</option>
       </select>
     </span>
-  )
+  );
 }
