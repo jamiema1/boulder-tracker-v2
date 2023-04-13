@@ -2,11 +2,10 @@ import React, {useState, useRef} from "react";
 import Axios from "../../api/Axios";
 import BoulderTable from "../boulderTable/BoulderTable";
 import AddBoulder from "../addBoulder/AddBoulder";
-import Introduction from "../introduction/Introduction";
 import BarChart from "../charts/BarChart";
 import "chart.js";
 
-const ADMIN_STATUS = "adminStatus";
+const USER = "user";
 export default function BoulderData() {
   const [boulderList, setBoulderList] = useState([]);
 
@@ -14,7 +13,7 @@ export default function BoulderData() {
   const addBoulderRef = useRef();
 
   function addBoulderToDB(newBoulder) {
-    if (localStorage.getItem(ADMIN_STATUS) == "true") {
+    if (localStorage.getItem(USER) == "jamiema1") {
       Axios.post("/boulder", newBoulder).then((response) => {
         if (response.status != 200) {
           alert("Failed to insert data with " + response.data);
@@ -29,7 +28,7 @@ export default function BoulderData() {
   }
 
   function deleteBoulderFromDB(id) {
-    if (localStorage.getItem(ADMIN_STATUS) == "true") {
+    if (localStorage.getItem(USER) == "jamiema1") {
       Axios.delete("/boulder/" + id).then((response) => {
         if (response.status != 200) {
           alert("Failed to delete data with " + response.data);
@@ -44,8 +43,8 @@ export default function BoulderData() {
 
   function getBoulderListFromDB(uri) {
     if (
-      localStorage.getItem(ADMIN_STATUS) == "true" ||
-      localStorage.getItem(ADMIN_STATUS) == "false"
+      localStorage.getItem(USER) == "jamiema1" ||
+      localStorage.getItem(USER) == "guest"
     ) {
       Axios.get("/boulders?" + uri).then((response) => {
         if (response.status != 200) {
@@ -60,7 +59,7 @@ export default function BoulderData() {
   }
 
   function updateBoulderFromDB(updatedBoulder) {
-    if (localStorage.getItem(ADMIN_STATUS) == "true") {
+    if (localStorage.getItem(USER) == "jamiema1") {
       Axios.put("/boulder", updatedBoulder)
         .then(() => {
           boulderTableRef.current.updateBoulderList();
@@ -75,7 +74,6 @@ export default function BoulderData() {
 
   return (
     <>
-      <Introduction />
       <AddBoulder
         addBoulderToDB={addBoulderToDB}
         updateBoulderFromDB={updateBoulderFromDB}

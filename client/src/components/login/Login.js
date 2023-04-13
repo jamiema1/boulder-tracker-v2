@@ -26,7 +26,7 @@ export default function Login() {
         setUsername("");
         setPassword("");
         navigate("/user/" + username + "/data");
-        localStorage.setItem("adminStatus", "true");
+        localStorage.setItem("user", username);
       })
       .catch((error) => {
         alert(error.response.data);
@@ -41,7 +41,7 @@ export default function Login() {
   function guest(e) {
     e.preventDefault();
     navigate("/user/guest/data");
-    localStorage.setItem("adminStatus", "false");
+    localStorage.setItem("user", "guest");
   }
 
   return (

@@ -44,7 +44,7 @@ export default function Register() {
         setPassword("");
         setConfirmPassword("");
         navigate("/user/" + username + "/data");
-        localStorage.setItem("adminStatus", "true");
+        localStorage.setItem("user", username);
       })
       .catch((error) => {
         alert(error.response.data);

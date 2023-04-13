@@ -9,7 +9,7 @@ let hostname;
 // TODO: automate this variable so that it automatically toggles when the
 //       npm run deploy command is run
 const local = false;
-localStorage.setItem("adminStatus", "false");
+localStorage.setItem("user", "guest");
 
 if (local) {
   hostname = localhost;
