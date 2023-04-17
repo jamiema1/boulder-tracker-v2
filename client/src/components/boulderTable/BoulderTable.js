@@ -15,7 +15,7 @@ import "./BoulderTable.css";
 const sortColumns = new Map([["id", "DESC"]]);
 
 export default forwardRef(function BoulderTable(props, ref) {
-  const boulderList = props.boulderList;
+  const boulderTableData = props.boulderTableData;
   const getBoulderListFromDB = props.getBoulderListFromDB;
 
   const [columns, setColumns] = useState([]);
@@ -65,6 +65,7 @@ export default forwardRef(function BoulderTable(props, ref) {
       orderby: orderColumns,
       limit: limitSelectorRef.current.value,
     };
+
     params = encodeURIComponent(JSON.stringify(params));
 
     getBoulderListFromDB(params);
@@ -103,10 +104,10 @@ export default forwardRef(function BoulderTable(props, ref) {
         </div>
       </div>
       <div className="boulderTableWrapper">
-        <table className="boulderList">
+        <table className="boulderTableData">
           <TableHeader columns={columns} toggleSortColumn={toggleSortColumn} />
           <tbody>
-            {boulderList.map((boulder) => {
+            {boulderTableData.map((boulder) => {
               return (
                 <Boulder
                   key={boulder.id}

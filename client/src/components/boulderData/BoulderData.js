@@ -1,13 +1,48 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Axios from "../../api/Axios";
 import BoulderTable from "../boulderTable/BoulderTable";
 import AddBoulder from "../addBoulder/AddBoulder";
 import BarChart from "../charts/BarChart";
+// import ScatterChart from "../charts/ScatterChart";
 import "chart.js";
+import BubbleChart from "../charts/BubbleChart";
+import DoughnutChart from "../charts/DoughnutChart";
 
 const USER = "user";
 export default function BoulderData() {
-  const [boulderList, setBoulderList] = useState([]);
+  const [boulderTableData, setBoulderTableData] = useState([]);
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    let params = {
+      select: [
+        "id",
+        "gymId",
+        "sessionId",
+        "rating",
+        "colour",
+        "holdType",
+        "boulderType",
+        "sendAttempts",
+        "startDate",
+        "sendDate",
+        "description",
+      ],
+      where: "",
+      orderby: [{id: "DESC"}],
+      limit: "NONE",
+    };
+
+    const uri = encodeURIComponent(JSON.stringify(params));
+
+    Axios.get("/boulders?" + uri).then((response) => {
+      if (response.status != 200) {
+        alert("Failed to get data with " + response.data);
+        return;
+      }
+      setChartData(response.data);
+    });
+  }, []);
 
   const boulderTableRef = useRef();
   const addBoulderRef = useRef();
@@ -19,11 +54,13 @@ export default function BoulderData() {
           alert("Failed to insert data with " + response.data);
           return;
         }
-        setBoulderList([newBoulder, ...boulderList]);
+        // TODO: make a GET call instead so that the boulder has an id to avoid
+        //       the warning messages
+        setBoulderTableData([newBoulder, ...boulderTableData]);
         boulderTableRef.current.updateBoulderList();
       });
     } else {
-      alert("You do not have access to adding");
+      alert("Please log in to add boulders");
     }
   }
 
@@ -37,7 +74,7 @@ export default function BoulderData() {
         boulderTableRef.current.updateBoulderList();
       });
     } else {
-      alert("You do not have access to deleting");
+      alert("Please log in to delete boulders");
     }
   }
 
@@ -51,10 +88,10 @@ export default function BoulderData() {
           alert("Failed to get data with " + response.data);
           return;
         }
-        setBoulderList(response.data);
+        setBoulderTableData(response.data);
       });
     } else {
-      alert("You do not have access to getting");
+      alert("Please log in to see boulders");
     }
   }
 
@@ -68,7 +105,7 @@ export default function BoulderData() {
           alert("Failed Update");
         });
     } else {
-      alert("You do not have access to updating");
+      alert("Please log in to update boulders");
     }
   }
 
@@ -80,13 +117,16 @@ export default function BoulderData() {
         ref={addBoulderRef}
       />
       <BoulderTable
-        boulderList={boulderList}
+        boulderTableData={boulderTableData}
         setOptions={(options) => addBoulderRef.current.setOptions(options)}
         deleteBoulderFromDB={deleteBoulderFromDB}
         getBoulderListFromDB={getBoulderListFromDB}
         ref={boulderTableRef}
       />
-      <BarChart boulderList={boulderList} />
+      <BarChart boulderData={chartData} />
+      {/* <ScatterChart boulderData={chartData} /> */}
+      <BubbleChart boulderData={chartData} />
+      <DoughnutChart boulderData={chartData} />
     </>
   );
 }

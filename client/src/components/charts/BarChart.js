@@ -10,6 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import {Bar} from "react-chartjs-2";
+import "./Chart.css";
 
 ChartJS.register(
   BarElement,
@@ -20,12 +21,12 @@ ChartJS.register(
   Legend
 );
 
-export default function BarChart({boulderList}) {
+export default function BarChart(props) {
   const [chartData, setChartData] = useState({labels: [], datasets: []});
 
   useEffect(() => {
     // TODO: clean this section up and move it to a seperate helper function
-    const pairs = boulderList.map((boulder) => {
+    const pairs = props.boulderData.map((boulder) => {
       if (boulder.sendDate === null)
         return {sendDate: "Unfinished", rating: boulder.rating};
       return {
@@ -34,7 +35,6 @@ export default function BarChart({boulderList}) {
       };
     });
 
-    // console.log(pairs)
     const pairMap = new Map();
 
     pairs.forEach((pair) => {
@@ -47,7 +47,7 @@ export default function BarChart({boulderList}) {
         pairMap.set(pair.sendDate.split("T")[0], pair.rating);
       }
     });
-    // console.log(pairMap)
+
     pairMap.delete("Unfinished");
 
     const sorted = new Map([...pairMap.entries()].sort());
@@ -68,7 +68,7 @@ export default function BarChart({boulderList}) {
         },
       ],
     });
-  }, [boulderList]);
+  }, [props.boulderData]);
 
   const options = {
     elements: {
@@ -90,14 +90,7 @@ export default function BarChart({boulderList}) {
 
   return (
     <>
-      <div
-        style={{
-          height: "60vh",
-          position: "relative",
-          marginBottom: "1%",
-          padding: "1%",
-        }}
-      >
+      <div className="chart">
         <Bar data={chartData} options={options} />
       </div>
     </>

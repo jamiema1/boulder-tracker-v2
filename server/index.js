@@ -13,9 +13,9 @@ app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // const db = mysql.createConnection({
-//   host: 'boulder-tracker-db.cn7nz4spdrrn.us-west-2.rds.amazonaws.com',
-//   user: 'jamiema1',
-//   password: 'jamiema1',
+//   host: process.env.DATABASE_HOSTNAME,
+//   user: process.env.DATABASE_USERNAME,
+//   password: process.env.DATABASE_PASSWORD,
 //   database: 'boulderTracker'
 // })
 
@@ -174,6 +174,10 @@ app.get('/boulders', (req, res) => {
     if (err) return res.json('Error - ' + err)
     res.send(data)
   })
+})
+
+app.get('/', (req, res) => {
+  res.send('Test API URI')
 })
 
 function makeGetQueryString (query) {
