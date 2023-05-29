@@ -1,7 +1,7 @@
 import Axios from "axios";
 
 // TODO: need to make the serverhost name start with https
-const serverhost = "http://35.163.119.158:3001";
+const serverhost = "http://52.38.209.156:3001";
 const localhost = "http://localhost:3001";
 
 let hostname;
