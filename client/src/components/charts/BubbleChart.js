@@ -18,7 +18,6 @@ export default function BubbleChart(props) {
   useEffect(() => {
     // TODO: clean this section up and move it to a seperate helper function
     const pairs = props.boulderData.map((boulder) => {
-      console.log(boulder.sendAttempts);
       return {
         sendAttempts: boulder.sendAttempts,
         rating: boulder.rating,

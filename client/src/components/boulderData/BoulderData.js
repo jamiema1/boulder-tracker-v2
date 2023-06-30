@@ -35,7 +35,7 @@ export default function BoulderData() {
 
     const uri = encodeURIComponent(JSON.stringify(params));
 
-    Axios.get("/boulders?" + uri).then((response) => {
+    Axios.get("/boulder?" + uri).then((response) => {
       if (response.status != 200) {
         alert("Failed to get data with " + response.data);
         return;
@@ -83,7 +83,7 @@ export default function BoulderData() {
       localStorage.getItem(USER) == "jamiema1" ||
       localStorage.getItem(USER) == "guest"
     ) {
-      Axios.get("/boulders?" + uri).then((response) => {
+      Axios.get("/boulder?" + uri).then((response) => {
         if (response.status != 200) {
           alert("Failed to get data with " + response.data);
           return;
