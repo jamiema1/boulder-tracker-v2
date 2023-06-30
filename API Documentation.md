@@ -2,7 +2,7 @@
 
 ## List all users
 ```
-GET /users
+GET /user
 ```
 
 ## Create a user
