@@ -42,13 +42,13 @@ export default function HoldType(props) {
           checked={props.holdTypeCheckedState.get("horn")}
           onChange={handleOnChange}
         ></input>
-        <label>Horn</label>
+        {/* <label>Horn</label>
         <input
           type="checkbox"
           value="jug"
           checked={props.holdTypeCheckedState.get("jug")}
           onChange={handleOnChange}
-        ></input>
+        ></input> */}
         <label>Jug</label>
         <input
           type="checkbox"
@@ -56,13 +56,13 @@ export default function HoldType(props) {
           checked={props.holdTypeCheckedState.get("mini-jug")}
           onChange={handleOnChange}
         ></input>
-        <label>Mini-Jug</label>
+        {/* <label>Mini-Jug</label>
         <input
           type="checkbox"
           value="pinch"
           checked={props.holdTypeCheckedState.get("pinch")}
           onChange={handleOnChange}
-        ></input>
+        ></input> */}
         <label>Pinch</label>
         <input
           type="checkbox"
@@ -77,7 +77,7 @@ export default function HoldType(props) {
           checked={props.holdTypeCheckedState.get("side-pull")}
           onChange={handleOnChange}
         ></input>
-        <label>Side-Pull/Gaston</label>
+        <label>Side-Pull</label>
         <input
           type="checkbox"
           value="sloper"
@@ -91,13 +91,13 @@ export default function HoldType(props) {
           checked={props.holdTypeCheckedState.get("undercling")}
           onChange={handleOnChange}
         ></input>
-        <label>Undercling</label>
+        {/* <label>Undercling</label>
         <input
           type="checkbox"
           value="volume"
           checked={props.holdTypeCheckedState.get("volume")}
           onChange={handleOnChange}
-        ></input>
+        ></input> */}
         <label>Volume</label>
       </div>
     </div>

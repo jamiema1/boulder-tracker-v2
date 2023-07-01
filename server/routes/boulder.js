@@ -27,6 +27,9 @@ boulderRouter.get('/:id', (req, res) => {
 })
 
 boulderRouter.post('/', (req, res) => {
+
+  console.log(req.body)
+
   const rating = req.body.rating
   const colour = req.body.colour
   const holdType = req.body.holdType
@@ -49,6 +52,7 @@ boulderRouter.post('/', (req, res) => {
 })
 
 boulderRouter.put('/', (req, res) => {
+
   const values = new Map([
     ['id', req.body.id],
     ['rating', req.body.rating],

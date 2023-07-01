@@ -26,14 +26,14 @@ export default forwardRef(function AddBoulder(props, ref) {
     new Map([
       ["crimp", false],
       ["edge", false],
-      ["horn", false],
+      // ["horn", false],
       ["jug", false],
-      ["mini-jug", false],
+      // ["mini-jug", false],
       ["pinch", false],
       ["pocket", false],
       ["side-pull", false],
       ["sloper", false],
-      ["undercling", false],
+      // ["undercling", false],
       ["volume", false],
     ])
   );
@@ -155,6 +155,10 @@ export default forwardRef(function AddBoulder(props, ref) {
     setUpdating(false);
   }
 
+  function addBoulders() {
+
+  }
+
   return (
     <div className="addBoulder">
       <div className="componentTitle">Add Boulder</div>
@@ -208,6 +212,12 @@ export default forwardRef(function AddBoulder(props, ref) {
           </div>
         </div>
       </form>
+      <div>
+        <textarea></textarea>
+        <button onClick={addBoulders} type="button" disabled={updating}>
+          Add Boulders
+        </button>
+      </div>
     </div>
   );
 });
