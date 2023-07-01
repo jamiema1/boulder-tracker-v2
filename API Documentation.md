@@ -1,41 +1,25 @@
 
-# Users
-
-***TODO***
-## List all users
-```
-GET /user
-```
-
-***TODO***
-## Create a user
-```
-POST /user/:username/:password
-```
-
-***TODO***
-## Change password of user
-```
-PUT /user/:username/:password
-```
-
-***TODO***
-## Delete user
-```
-Delete /user/:username/:password
-```
-
-***TODO***
-## Authenticate user
-```
-POST /user/:username/:password/signin
-```
-
 # Boulder
 
-***TODO***
+### Attributes
+
+attribute | description | type | example
+--- | --- | --- | ---
+id | Boulder ID | Integer | ``` 200 ``` 
+gymId | Gym ID | Integer | ``` 3 ```
+sessionId | Session ID | Integer | ``` 15 ```
+colour | Boulder colour | String | ``` red ```
+rating | Boulder rating | Integer | ``` 4 ```
+holdType | Holds used in the boulder | String | ``` jug undercling volume ```
+boulderType | Boulder type | String | ``` slab ```
+sendAttempts | # of attempts | Integer | ``` 4 ```
+description | Boulder description | String | ``` Fairly easy 4 ```
+startDate | Date the boulder was started | Date | ``` 2023-02-12T08:00:00.000Z ```
+sendDate | Date the boulder was sent, ``` null ``` if not sent | Date | ``` 2023-02-12T08:00:00.000Z ```
 
 ## List a boulder
+
+This method returns the boulder data for a single boulder.
 
 ```
 GET /boulder/:id
@@ -132,3 +116,36 @@ PUT /boulder
 ```
 Delete /boulder/:id
 ```
+
+# Users
+
+***TODO***
+## List all users
+```
+GET /user
+```
+
+***TODO***
+## Create a user
+```
+POST /user/:username/:password
+```
+
+***TODO***
+## Change password of user
+```
+PUT /user/:username/:password
+```
+
+***TODO***
+## Delete user
+```
+Delete /user/:username/:password
+```
+
+***TODO***
+## Authenticate user
+```
+POST /user/:username/:password/signin
+```
+
