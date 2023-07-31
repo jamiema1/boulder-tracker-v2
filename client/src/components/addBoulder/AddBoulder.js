@@ -43,6 +43,8 @@ export default forwardRef(function AddBoulder(props, ref) {
   const [sendDate, setSendDate] = useState("");
   const [description, setDescription] = useState("");
 
+  const [boulderList, setBoulderList] = useState("[]");
+
   const addBoulderToDB = props.addBoulderToDB;
   const updateBoulderFromDB = props.updateBoulderFromDB;
 
@@ -83,15 +85,15 @@ export default forwardRef(function AddBoulder(props, ref) {
     }
 
     const boulder = {
-      rating: convertRatingToNumber(rating),
-      colour: colour,
-      holdType: holdType,
-      boulderType: boulderType,
-      sendAttempts: sendAttempts,
-      startDate: startDate,
-      sendDate: sendDate === "" ? null : sendDate,
-      description: description,
-    };
+      "rating": convertRatingToNumber(rating),
+      "colour": colour,
+      "holdType": holdType,
+      "boulderType": boulderType,
+      "sendAttempts": sendAttempts,
+      "startDate": startDate,
+      "sendDate": sendDate === "" ? null : sendDate,
+      "description": description,
+    }
 
     return boulder;
   }
@@ -100,8 +102,38 @@ export default forwardRef(function AddBoulder(props, ref) {
     let newBoulder = getInputFields();
     if (newBoulder === undefined) return;
     addBoulderToDB(newBoulder);
-    resetInputFields();
+    // TODO: uncomment when done testing
+    // resetInputFields();
   }
+
+  function addBoulders() {
+    // TODO: finish this function
+    let newBoulders = boulderList.replaceAll("\n", "  ").replaceAll("; ", "");
+    // console.log(newBoulders)
+    newBoulders = JSON.parse(newBoulders)
+    if (newBoulders === undefined) return;
+    newBoulders.forEach(cleanData);
+    newBoulders.forEach(addBoulderToDB);
+  }
+
+  function cleanData(newBoulder) {
+    newBoulder.startDate = convertToDateTime(newBoulder.startDate);
+    newBoulder.sendDate = convertToDateTime(newBoulder.sendDate);
+  }
+
+  function convertToDateTime(dateTime) {
+    if (dateTime == null) {
+      return dateTime
+    }
+    const dateTimeParts = dateTime.split(", ");
+    let timeParts = dateTimeParts[1].split(":");
+    let minuteParts = timeParts[1].split(" ")
+    if (minuteParts[1] == "PM") {
+      timeParts[0] = String(Number(timeParts[0]) + 12)
+    }
+    return dateTimeParts[0] + " " + timeParts[0] + ":" + minuteParts[0];
+  }
+
 
   const [updating, setUpdating] = useState(false);
 
@@ -153,10 +185,6 @@ export default forwardRef(function AddBoulder(props, ref) {
   function cancelUpdate() {
     resetInputFields();
     setUpdating(false);
-  }
-
-  function addBoulders() {
-
   }
 
   return (
@@ -213,7 +241,8 @@ export default forwardRef(function AddBoulder(props, ref) {
         </div>
       </form>
       <div>
-        <textarea></textarea>
+        <textarea onChange={(e) => setBoulderList(e.target.value)}>
+        </textarea>
         <button onClick={addBoulders} type="button" disabled={updating}>
           Add Boulders
         </button>

@@ -9,7 +9,7 @@ const db = mysql.createPool({
   host: process.env.DATABASE_HOSTNAME,
   user: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
-  database: 'boulderTracker'
+  database: process.env.DATABASE_NAME
 })
 
 
@@ -88,6 +88,7 @@ boulderRouter.put('/', (req, res) => {
 
 
 boulderRouter.get('/', (req, res) => {
+
   const url = decodeURIComponent(req.url.substring(2))
   const query = JSON.parse(url)
   const q = makeGetQueryString(query)
