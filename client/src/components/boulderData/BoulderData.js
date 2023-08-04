@@ -17,8 +17,6 @@ export default function BoulderData() {
     let params = {
       select: [
         "id",
-        "gymId",
-        "sessionId",
         "rating",
         "colour",
         "holdType",

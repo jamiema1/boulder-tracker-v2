@@ -18,7 +18,7 @@ const boulderRouter = express.Router()
 
 boulderRouter.get('/:id', (req, res) => {
   const id = req.params.id
-  const q = "SELECT * FROM boulders WHERE id = " + id
+  const q = "SELECT * FROM boulders_old WHERE id = " + id
 
   db.query(q, (err, data) => {
     if (err) return res.json('Error - ' + err)
@@ -42,7 +42,7 @@ boulderRouter.post('/', (req, res) => {
   const values = [rating, colour, holdType, boulderType, sendAttempts,
     startDate, sendDate, description]
 
-  const q = 'INSERT INTO boulders (rating, colour, holdType, boulderType,' +
+  const q = 'INSERT INTO boulders_old (rating, colour, holdType, boulderType,' +
      ' sendAttempts, startDate, sendDate, description) VALUES' +
      ' (?,?,?,?,?,?,?,?);'
   db.query(q, values, (err, data) => {
@@ -65,7 +65,7 @@ boulderRouter.put('/', (req, res) => {
     ['description', req.body.description]
   ])
 
-  let q = 'UPDATE boulders SET '
+  let q = 'UPDATE boulders_old SET '
 
   values.forEach((value, key) => {
     if (key === 'id' || key === 'rating' || key === 'sendAttempts' ||
@@ -120,7 +120,7 @@ boulderRouter.get('/', (req, res) => {
   }
   
   function FROM (query) {
-    return 'FROM boulders'
+    return 'FROM boulders_old'
   }
   
   function WHERE (query) {
@@ -157,7 +157,7 @@ boulderRouter.get('/', (req, res) => {
 })
 
 boulderRouter.delete('/:id', (req, res) => {
-  const q = 'DELETE FROM boulders WHERE id = ' + req.params.id + ';'
+  const q = 'DELETE FROM boulders_old WHERE id = ' + req.params.id + ';'
 
   db.query(q, (err, data) => {
     if (err) return res.json('Error - ' + err)
