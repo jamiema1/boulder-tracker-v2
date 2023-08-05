@@ -1,3 +1,167 @@
+# Climbs
+
+## Attributes
+
+attribute | description | type | example
+--- | --- | --- | ---
+id | Climb ID | Integer | ``` 200 ``` 
+boulderID | Boulder ID | Integer | ``` 3 ```
+sessionId | Session ID | Integer | ``` 15 ```
+attempts | # of attempts | Integer | ``` 4 ```
+sends | # of sends | Integer | ``` 1 ```
+climbStartDate | Date the climb was started | Date | ``` 2023-02-12T08:00:00.000Z ```
+climbEndDate | Date the climb ended | Date | ``` 2023-02-12T08:00:00.000Z ```
+
+## List a climb
+
+This method returns the data for a single climb.
+
+```
+GET /climb/:id
+```
+
+### Example
+
+```
+curl -X GET http://localhost:3001/climb/200
+```
+
+```
+{
+    "data": [
+        {
+            "id": 200,
+            "boulderId": 0,
+            "sessionId": 0,
+            "attempts": 2,
+            "sends": 1,
+            "climbStartDate": "2023-02-12T08:00:00.000Z",
+            "climbEndDate": "2023-02-12T08:00:00.000Z"
+        }
+    ]
+}
+```
+
+## List all climbs
+
+This method returns all climbs
+
+```
+GET /climb
+```
+
+### Example
+
+```
+curl -X GET http://localhost:3001/climb
+```
+
+```
+{
+    "data": [
+        {
+            "id": 200,
+            "boulderId": 0,
+            "sessionId": 0,
+            "attempts": 2,
+            "sends": 1,
+            "climbStartDate": "2023-02-12T08:00:00.000Z",
+            "climbEndDate": "2023-02-12T08:00:00.000Z"
+        },
+        {
+            "id": 201,
+            "boulderId": 0,
+            "sessionId": 1,
+            "attempts": 4,
+            "sends": 0,
+            "climbStartDate": "2023-02-12T08:00:00.000Z",
+            "climbEndDate": "2023-02-12T08:00:00.000Z"
+        },
+        {
+            "id": 202,
+            "boulderId": 1,
+            "sessionId": 1,
+            "attempts": 10,
+            "sends": 4,
+            "climbStartDate": "2023-02-12T08:00:00.000Z",
+            "climbEndDate": "2023-02-12T08:00:00.000Z"
+        }
+    ]
+}
+```
+
+## Add climb
+
+This method adds a climb
+
+```
+POST /climb
+```
+
+### Example
+
+```
+curl -d '{ "boulderId": 1, "sessionId": 2, "attempts": 1, "sends": 5, "climbStartTime": "2023-08-01T02:40:00.000Z", "climbEndTime": "2023-08-01T02:41:00.000Z" }' -H "Content-Type: application/json" -X POST http://localhost:3001/climb
+```
+
+```
+{
+    "data": [
+        {
+            "id": 18
+        }
+    ]
+}
+```
+
+## Update boulder
+
+This method adds a climb
+
+```
+PUT /climb/:id
+```
+
+### Example
+
+```
+curl -d '{ "boulderId": 1, "sessionId": 2, "attempts": 1, "sends": 5, "climbStartTime": "2023-08-01T02:40:00.000Z", "climbEndTime": "2023-08-01T02:41:00.000Z" }' -H "Content-Type: application/json" -X PUT http://localhost:3001/climb/18
+```
+
+```
+{
+    "data": [
+        {
+            "id": 18
+        }
+    ]
+}
+```
+
+## Delete climb
+
+This method deletes a climb
+
+```
+DELETE /climb/:id
+```
+
+### Example
+
+```
+curl -X DELETE http://localhost:3001/climb/3
+```
+
+```
+{
+    "data": [
+        {
+            "id": 3
+        }
+    ]
+}
+```
+
 
 # Boulder
 
