@@ -20,6 +20,14 @@ This method returns the data for a single climb.
 GET /climb/:id
 ```
 
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully listed climb
+400 | Error occurred
+404 | Id not found
+
 ### Example
 
 ```
@@ -42,6 +50,8 @@ curl -X GET http://localhost:3001/climb/200
 }
 ```
 
+
+
 ## List all climbs
 
 This method returns all climbs
@@ -49,6 +59,13 @@ This method returns all climbs
 ```
 GET /climb
 ```
+
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully listed climbs
+400 | Error occurred
 
 ### Example
 
@@ -98,6 +115,13 @@ This method adds a climb
 POST /climb
 ```
 
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully add climb
+400 | Error occurred
+
 ### Example
 
 ```
@@ -122,6 +146,15 @@ This method adds a climb
 PUT /climb/:id
 ```
 
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully updated climb
+202 | No data updated
+400 | Error occurred
+404 | Id not found
+
 ### Example
 
 ```
@@ -145,6 +178,14 @@ This method deletes a climb
 ```
 DELETE /climb/:id
 ```
+
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully deleted climb
+400 | Error occurred
+404 | Id not found
 
 ### Example
 
