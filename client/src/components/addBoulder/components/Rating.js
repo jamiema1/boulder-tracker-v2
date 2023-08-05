@@ -1,13 +1,13 @@
-import React from 'react'
+import React from "react"
 
 export default function Rating(props) {
   return (
     <div>
-      <label className='title'>Rating: </label>
-      <select 
-        id="rating" 
+      <label className="title">Rating: </label>
+      <select
+        id="rating"
         value={props.rating}
-        onChange={(e) =>props.setRating(e.target.value)}
+        onChange={(e) => props.setRating(e.target.value)}
       >
         <option value="null">-- Select --</option>
         <option value="1 hex">1 Hex</option>

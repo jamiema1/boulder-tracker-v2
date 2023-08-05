@@ -1,10 +1,10 @@
-import React from 'react'
+import React from "react"
 
-export default function Colour (props){
+export default function Colour(props) {
   return (
     <span>
-      <label className='title'>Colour: </label>
-      <select 
+      <label className="title">Colour: </label>
+      <select
         id="colour"
         value={props.colour}
         onChange={(e) => props.setColour(e.target.value)}

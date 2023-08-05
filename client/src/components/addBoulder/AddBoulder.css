@@ -1,73 +1,69 @@
 .addBoulder {
-    background-color:beige;
-    border: 5px ridge rgb(245, 245, 204);
-    margin: 50px 0px;
+  background-color: beige;
+  border: 5px ridge rgb(245, 245, 204);
+  margin: 50px 0px;
 }
 
 #addBoulderForm {
-    display: flex;
-    align-items: flex-start;
+  display: flex;
+  align-items: flex-start;
 }
 
 #addBoulderForm > div {
-    padding: 15px
+  padding: 15px;
 }
 
 .dropDownOptionsWrapper {
-    flex-grow: 1;
-    display: flex;
+  flex-grow: 1;
+  display: flex;
 }
 
 .dropDownOptions {
-    display: flex;
-    flex-flow: column nowrap;
-    height: 125px;
-    width: 240px; 
-    justify-content: space-between;
+  display: flex;
+  flex-flow: column nowrap;
+  height: 125px;
+  width: 240px;
+  justify-content: space-between;
 }
 
 .dropDownOptions > * {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
-#startDate > input, #sendDate > input {
-    width: 100px;
+#startDate > input,
+#sendDate > input {
+  width: 100px;
 }
 
 #holdType {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 #holdType > #holdTypeOptions {
-    display: grid;
-    grid-template-columns: 20px 100px 20px 140px 20px 75px;
-    /* column-gap: 5px; */
+  display: grid;
+  grid-template-columns: 20px 100px 20px 140px 20px 75px;
+  /* column-gap: 5px; */
 }
 
 #description {
-    flex-grow: 3;
-    min-height: 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  flex-grow: 3;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 #description > textarea {
-    flex-grow: 1;
-    height: 100%;
-    width: 90%;
-    resize: none;
-}
-
-.title {
-    font-weight: 700;
-    font-size: medium;
+  flex-grow: 1;
+  height: 100%;
+  width: 90%;
+  resize: none;
 }
 
 .addBoulderButtons {
-    height: 125px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}   
+  height: 125px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

@@ -1,0 +1,12 @@
+.chart {
+  width: 75%;
+  margin: 100px;
+}
+
+.pieChart {
+  display: flex;
+}
+
+.pieChart > * {
+  width: 30%;
+}
