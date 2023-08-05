@@ -12,13 +12,11 @@ const db = mysql.createPool({
   database: process.env.DATABASE_NAME
 })
 
-
 const boulderRouter = express.Router()
-
 
 boulderRouter.get('/:id', (req, res) => {
   const id = req.params.id
-  const q = "SELECT * FROM boulders_old WHERE id = " + id
+  const q = 'SELECT * FROM boulders_old WHERE id = ' + id
 
   db.query(q, (err, data) => {
     if (err) return res.json('Error - ' + err)
@@ -27,7 +25,6 @@ boulderRouter.get('/:id', (req, res) => {
 })
 
 boulderRouter.post('/', (req, res) => {
-
   console.log(req.body)
 
   const rating = req.body.rating
@@ -52,7 +49,6 @@ boulderRouter.post('/', (req, res) => {
 })
 
 boulderRouter.put('/', (req, res) => {
-
   const values = new Map([
     ['id', req.body.id],
     ['rating', req.body.rating],
@@ -79,16 +75,13 @@ boulderRouter.put('/', (req, res) => {
 
   q = q.concat(' WHERE id = ' + values.get('id') + ';')
 
-  db.query(q, (err, data) => {  
+  db.query(q, (err, data) => {
     if (err) return res.json('Error - ' + err)
     res.send(data)
   })
 })
 
-
-
 boulderRouter.get('/', (req, res) => {
-
   const url = decodeURIComponent(req.url.substring(2))
   const query = JSON.parse(url)
   const q = makeGetQueryString(query)
@@ -103,14 +96,14 @@ boulderRouter.get('/', (req, res) => {
       LIMIT(query.limit), ';'
     )
   }
-  
+
   function SELECT (columns) {
     let q = 'SELECT '
-  
+
     columns.forEach(column => {
       q = q.concat(column + ', ')
     })
-  
+
     if (q.substring(q.length - 2) === ', ') {
       q = q.substring(0, q.length - 2)
     } else {
@@ -118,18 +111,18 @@ boulderRouter.get('/', (req, res) => {
     }
     return q
   }
-  
+
   function FROM (query) {
     return 'FROM boulders_old'
   }
-  
+
   function WHERE (query) {
     if (query === '') {
       return ''
     }
     return 'WHERE ' + query
   }
-  
+
   function ORDERBY (columns) {
     let q = 'ORDER BY '
     columns.forEach(column => {
@@ -139,7 +132,7 @@ boulderRouter.get('/', (req, res) => {
     })
     return q.substring(0, q.length - 2)
   }
-  
+
   function LIMIT (limit) {
     if (limit === 'null') {
       return 'LIMIT 15'
@@ -164,6 +157,5 @@ boulderRouter.delete('/:id', (req, res) => {
     res.send(data)
   })
 })
-
 
 export default boulderRouter

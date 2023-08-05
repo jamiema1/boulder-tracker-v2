@@ -47,7 +47,7 @@ export default function BoulderData() {
 
   function addBoulderToDB(newBoulder) {
     if (localStorage.getItem(USER) == "jamiema1") {
-      Axios.post("/boulder", newBoulder).then((response) => {
+      Axios.post("/boulder_old", newBoulder).then((response) => {
         if (response.status != 200) {
           alert("Failed to insert data with " + response.data);
           return;
@@ -64,7 +64,7 @@ export default function BoulderData() {
 
   function deleteBoulderFromDB(id) {
     if (localStorage.getItem(USER) == "jamiema1") {
-      Axios.delete("/boulder/" + id).then((response) => {
+      Axios.delete("/boulder_old/" + id).then((response) => {
         if (response.status != 200) {
           alert("Failed to delete data with " + response.data);
           return;
@@ -81,7 +81,7 @@ export default function BoulderData() {
       localStorage.getItem(USER) == "jamiema1" ||
       localStorage.getItem(USER) == "guest"
     ) {
-      Axios.get("/boulder?" + uri).then((response) => {
+      Axios.get("/boulder_old?" + uri).then((response) => {
         if (response.status != 200) {
           alert("Failed to get data with " + response.data);
           return;
@@ -95,7 +95,7 @@ export default function BoulderData() {
 
   function updateBoulderFromDB(updatedBoulder) {
     if (localStorage.getItem(USER) == "jamiema1") {
-      Axios.put("/boulder", updatedBoulder)
+      Axios.put("/boulder_old", updatedBoulder)
         .then(() => {
           boulderTableRef.current.updateBoulderList();
         })
