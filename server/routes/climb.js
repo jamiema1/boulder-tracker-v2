@@ -19,10 +19,13 @@ climbRouter.get('/:id', (req, res) => {
   const q = 'SELECT * FROM climbs WHERE id = ' + id
 
   db.query(q, (err, data) => {
-    if (err === null && data.length === 0) {
-      return res.status(404).json('Error - id not found')
+    if (err) {
+      return res.status(400).json({ error: 'Error - ' + err })
     }
-    res.status(200).json({ data: data[0] })
+    if (data.length === 0) {
+      return res.status(404).json({ error: 'Error - id not found' })
+    }
+    res.status(200).json({ data })
   })
 })
 
@@ -30,8 +33,8 @@ climbRouter.get('/', (req, res) => {
   const q = 'SELECT * FROM climbs'
 
   db.query(q, (err, data) => {
-    if (err !== null) {
-      return res.status(400).json('Error')
+    if (err) {
+      return res.status(400).json({ error: 'Error - ' + err })
     }
     res.status(200).json({ data })
   })
@@ -53,9 +56,15 @@ climbRouter.post('/', (req, res) => {
      ' (?,?,?,?,?,?);'
   db.query(q, values, (err, data) => {
     if (err) {
-      return res.status(400).json('Error - ' + err)
+      return res.status(400).json({ error: 'Error - ' + err })
     }
-    res.status(200).json(JSON.parse(JSON.stringify(data)).insertId)
+    res.status(200).json({
+      data: [
+        {
+          id: JSON.parse(JSON.stringify(data)).insertId
+        }
+      ]
+    })
   })
 })
 
@@ -83,13 +92,26 @@ climbRouter.put('/:id', (req, res) => {
     .concat(' WHERE id = ' + req.params.id + ';')
 
   db.query(q, (err, data) => {
+    console.log(err)
+    if (err) {
+      return res.status(400).json({ error: 'Error - ' + err })
+    }
     if (data === undefined) {
-      return res.status(400).json('Error - ' + err)
+      return res.status(400).json({ error: 'Error - ' + err })
     }
-    if (err === null && JSON.parse(JSON.stringify(data)).changedRows === 0) {
-      return res.status(404).json('Error - id not found')
+    if (JSON.parse(JSON.stringify(data)).affectedRows === 0) {
+      return res.status(404).json({ error: 'Error - id not found' })
     }
-    res.status(200).json(req.params.id)
+    if (JSON.parse(JSON.stringify(data)).changedRows === 0) {
+      return res.status(202).json({ error: 'Error - no data updated' })
+    }
+    res.status(200).json({
+      data: [
+        {
+          id: req.params.id
+        }
+      ]
+    })
   })
 })
 
@@ -97,7 +119,10 @@ climbRouter.delete('/:id', (req, res) => {
   const q = 'DELETE FROM climbs WHERE id = ' + req.params.id + ';'
 
   db.query(q, (err, data) => {
-    if (err === null && JSON.parse(JSON.stringify(data)).affectedRows === 0) {
+    if (err) {
+      return res.status(400).json({ error: 'Error - ' + err })
+    }
+    if (JSON.parse(JSON.stringify(data)).affectedRows === 0) {
       return res.status(404).json('Error - id not found')
     }
     res.status(200).json(req.params.id)
