@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 export default function Description(props) {
   return (
@@ -11,5 +11,5 @@ export default function Description(props) {
         //       .replace("'", "\\'")
       ></textarea>
     </div>
-  );
+  )
 }

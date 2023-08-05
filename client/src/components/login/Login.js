@@ -1,47 +1,47 @@
-import React, {useState} from "react";
-import Axios from "../../api/Axios";
-import {useNavigate} from "react-router-dom";
-import "./Login.css";
+import React, {useState} from "react"
+import Axios from "../../api/Axios"
+import {useNavigate} from "react-router-dom"
+import "./Login.css"
 
 export default function Login() {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate()
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
 
   function login(e) {
-    e.preventDefault();
+    e.preventDefault()
 
     if (username === "") {
-      alert("Please enter a username");
-      return;
+      alert("Please enter a username")
+      return
     }
     if (password === "") {
-      alert("Please enter a password");
-      return;
+      alert("Please enter a password")
+      return
     }
 
     Axios.post("/user/" + username + "/" + password + "/signin")
       .then((response) => {
-        alert("Successfully logged in " + response.data);
-        setUsername("");
-        setPassword("");
-        navigate("/user/" + username + "/data");
-        localStorage.setItem("user", username);
+        alert("Successfully logged in " + response.data)
+        setUsername("")
+        setPassword("")
+        navigate("/user/" + username + "/data")
+        localStorage.setItem("user", username)
       })
       .catch((error) => {
-        alert(error.response.data);
-      });
+        alert(error.response.data)
+      })
   }
 
   function register(e) {
-    e.preventDefault();
-    navigate("/user/register");
+    e.preventDefault()
+    navigate("/user/register")
   }
 
   function guest(e) {
-    e.preventDefault();
-    navigate("/user/guest/data");
-    localStorage.setItem("user", "guest");
+    e.preventDefault()
+    navigate("/user/guest/data")
+    localStorage.setItem("user", "guest")
   }
 
   return (
@@ -55,7 +55,7 @@ export default function Login() {
               type="text"
               value={username}
               onChange={(e) => {
-                setUsername(e.target.value);
+                setUsername(e.target.value)
               }}
             ></input>
           </div>
@@ -65,7 +65,7 @@ export default function Login() {
               type="password"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value);
+                setPassword(e.target.value)
               }}
             ></input>
           </div>
@@ -75,5 +75,5 @@ export default function Login() {
         </form>
       </div>
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import React, {forwardRef} from "react";
+import React, {forwardRef} from "react"
 
 export default forwardRef(function LimitSelector(props, ref) {
   return (
@@ -18,5 +18,5 @@ export default forwardRef(function LimitSelector(props, ref) {
         <option value="NONE">All</option>
       </select>
     </span>
-  );
-});
+  )
+})

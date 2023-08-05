@@ -80,8 +80,7 @@ climbRouter.put('/:id', (req, res) => {
     }
   })
   q = q.substring(0, q.length - 2)
-
-  q = q.concat(' WHERE id = ' + req.params.id + ';')
+    .concat(' WHERE id = ' + req.params.id + ';')
 
   db.query(q, (err, data) => {
     if (data === undefined) {

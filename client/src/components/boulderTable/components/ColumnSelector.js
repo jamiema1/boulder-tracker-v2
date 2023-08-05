@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, {forwardRef} from "react";
+import React, {forwardRef} from "react"
 
 export default forwardRef(function ColumnSelector(props, ref) {
-  const change = props.updateBoulderList;
+  const change = props.updateBoulderList
 
   return (
     <div className="columnSelector">
@@ -66,5 +66,5 @@ export default forwardRef(function ColumnSelector(props, ref) {
         <label className="option">Description</label>
       </div>
     </div>
-  );
-});
+  )
+})

@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 export default function Rating(props) {
   return (
@@ -19,5 +19,5 @@ export default function Rating(props) {
         <option value="unrated">Unrated</option>
       </select>
     </div>
-  );
+  )
 }

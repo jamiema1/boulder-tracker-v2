@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 export default function SendAttempts(props) {
   return (
@@ -22,5 +22,5 @@ export default function SendAttempts(props) {
         <option value="10">10+</option>
       </select>
     </span>
-  );
+  )
 }

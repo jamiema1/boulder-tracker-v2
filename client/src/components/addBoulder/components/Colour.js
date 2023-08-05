@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 export default function Colour(props) {
   return (
@@ -20,5 +20,5 @@ export default function Colour(props) {
         <option value="yellow">Yellow</option>
       </select>
     </span>
-  );
+  )
 }

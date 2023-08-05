@@ -4,30 +4,30 @@ import React, {
   useEffect,
   useImperativeHandle,
   forwardRef,
-} from "react";
-import Boulder from "./components/Boulder";
-import TableHeader from "./components/TableHeader";
-import ColumnSelector from "./components/ColumnSelector";
-import LimitSelector from "./components/LimitSelector";
-import FilterSelector from "./components/FilterSelector";
-import "./BoulderTable.css";
+} from "react"
+import Boulder from "./components/Boulder"
+import TableHeader from "./components/TableHeader"
+import ColumnSelector from "./components/ColumnSelector"
+import LimitSelector from "./components/LimitSelector"
+import FilterSelector from "./components/FilterSelector"
+import "./BoulderTable.css"
 
-const sortColumns = new Map([["id", "DESC"]]);
+const sortColumns = new Map([["id", "DESC"]])
 
 export default forwardRef(function BoulderTable(props, ref) {
-  const boulderTableData = props.boulderTableData;
-  const getBoulderListFromDB = props.getBoulderListFromDB;
+  const boulderTableData = props.boulderTableData
+  const getBoulderListFromDB = props.getBoulderListFromDB
 
-  const [columns, setColumns] = useState([]);
-  const columnRef = useRef();
-  const limitSelectorRef = useRef(15);
-  const filterRef = useRef();
+  const [columns, setColumns] = useState([])
+  const columnRef = useRef()
+  const limitSelectorRef = useRef(15)
+  const filterRef = useRef()
 
   useImperativeHandle(ref, () => ({
     updateBoulderList() {
-      updateBoulderList();
+      updateBoulderList()
     },
-  }));
+  }))
 
   useEffect(() => {
     const allFields = [
@@ -40,23 +40,23 @@ export default forwardRef(function BoulderTable(props, ref) {
       "startDate",
       "sendDate",
       "description",
-    ];
-    updateColumns(allFields);
-  }, []);
+    ]
+    updateColumns(allFields)
+  }, [])
 
   function updateBoulderList() {
     const cols = Array.from(columnRef.current.children)
       .filter((e) => e.nodeName === "INPUT" && e.checked)
-      .map((e) => e.value);
-    updateColumns([...cols, "id"]);
+      .map((e) => e.value)
+    updateColumns([...cols, "id"])
   }
 
   function updateColumns(cols) {
-    setColumns(cols);
+    setColumns(cols)
 
-    let orderColumns = [];
+    let orderColumns = []
     for (const key of sortColumns.keys()) {
-      orderColumns.push({[key]: sortColumns.get(key)});
+      orderColumns.push({[key]: sortColumns.get(key)})
     }
 
     let params = {
@@ -64,22 +64,22 @@ export default forwardRef(function BoulderTable(props, ref) {
       where: filterRef.current.value,
       orderby: orderColumns,
       limit: limitSelectorRef.current.value,
-    };
+    }
 
-    params = encodeURIComponent(JSON.stringify(params));
+    params = encodeURIComponent(JSON.stringify(params))
 
-    getBoulderListFromDB(params);
+    getBoulderListFromDB(params)
   }
 
   function toggleSortColumn(column, value) {
     if (value === "NONE") {
-      sortColumns.delete(column);
+      sortColumns.delete(column)
     } else {
-      sortColumns.set(column, value);
+      sortColumns.set(column, value)
     }
-    sortColumns.delete("id");
-    sortColumns.set("id", "DESC");
-    updateBoulderList();
+    sortColumns.delete("id")
+    sortColumns.set("id", "DESC")
+    updateBoulderList()
   }
 
   return (
@@ -115,11 +115,11 @@ export default forwardRef(function BoulderTable(props, ref) {
                   deleteBoulderFromDB={props.deleteBoulderFromDB}
                   setOptions={props.setOptions}
                 />
-              );
+              )
             })}
           </tbody>
         </table>
       </div>
     </div>
-  );
-});
+  )
+})

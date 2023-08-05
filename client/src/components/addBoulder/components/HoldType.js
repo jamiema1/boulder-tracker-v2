@@ -1,21 +1,21 @@
-import React from "react";
+import React from "react"
 
 export default function HoldType(props) {
   function handleOnChange(e) {
-    const key = e.target.value;
-    const updatedCheckedState = new Map(props.holdTypeCheckedState);
-    updatedCheckedState.set(key, !props.holdTypeCheckedState.get(key));
+    const key = e.target.value
+    const updatedCheckedState = new Map(props.holdTypeCheckedState)
+    updatedCheckedState.set(key, !props.holdTypeCheckedState.get(key))
 
-    props.setHoldTypeCheckedState(updatedCheckedState);
+    props.setHoldTypeCheckedState(updatedCheckedState)
 
-    let newHoldType = "";
+    let newHoldType = ""
     updatedCheckedState.forEach((value, key) => {
       if (value) {
-        newHoldType = newHoldType.concat(key, " ");
+        newHoldType = newHoldType.concat(key, " ")
       }
-    });
+    })
 
-    props.setHoldType(newHoldType.trimEnd());
+    props.setHoldType(newHoldType.trimEnd())
   }
 
   return (
@@ -101,5 +101,5 @@ export default function HoldType(props) {
         <label>Volume</label>
       </div>
     </div>
-  );
+  )
 }

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react"
 import {
   Chart as ChartJS,
   BarElement,
@@ -8,54 +8,47 @@ import {
   Title,
   Tooltip,
   Legend,
-} from "chart.js";
-import {Bar} from "react-chartjs-2";
-import "./Chart.css";
+} from "chart.js"
+import {Bar} from "react-chartjs-2"
+import "./Chart.css"
 
-ChartJS.register(
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend)
 
 export default function BarChart(props) {
-  const [chartData, setChartData] = useState({labels: [], datasets: []});
+  const [chartData, setChartData] = useState({labels: [], datasets: []})
 
   useEffect(() => {
     // TODO: clean this section up and move it to a seperate helper function
     const pairs = props.boulderData.map((boulder) => {
       if (boulder.sendDate === null)
-        return {sendDate: "Unfinished", rating: boulder.rating};
+        return {sendDate: "Unfinished", rating: boulder.rating}
       return {
         sendDate: boulder.sendDate.split("T")[0],
         rating: boulder.rating,
-      };
-    });
+      }
+    })
 
-    const pairMap = new Map();
+    const pairMap = new Map()
 
     pairs.forEach((pair) => {
       if (pairMap.has(pair.sendDate.split("T")[0])) {
         pairMap.set(
           pair.sendDate.split("T")[0],
           pairMap.get(pair.sendDate.split("T")[0]) + pair.rating
-        );
+        )
       } else {
-        pairMap.set(pair.sendDate.split("T")[0], pair.rating);
+        pairMap.set(pair.sendDate.split("T")[0], pair.rating)
       }
-    });
+    })
 
-    pairMap.delete("Unfinished");
+    pairMap.delete("Unfinished")
 
-    const sorted = new Map([...pairMap.entries()].sort());
+    const sorted = new Map([...pairMap.entries()].sort())
 
-    const c1 = [];
-    const c2 = [];
-    sorted.forEach((value, key) => c1.push(key));
-    sorted.forEach((value) => c2.push(value));
+    const c1 = []
+    const c2 = []
+    sorted.forEach((value, key) => c1.push(key))
+    sorted.forEach((value) => c2.push(value))
 
     setChartData({
       labels: c1,
@@ -67,8 +60,8 @@ export default function BarChart(props) {
           data: c2,
         },
       ],
-    });
-  }, [props.boulderData]);
+    })
+  }, [props.boulderData])
 
   const options = {
     elements: {
@@ -86,7 +79,7 @@ export default function BarChart(props) {
         text: "Total Rating per Day",
       },
     },
-  };
+  }
 
   return (
     <>
@@ -94,5 +87,5 @@ export default function BarChart(props) {
         <Bar data={chartData} options={options} />
       </div>
     </>
-  );
+  )
 }

@@ -1,17 +1,17 @@
-import React from "react";
-import {useNavigate} from "react-router-dom";
-import "./homepage.css";
+import React from "react"
+import {useNavigate} from "react-router-dom"
+import "./homepage.css"
 
 export default function Homepage() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   function login() {
-    navigate("/user/login");
+    navigate("/user/login")
   }
 
   function guest() {
-    navigate("/user/guest/data");
-    localStorage.setItem("user", "guest");
+    navigate("/user/guest/data")
+    localStorage.setItem("user", "guest")
   }
 
   return (
@@ -67,5 +67,5 @@ export default function Homepage() {
       <button onClick={login}>Log In</button>
       <button onClick={guest}>Continue as Guest</button>
     </div>
-  );
+  )
 }

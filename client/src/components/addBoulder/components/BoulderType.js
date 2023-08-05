@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 export default function BoulderType(props) {
   return (
@@ -16,5 +16,5 @@ export default function BoulderType(props) {
         <option value="roof">Roof</option>
       </select>
     </span>
-  );
+  )
 }

@@ -1,41 +1,41 @@
-import React from "react";
+import React from "react"
 
 export default function Boulder({boulder, deleteBoulderFromDB, setOptions}) {
-  const id = boulder.id;
-  const rating = boulder.rating;
-  const colour = boulder.colour;
-  const holdType = boulder.holdType;
-  const boulderType = boulder.boulderType;
-  const sendAttempts = boulder.sendAttempts;
-  const startDate = boulder.startDate;
-  const sendDate = boulder.sendDate;
-  const description = boulder.description;
+  const id = boulder.id
+  const rating = boulder.rating
+  const colour = boulder.colour
+  const holdType = boulder.holdType
+  const boulderType = boulder.boulderType
+  const sendAttempts = boulder.sendAttempts
+  const startDate = boulder.startDate
+  const sendDate = boulder.sendDate
+  const description = boulder.description
 
   function getDate(datetime) {
     if (datetime === null || datetime === undefined) {
-      return "Unfinished";
+      return "Unfinished"
     }
-    return datetime.split("T")[0];
+    return datetime.split("T")[0]
   }
 
   function handleDeleteBoulder(e) {
-    deleteBoulderFromDB(e.target.id);
+    deleteBoulderFromDB(e.target.id)
   }
 
   function handleUpdateBoulder(e) {
     const row =
       e.target.parentElement.parentElement.parentElement.getElementsByTagName(
         "td"
-      );
+      )
 
     if (row.length < 10) {
-      alert("All columns must be shown before editing a boulder");
-      return;
+      alert("All columns must be shown before editing a boulder")
+      return
     }
 
-    let r = rating === -1 ? "unrated" : rating + " hex";
-    let start = getDate(startDate);
-    let send = getDate(sendDate) === "Unfinished" ? null : getDate(sendDate);
+    let r = rating === -1 ? "unrated" : rating + " hex"
+    let start = getDate(startDate)
+    let send = getDate(sendDate) === "Unfinished" ? null : getDate(sendDate)
 
     setOptions([
       id,
@@ -47,7 +47,7 @@ export default function Boulder({boulder, deleteBoulderFromDB, setOptions}) {
       start,
       send,
       description,
-    ]);
+    ])
   }
 
   return (
@@ -71,5 +71,5 @@ export default function Boulder({boulder, deleteBoulderFromDB, setOptions}) {
         </button>
       </td>
     </tr>
-  );
+  )
 }

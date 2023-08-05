@@ -1,11 +1,11 @@
-import React from "react";
-import BoulderData from "./components/boulderData/BoulderData";
-import Login from "./components/login/Login";
+import React from "react"
+import BoulderData from "./components/boulderData/BoulderData"
+import Login from "./components/login/Login"
 // import Register from "./components/login/Register";
-import Homepage from "./components/homepage/homepage";
-import GymPage from "./pages/gymPage";
-import {HashRouter as Router, Routes, Route, Link} from "react-router-dom";
-import "chart.js";
+import Homepage from "./components/homepage/homepage"
+import GymPage from "./pages/gymPage"
+import {HashRouter as Router, Routes, Route, Link} from "react-router-dom"
+import "chart.js"
 
 function App() {
   // function logout() {
@@ -54,7 +54,7 @@ function App() {
         <Route exact path="/gyms" element={<GymPage />}></Route>
       </Routes>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App

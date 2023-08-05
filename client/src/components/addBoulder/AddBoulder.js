@@ -1,27 +1,27 @@
-import React, {useState, useImperativeHandle, forwardRef} from "react";
-import Rating from "./components/Rating";
-import Colour from "./components/Colour";
-import HoldType from "./components/HoldType";
-import BoulderType from "./components/BoulderType";
-import SendAttempts from "./components/SendAttempts";
-import Description from "./components/Description";
-import "./AddBoulder.css";
-import StartDate from "./components/StartDate";
-import SendDate from "./components/SendDate";
+import React, {useState, useImperativeHandle, forwardRef} from "react"
+import Rating from "./components/Rating"
+import Colour from "./components/Colour"
+import HoldType from "./components/HoldType"
+import BoulderType from "./components/BoulderType"
+import SendAttempts from "./components/SendAttempts"
+import Description from "./components/Description"
+import "./AddBoulder.css"
+import StartDate from "./components/StartDate"
+import SendDate from "./components/SendDate"
 
 function convertRatingToNumber(str) {
   if (str.includes("hex")) {
-    return +str.substring(0, 1);
+    return +str.substring(0, 1)
   }
-  return -1;
+  return -1
 }
 
-let updateBoulderId;
+let updateBoulderId
 
 export default forwardRef(function AddBoulder(props, ref) {
-  const [rating, setRating] = useState("null");
-  const [colour, setColour] = useState("null");
-  const [holdType, setHoldType] = useState("null");
+  const [rating, setRating] = useState("null")
+  const [colour, setColour] = useState("null")
+  const [holdType, setHoldType] = useState("null")
   const [holdTypeCheckedState, setHoldTypeCheckedState] = useState(
     new Map([
       ["crimp", false],
@@ -36,36 +36,36 @@ export default forwardRef(function AddBoulder(props, ref) {
       // ["undercling", false],
       ["volume", false],
     ])
-  );
-  const [boulderType, setBoulderType] = useState("null");
-  const [sendAttempts, setSendAttempts] = useState("null");
-  const [startDate, setStartDate] = useState("");
-  const [sendDate, setSendDate] = useState("");
-  const [description, setDescription] = useState("");
+  )
+  const [boulderType, setBoulderType] = useState("null")
+  const [sendAttempts, setSendAttempts] = useState("null")
+  const [startDate, setStartDate] = useState("")
+  const [sendDate, setSendDate] = useState("")
+  const [description, setDescription] = useState("")
 
-  const [boulderList, setBoulderList] = useState("[]");
+  const [boulderList, setBoulderList] = useState("[]")
 
-  const addBoulderToDB = props.addBoulderToDB;
-  const updateBoulderFromDB = props.updateBoulderFromDB;
+  const addBoulderToDB = props.addBoulderToDB
+  const updateBoulderFromDB = props.updateBoulderFromDB
 
   useImperativeHandle(ref, () => ({
     setOptions(options) {
-      setOptions(options);
+      setOptions(options)
     },
-  }));
+  }))
 
   function resetInputFields() {
-    setRating("null");
-    setColour("null");
-    setHoldType("");
-    const newCheckedState = new Map(holdTypeCheckedState);
-    newCheckedState.forEach((value, key) => newCheckedState.set(key, false));
-    setHoldTypeCheckedState(newCheckedState);
-    setBoulderType("null");
-    setSendAttempts("null");
-    setStartDate("");
-    setSendDate("");
-    setDescription("");
+    setRating("null")
+    setColour("null")
+    setHoldType("")
+    const newCheckedState = new Map(holdTypeCheckedState)
+    newCheckedState.forEach((value, key) => newCheckedState.set(key, false))
+    setHoldTypeCheckedState(newCheckedState)
+    setBoulderType("null")
+    setSendAttempts("null")
+    setStartDate("")
+    setSendDate("")
+    setDescription("")
   }
 
   function getInputFields() {
@@ -77,65 +77,64 @@ export default forwardRef(function AddBoulder(props, ref) {
       sendAttempts,
       startDate,
       description,
-    ].reduce((acc, val) => acc || val === "null" || val === "", false);
+    ].reduce((acc, val) => acc || val === "null" || val === "", false)
 
     if (anyNullFields) {
-      alert("Missing required information");
-      return;
+      alert("Missing required information")
+      return
     }
 
     const boulder = {
-      "rating": convertRatingToNumber(rating),
-      "colour": colour,
-      "holdType": holdType,
-      "boulderType": boulderType,
-      "sendAttempts": sendAttempts,
-      "startDate": startDate,
-      "sendDate": sendDate === "" ? null : sendDate,
-      "description": description,
+      rating: convertRatingToNumber(rating),
+      colour: colour,
+      holdType: holdType,
+      boulderType: boulderType,
+      sendAttempts: sendAttempts,
+      startDate: startDate,
+      sendDate: sendDate === "" ? null : sendDate,
+      description: description,
     }
 
-    return boulder;
+    return boulder
   }
 
   function addBoulder() {
-    let newBoulder = getInputFields();
-    if (newBoulder === undefined) return;
-    addBoulderToDB(newBoulder);
+    let newBoulder = getInputFields()
+    if (newBoulder === undefined) return
+    addBoulderToDB(newBoulder)
     // TODO: uncomment when done testing
     // resetInputFields();
   }
 
   function addBoulders() {
     // TODO: finish this function
-    let newBoulders = boulderList.replaceAll("\n", "  ").replaceAll("; ", "");
+    let newBoulders = boulderList.replaceAll("\n", "  ").replaceAll("; ", "")
     // console.log(newBoulders)
     newBoulders = JSON.parse(newBoulders)
-    if (newBoulders === undefined) return;
-    newBoulders.forEach(cleanData);
-    newBoulders.forEach(addBoulderToDB);
+    if (newBoulders === undefined) return
+    newBoulders.forEach(cleanData)
+    newBoulders.forEach(addBoulderToDB)
   }
 
   function cleanData(newBoulder) {
-    newBoulder.startDate = convertToDateTime(newBoulder.startDate);
-    newBoulder.sendDate = convertToDateTime(newBoulder.sendDate);
+    newBoulder.startDate = convertToDateTime(newBoulder.startDate)
+    newBoulder.sendDate = convertToDateTime(newBoulder.sendDate)
   }
 
   function convertToDateTime(dateTime) {
     if (dateTime == null) {
       return dateTime
     }
-    const dateTimeParts = dateTime.split(", ");
-    let timeParts = dateTimeParts[1].split(":");
+    const dateTimeParts = dateTime.split(", ")
+    let timeParts = dateTimeParts[1].split(":")
     let minuteParts = timeParts[1].split(" ")
     if (minuteParts[1] == "PM") {
       timeParts[0] = String(Number(timeParts[0]) + 12)
     }
-    return dateTimeParts[0] + " " + timeParts[0] + ":" + minuteParts[0];
+    return dateTimeParts[0] + " " + timeParts[0] + ":" + minuteParts[0]
   }
 
-
-  const [updating, setUpdating] = useState(false);
+  const [updating, setUpdating] = useState(false)
 
   function setOptions([
     id,
@@ -148,43 +147,43 @@ export default forwardRef(function AddBoulder(props, ref) {
     sendDate,
     description,
   ]) {
-    setRating(rating);
-    setColour(colour);
-    setHoldType(holdType);
+    setRating(rating)
+    setColour(colour)
+    setHoldType(holdType)
 
-    const newCheckedState = new Map(holdTypeCheckedState);
+    const newCheckedState = new Map(holdTypeCheckedState)
     newCheckedState.forEach((value, key) => {
       if (holdType.includes(key)) {
-        newCheckedState.set(key, true);
+        newCheckedState.set(key, true)
       } else {
-        newCheckedState.set(key, false);
+        newCheckedState.set(key, false)
       }
-    });
-    setHoldTypeCheckedState(newCheckedState);
+    })
+    setHoldTypeCheckedState(newCheckedState)
 
-    setBoulderType(boulderType);
-    setSendAttempts(sendAttempts);
-    setStartDate(startDate);
-    setSendDate(sendDate === null ? "" : sendDate);
-    setDescription(description);
+    setBoulderType(boulderType)
+    setSendAttempts(sendAttempts)
+    setStartDate(startDate)
+    setSendDate(sendDate === null ? "" : sendDate)
+    setDescription(description)
 
     // TODO: move to a separate function
-    updateBoulderId = id;
-    setUpdating(true);
+    updateBoulderId = id
+    setUpdating(true)
   }
 
   function updateBoulder() {
-    const updatedBoulder = getInputFields();
-    if (updatedBoulder === undefined) return;
-    updatedBoulder.id = updateBoulderId;
-    updateBoulderFromDB(updatedBoulder);
-    resetInputFields();
-    setUpdating(false);
+    const updatedBoulder = getInputFields()
+    if (updatedBoulder === undefined) return
+    updatedBoulder.id = updateBoulderId
+    updateBoulderFromDB(updatedBoulder)
+    resetInputFields()
+    setUpdating(false)
   }
 
   function cancelUpdate() {
-    resetInputFields();
-    setUpdating(false);
+    resetInputFields()
+    setUpdating(false)
   }
 
   return (
@@ -241,12 +240,11 @@ export default forwardRef(function AddBoulder(props, ref) {
         </div>
       </form>
       <div>
-        <textarea onChange={(e) => setBoulderList(e.target.value)}>
-        </textarea>
+        <textarea onChange={(e) => setBoulderList(e.target.value)}></textarea>
         <button onClick={addBoulders} type="button" disabled={updating}>
           Add Boulders
         </button>
       </div>
     </div>
-  );
-});
+  )
+})

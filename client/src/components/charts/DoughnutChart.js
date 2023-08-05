@@ -1,37 +1,37 @@
-import {Chart as ChartJS, ArcElement} from "chart.js";
-import React, {useState, useEffect} from "react";
-import {Doughnut, Pie} from "react-chartjs-2";
+import {Chart as ChartJS, ArcElement} from "chart.js"
+import React, {useState, useEffect} from "react"
+import {Doughnut, Pie} from "react-chartjs-2"
 
-ChartJS.register(ArcElement);
+ChartJS.register(ArcElement)
 
 export default function DoughnutChart(props) {
-  const [chartData, setChartData] = useState({datasets: []});
+  const [chartData, setChartData] = useState({datasets: []})
 
   useEffect(() => {
     // TODO: clean this section up and move it to a seperate helper function
     const category = props.boulderData.map((boulder) => {
       return {
         boulderType: boulder.boulderType,
-      };
-    });
+      }
+    })
 
-    const pairMap = new Map();
+    const pairMap = new Map()
 
     category.forEach((cat) => {
-      const val = cat.boulderType;
+      const val = cat.boulderType
       if (pairMap.has(val)) {
-        pairMap.set(val, pairMap.get(val) + 1);
+        pairMap.set(val, pairMap.get(val) + 1)
       } else {
-        pairMap.set(val, 1);
+        pairMap.set(val, 1)
       }
-    });
+    })
 
-    let labels = [];
-    let data = [];
+    let labels = []
+    let data = []
     pairMap.forEach((value, key) => {
-      labels.push(key);
-      data.push(value);
-    });
+      labels.push(key)
+      data.push(value)
+    })
 
     setChartData({
       maintainAspectRatio: false,
@@ -48,8 +48,8 @@ export default function DoughnutChart(props) {
           //   hoverBackgroundColor: chartColors,
         },
       ],
-    });
-  }, [props.boulderData]);
+    })
+  }, [props.boulderData])
 
   const options = {
     legend: {
@@ -61,7 +61,7 @@ export default function DoughnutChart(props) {
     //     borderWidth: 0,
     //   },
     // },
-  };
+  }
 
   return (
     <div className="pieChart">
@@ -72,5 +72,5 @@ export default function DoughnutChart(props) {
         <Pie data={chartData} options={options} />
       </div>
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react"
 import {
   Chart as ChartJS,
   LinearScale,
@@ -6,14 +6,14 @@ import {
   LineElement,
   Tooltip,
   Legend,
-} from "chart.js";
-import {Bubble} from "react-chartjs-2";
-import "./Chart.css";
+} from "chart.js"
+import {Bubble} from "react-chartjs-2"
+import "./Chart.css"
 
-ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
+ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend)
 
 export default function BubbleChart(props) {
-  const [chartData, setChartData] = useState({datasets: []});
+  const [chartData, setChartData] = useState({datasets: []})
 
   useEffect(() => {
     // TODO: clean this section up and move it to a seperate helper function
@@ -21,32 +21,32 @@ export default function BubbleChart(props) {
       return {
         sendAttempts: boulder.sendAttempts,
         rating: boulder.rating,
-      };
-    });
+      }
+    })
 
-    let data = [];
+    let data = []
     pairs.forEach((pair) => {
-      const rating = pair.rating;
-      const sendAttempts = pair.sendAttempts;
-      data.push({x: rating, y: sendAttempts});
-    });
+      const rating = pair.rating
+      const sendAttempts = pair.sendAttempts
+      data.push({x: rating, y: sendAttempts})
+    })
 
-    const pairMap = new Map();
+    const pairMap = new Map()
 
     data.forEach((pair) => {
-      const str = JSON.stringify(pair);
+      const str = JSON.stringify(pair)
       if (pairMap.has(str)) {
-        pairMap.set(str, pairMap.get(str) + 1);
+        pairMap.set(str, pairMap.get(str) + 1)
       } else {
-        pairMap.set(str, 1);
+        pairMap.set(str, 1)
       }
-    });
+    })
 
-    data = [];
+    data = []
     pairMap.forEach((value, keyStr) => {
-      const key = JSON.parse(keyStr);
-      data.push({x: key.x, y: key.y, r: value});
-    });
+      const key = JSON.parse(keyStr)
+      data.push({x: key.x, y: key.y, r: value})
+    })
 
     setChartData({
       datasets: [
@@ -56,8 +56,8 @@ export default function BubbleChart(props) {
           data: data,
         },
       ],
-    });
-  }, [props.boulderData]);
+    })
+  }, [props.boulderData])
 
   const options = {
     scales: {
@@ -69,11 +69,11 @@ export default function BubbleChart(props) {
         title: {display: true, text: "Rating"},
       },
     },
-  };
+  }
 
   return (
     <div className="chart">
       <Bubble data={chartData} options={options} />
     </div>
-  );
+  )
 }

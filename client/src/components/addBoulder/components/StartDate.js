@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 export default function StartDate(props) {
   return (
@@ -10,5 +10,5 @@ export default function StartDate(props) {
         onChange={(e) => props.setStartDate(e.target.value)}
       ></input>
     </div>
-  );
+  )
 }

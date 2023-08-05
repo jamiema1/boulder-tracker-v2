@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 export default function GymPage() {
   return (
@@ -20,5 +20,5 @@ export default function GymPage() {
       <li>Port Coquitlam</li>
       <li>North Vancouver</li>
     </ul>
-  );
+  )
 }

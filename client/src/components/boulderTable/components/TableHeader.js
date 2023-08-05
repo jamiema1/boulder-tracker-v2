@@ -1,52 +1,52 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from "react"
+import PropTypes from "prop-types"
 
 TableHeader.propTypes = {
   columns: PropTypes.array.isRequired,
   toggleSortColumn: PropTypes.func.isRequired,
-};
+}
 
 export default function TableHeader({columns, toggleSortColumn}) {
   function changeValue(e) {
-    const button = e.target;
-    let [column, value] = button.value.split(" ");
+    const button = e.target
+    let [column, value] = button.value.split(" ")
     switch (value) {
     case "NONE":
-      value = "ASC";
-      break;
+      value = "ASC"
+      break
     case "ASC":
-      value = "DESC";
-      break;
+      value = "DESC"
+      break
     case "DESC":
-      value = "NONE";
-      break;
+      value = "NONE"
+      break
     default:
-      break;
+      break
     }
 
-    button.innerHTML = value;
-    button.value = column + " " + value;
-    toggleSortColumn(column, value);
+    button.innerHTML = value
+    button.value = column + " " + value
+    toggleSortColumn(column, value)
   }
 
   function resetValues(e) {
     const buttons = Array.from(
       e.target.parentElement.parentElement.getElementsByTagName("button")
-    );
+    )
 
     buttons.forEach((button) => {
       if (button.id !== "reset") {
-        let [column, value] = button.value.split(" ");
-        value = "NONE";
-        button.innerHTML = value;
-        button.value = column + " " + value;
-        toggleSortColumn(column, value);
+        let [column, value] = button.value.split(" ")
+        value = "NONE"
+        button.innerHTML = value
+        button.value = column + " " + value
+        toggleSortColumn(column, value)
       }
-    });
+    })
   }
 
   function showColumn(columnName) {
-    return columns.findIndex((c) => c === columnName) !== -1;
+    return columns.findIndex((c) => c === columnName) !== -1
   }
 
   return (
@@ -154,5 +154,5 @@ export default function TableHeader({columns, toggleSortColumn}) {
         </tr>
       </thead>
     </>
-  );
+  )
 }
