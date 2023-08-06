@@ -3,6 +3,8 @@ import * as dotenv from 'dotenv'
 
 dotenv.config()
 
+const IdNotFoundError = { error: 'Error - id not found' }
+
 const db = mysql.createPool({
   connectionLimit: 10,
   host: process.env.DATABASE_HOSTNAME,
@@ -16,10 +18,10 @@ export function getOne (res, tableName, id) {
 
   db.query(query, (err, data) => {
     if (err) {
-      return res.status(400).json({ error: 'Error - ' + err })
+      return res.status(400).json({ error: err })
     }
     if (data.length === 0) {
-      return res.status(404).json({ error: 'Error - id not found' })
+      return res.status(404).json(IdNotFoundError)
     }
     res.status(200).json({ data })
   })
@@ -30,7 +32,7 @@ export function getAll (res, tableName) {
 
   db.query(query, (err, data) => {
     if (err) {
-      return res.status(400).json({ error: 'Error - ' + err })
+      return res.status(400).json({ error: err })
     }
     res.status(200).json({ data })
   })
@@ -56,15 +58,10 @@ export function addOne (res, tableName, values, stringValues) {
 
   db.query(query, valueArray, (err, data) => {
     if (err) {
-      return res.status(400).json({ error: 'Error - ' + err })
+      return res.status(400).json({ error: err })
     }
-    res.status(200).json({
-      data: [
-        {
-          id: JSON.parse(JSON.stringify(data)).insertId
-        }
-      ]
-    })
+    res.status(200)
+      .json({ data: [{ id: JSON.parse(JSON.stringify(data)).insertId }] })
   })
 }
 
@@ -85,13 +82,10 @@ export function updateOne (res, tableName, id, values, stringValues) {
 
   db.query(query, (err, data) => {
     if (err) {
-      return res.status(400).json({ error: 'Error - ' + err })
-    }
-    if (data === undefined) {
-      return res.status(400).json({ error: 'Error - ' + err })
+      return res.status(400).json({ error: err })
     }
     if (JSON.parse(JSON.stringify(data)).affectedRows === 0) {
-      return res.status(404).json({ error: 'Error - id not found' })
+      return res.status(404).json(IdNotFoundError)
     }
     if (JSON.parse(JSON.stringify(data)).changedRows === 0) {
       return res.status(202).json({ error: 'Error - no data updated' })
@@ -104,11 +98,13 @@ export function deleteOne (res, tableName, id) {
   const query = 'DELETE FROM ' + tableName + ' WHERE id = ' + id + ';'
 
   db.query(query, (err, data) => {
+    console.log(err)
+    console.log(data)
     if (err) {
-      return res.status(400).json({ error: 'Error - ' + err })
+      return res.status(400).json({ error: err })
     }
     if (JSON.parse(JSON.stringify(data)).affectedRows === 0) {
-      return res.status(404).json({ error: 'Error - id not found' })
+      return res.status(404).json(IdNotFoundError)
     }
     res.status(200).json({ data: [{ id }] })
   })

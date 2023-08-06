@@ -6,6 +6,14 @@ dotenv.config()
 
 const stringValues = ['name', 'address', 'city']
 
+function getValuesMap (req) {
+  return new Map([
+    ['name', req.body.name],
+    ['address', req.body.address],
+    ['city', req.body.city]
+  ])
+}
+
 const gymRouter = express.Router()
 
 gymRouter.get('/:id', (req, res) => {
@@ -17,28 +25,16 @@ gymRouter.get('/', (req, res) => {
 })
 
 gymRouter.post('/', (req, res) => {
-  const values = new Map([
-    ['name', req.body.name],
-    ['address', req.body.address],
-    ['city', req.body.city]
-  ])
-
-  addOne(res, process.env.GYM_TABLE_NAME, values, stringValues)
+  addOne(res, process.env.GYM_TABLE_NAME, getValuesMap(req), stringValues)
 })
 
 gymRouter.put('/:id', (req, res) => {
-  const values = new Map([
-    ['name', req.body.name],
-    ['address', req.body.address],
-    ['city', req.body.city]
-  ])
-
-  updateOne(res, process.env.GYM_TABLE_NAME, req.params.id, values,
+  updateOne(res, process.env.GYM_TABLE_NAME, req.params.id, getValuesMap(req),
     stringValues)
 })
 
 gymRouter.delete('/:id', (req, res) => {
-  deleteOne(req, res, req.params.id, process.env.GYM_TABLE_NAME)
+  deleteOne(res, process.env.GYM_TABLE_NAME, req.params.id)
 })
 
 export default gymRouter

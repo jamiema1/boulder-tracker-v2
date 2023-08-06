@@ -6,6 +6,17 @@ dotenv.config()
 
 const stringValues = ['climbStartTime', 'climbEndTime']
 
+function getValuesMap (req) {
+  return new Map([
+    ['boulderId', req.body.boulderId],
+    ['sessionId', req.body.sessionId],
+    ['attempts', req.body.attempts],
+    ['sends', req.body.sends],
+    ['climbStartTime', req.body.climbStartTime],
+    ['climbEndTime', req.body.climbEndTime]
+  ])
+}
+
 const climbRouter = express.Router()
 
 climbRouter.get('/:id', (req, res) => {
@@ -17,29 +28,11 @@ climbRouter.get('/', (req, res) => {
 })
 
 climbRouter.post('/', (req, res) => {
-  const values = new Map([
-    ['boulderId', req.body.boulderId],
-    ['sessionId', req.body.sessionId],
-    ['attempts', req.body.attempts],
-    ['sends', req.body.sends],
-    ['climbStartTime', req.body.climbStartTime],
-    ['climbEndTime', req.body.climbEndTime]
-  ])
-
-  addOne(res, process.env.CLIMB_TABLE_NAME, values, stringValues)
+  addOne(res, process.env.CLIMB_TABLE_NAME, getValuesMap(req), stringValues)
 })
 
 climbRouter.put('/:id', (req, res) => {
-  const values = new Map([
-    ['boulderId', req.body.boulderId],
-    ['sessionId', req.body.sessionId],
-    ['attempts', req.body.attempts],
-    ['sends', req.body.sends],
-    ['climbStartTime', req.body.climbStartTime],
-    ['climbEndTime', req.body.climbEndTime]
-  ])
-
-  updateOne(res, process.env.CLIMB_TABLE_NAME, req.params.id, values,
+  updateOne(res, process.env.CLIMB_TABLE_NAME, req.params.id, getValuesMap(req),
     stringValues)
 })
 
