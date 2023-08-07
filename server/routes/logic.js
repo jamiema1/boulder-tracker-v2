@@ -40,7 +40,7 @@ export function getAll (res, tableName) {
 
 export function getQuery (res, tableName, query) {
   const sqlQuery = makeGetQueryString(JSON.parse(query))
-  console.log(sqlQuery)
+  // console.log(sqlQuery)
 
   function makeGetQueryString (query) {
     return ''.concat(
@@ -167,8 +167,6 @@ export function deleteOne (res, tableName, id) {
   const query = 'DELETE FROM ' + tableName + ' WHERE id = ' + id + ';'
 
   db.query(query, (err, data) => {
-    console.log(err)
-    console.log(data)
     if (err) {
       return res.status(400).json({ error: err })
     }

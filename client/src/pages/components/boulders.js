@@ -2,14 +2,12 @@ import React, {useEffect, useState} from "react"
 import Axios from "../../api/Axios"
 import Climbs from "./climbs"
 
-const LOCATION = "location"
-
 export default function Boulders(props) {
   const [boulderData, setBoulderData] = useState([])
+  const [selectedBoulder, setSelectedBoulder] = useState(0)
 
   const locationId = props.locationId
-
-  const selectedLocation = Number(localStorage.getItem(LOCATION))
+  const selectedLocation = props.selectedLocation
 
   function getAllBoulders() {
     let params = {
@@ -31,7 +29,7 @@ export default function Boulders(props) {
   useEffect(() => {
     if (locationId !== selectedLocation) return
     getAllBoulders()
-  }, [])
+  }, [selectedLocation])
 
   return (
     <ul>
@@ -39,12 +37,16 @@ export default function Boulders(props) {
         if (selectedLocation === locationId) {
           return (
             <li key={boulder.id}>
+              <button onClick={() => setSelectedBoulder(boulder.id)}></button>
               <div>{boulder.id}</div>
               <div>{boulder.rating}</div>
               <div>{boulder.colour}</div>
               <div>{boulder.boulderType}</div>
               <div>{boulder.description}</div>
-              <Climbs boulderId={boulder.id}></Climbs>
+              <Climbs
+                boulderId={boulder.id}
+                selectedBoulder={selectedBoulder}
+              ></Climbs>
             </li>
           )
         }

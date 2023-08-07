@@ -1,14 +1,11 @@
 import React, {useEffect, useState} from "react"
 import Axios from "../../api/Axios"
 
-const BOULDER = "boulder"
-
 export default function Climbs(props) {
   const [climbData, setClimbData] = useState([])
 
   const boulderId = props.boulderId
-
-  const selectedBoulder = Number(localStorage.getItem(BOULDER))
+  const selectedBoulder = props.selectedBoulder
 
   function getAllClimbs() {
     let params = {
@@ -30,7 +27,7 @@ export default function Climbs(props) {
   useEffect(() => {
     if (boulderId !== selectedBoulder) return
     getAllClimbs()
-  }, [])
+  }, [selectedBoulder])
 
   return (
     <ul>

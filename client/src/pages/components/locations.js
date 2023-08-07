@@ -2,14 +2,12 @@ import React, {useEffect, useState} from "react"
 import Axios from "../../api/Axios"
 import Boulders from "./boulders"
 
-const GYM = "gym"
-
 export default function Locations(props) {
   const [locationData, setLocationData] = useState([])
+  const [selectedLocation, setSelectedLocation] = useState(0)
 
   const gymId = props.gymId
-
-  const selectedGym = Number(localStorage.getItem(GYM))
+  let selectedGym = props.selectedGym
 
   function getAllLocations() {
     let params = {
@@ -31,7 +29,7 @@ export default function Locations(props) {
   useEffect(() => {
     if (gymId !== selectedGym) return
     getAllLocations()
-  }, [])
+  }, [selectedGym])
 
   return (
     <ul>
@@ -39,9 +37,13 @@ export default function Locations(props) {
         if (selectedGym === gymId) {
           return (
             <li key={location.id}>
+              <button onClick={() => setSelectedLocation(location.id)}></button>
               <div>{location.id}</div>
               <div>{location.name}</div>
-              <Boulders locationId={location.id}></Boulders>
+              <Boulders
+                locationId={location.id}
+                selectedLocation={selectedLocation}
+              ></Boulders>
             </li>
           )
         }

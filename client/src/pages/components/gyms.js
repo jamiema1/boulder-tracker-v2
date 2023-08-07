@@ -4,6 +4,7 @@ import Locations from "./locations"
 
 export default function Gyms() {
   const [gymData, setGymData] = useState([])
+  const [selectedGym, setSelectedGym] = useState(0)
 
   function getAllGyms() {
     Axios.get("/gym")
@@ -15,6 +16,7 @@ export default function Gyms() {
         console.log(err.response.data.error)
       })
   }
+
   useEffect(() => {
     getAllGyms()
   }, [])
@@ -24,11 +26,12 @@ export default function Gyms() {
       {gymData.map((gym) => {
         return (
           <li key={gym.id}>
+            <button onClick={() => setSelectedGym(gym.id)}></button>
             <div>{gym.id}</div>
             {/* <div>{gym.name}</div> */}
             {/* <div>{gym.address}</div> */}
             <div>{gym.city}</div>
-            <Locations gymId={gym.id}></Locations>
+            <Locations gymId={gym.id} selectedGym={selectedGym}></Locations>
           </li>
         )
       })}
