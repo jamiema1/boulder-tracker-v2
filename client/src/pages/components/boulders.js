@@ -7,14 +7,18 @@ const LOCATION = "location"
 export default function Boulders(props) {
   const [boulderData, setBoulderData] = useState([])
 
-  // TODO: create API endpoint to specify which location a boulder is taken from
   const locationId = props.locationId
 
   const selectedLocation = Number(localStorage.getItem(LOCATION))
 
   function getAllBoulders() {
-    // TODO: change endpoint
-    Axios.get("/boulder")
+    let params = {
+      where: "locationId = " + selectedLocation,
+    }
+
+    const uri = encodeURIComponent(JSON.stringify(params))
+
+    Axios.get("/boulder/query/" + uri)
       .then((res) => {
         setBoulderData(res.data.data)
       })
@@ -25,6 +29,7 @@ export default function Boulders(props) {
   }
 
   useEffect(() => {
+    if (locationId !== selectedLocation) return
     getAllBoulders()
   }, [])
 

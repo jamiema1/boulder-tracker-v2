@@ -1,6 +1,7 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
-import { getOne, getAll, addOne, updateOne, deleteOne } from './logic.js'
+import { getOne, getAll, addOne, updateOne, deleteOne, getQuery }
+  from './logic.js'
 
 dotenv.config()
 
@@ -21,6 +22,10 @@ sessionRouter.get('/:id', (req, res) => {
 
 sessionRouter.get('/', (req, res) => {
   getAll(res, process.env.SESSION_TABLE_NAME)
+})
+
+sessionRouter.get('/query/:query', (req, res) => {
+  getQuery(res, process.env.SESSION_TABLE_NAME, req.params.query)
 })
 
 sessionRouter.post('/', (req, res) => {

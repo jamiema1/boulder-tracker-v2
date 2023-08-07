@@ -38,6 +38,75 @@ export function getAll (res, tableName) {
   })
 }
 
+export function getQuery (res, tableName, query) {
+  const sqlQuery = makeGetQueryString(JSON.parse(query))
+  console.log(sqlQuery)
+
+  function makeGetQueryString (query) {
+    return ''.concat(
+      SELECT(query.select),
+      FROM(),
+      WHERE(query.where),
+      ORDERBY(query.orderby),
+      LIMIT(query.limit)
+    ).trimEnd().concat(';')
+  }
+
+  function SELECT (columns) {
+    if (columns === undefined) {
+      return 'SELECT * '
+    }
+
+    let q = 'SELECT '
+
+    columns.forEach(column => {
+      q = q.concat(column + ', ')
+    })
+
+    return q.substring(0, q.length - 2).concat(' ')
+  }
+
+  function FROM () {
+    return 'FROM ' + tableName + ' '
+  }
+
+  function WHERE (query) {
+    if (query === '') {
+      return ''
+    }
+    return 'WHERE ' + query + ' '
+  }
+
+  function ORDERBY (columns) {
+    if (columns === undefined) {
+      return ''
+    }
+
+    let q = 'ORDER BY '
+    columns.forEach(column => {
+      const col = Object.keys(column)[0]
+      const value = Object.values(column)[0]
+      q = q.concat(col, ' ', value, ', ')
+    })
+
+    return q.substring(0, q.length - 2).concat(' ')
+  }
+
+  function LIMIT (limit) {
+    if (limit === undefined) {
+      return ''
+    }
+    return 'LIMIT ' + limit
+  }
+
+  db.query(sqlQuery, (err, data) => {
+    if (err) {
+      return res.status(400).json({ error: err })
+    }
+    res.status(200).json({ data })
+  })
+}
+
 export function addOne (res, tableName, values, stringValues) {
   if (validateValues(res, values, stringValues)) return
 

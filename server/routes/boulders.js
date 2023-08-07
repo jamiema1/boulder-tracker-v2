@@ -1,6 +1,7 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
-import { getOne, getAll, addOne, updateOne, deleteOne } from './logic.js'
+import { getOne, getAll, addOne, updateOne, deleteOne, getQuery }
+  from './logic.js'
 
 dotenv.config()
 
@@ -24,6 +25,10 @@ boulderRouter.get('/:id', (req, res) => {
 
 boulderRouter.get('/', (req, res) => {
   getAll(res, process.env.BOULDER_TABLE_NAME)
+})
+
+boulderRouter.get('/query/:query', (req, res) => {
+  getQuery(res, process.env.BOULDER_TABLE_NAME, req.params.query)
 })
 
 boulderRouter.post('/', (req, res) => {

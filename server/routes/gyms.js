@@ -1,6 +1,7 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
-import { getOne, getAll, addOne, updateOne, deleteOne } from './logic.js'
+import { getOne, getAll, addOne, updateOne, deleteOne, getQuery }
+  from './logic.js'
 
 dotenv.config()
 
@@ -22,6 +23,10 @@ gymRouter.get('/:id', (req, res) => {
 
 gymRouter.get('/', (req, res) => {
   getAll(res, process.env.GYM_TABLE_NAME)
+})
+
+gymRouter.get('/query/:query', (req, res) => {
+  getQuery(res, process.env.GYM_TABLE_NAME, req.params.query)
 })
 
 gymRouter.post('/', (req, res) => {

@@ -6,14 +6,18 @@ const BOULDER = "boulder"
 export default function Climbs(props) {
   const [climbData, setClimbData] = useState([])
 
-  // TODO: create API endpoint to specify which location a boulder is taken from
   const boulderId = props.boulderId
 
   const selectedBoulder = Number(localStorage.getItem(BOULDER))
 
   function getAllClimbs() {
-    // TODO: change endpoint
-    Axios.get("/climb")
+    let params = {
+      where: "boulderId = " + selectedBoulder,
+    }
+
+    const uri = encodeURIComponent(JSON.stringify(params))
+
+    Axios.get("/climb/query/" + uri)
       .then((res) => {
         setClimbData(res.data.data)
       })
@@ -24,6 +28,7 @@ export default function Climbs(props) {
   }
 
   useEffect(() => {
+    if (boulderId !== selectedBoulder) return
     getAllClimbs()
   }, [])
 

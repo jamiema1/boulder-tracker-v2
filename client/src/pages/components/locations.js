@@ -7,14 +7,18 @@ const GYM = "gym"
 export default function Locations(props) {
   const [locationData, setLocationData] = useState([])
 
-  // TODO: create API endpoint to specify which gym a location is taken from
   const gymId = props.gymId
 
   const selectedGym = Number(localStorage.getItem(GYM))
 
   function getAllLocations() {
-    // TODO: change endpoint
-    Axios.get("/location")
+    let params = {
+      where: "gymId = " + selectedGym,
+    }
+
+    const uri = encodeURIComponent(JSON.stringify(params))
+
+    Axios.get("/location/query/" + uri)
       .then((res) => {
         setLocationData(res.data.data)
       })
@@ -25,6 +29,7 @@ export default function Locations(props) {
   }
 
   useEffect(() => {
+    if (gymId !== selectedGym) return
     getAllLocations()
   }, [])
 

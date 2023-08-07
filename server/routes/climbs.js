@@ -1,6 +1,7 @@
 import express from 'express'
 import * as dotenv from 'dotenv'
-import { getOne, getAll, addOne, updateOne, deleteOne } from './logic.js'
+import { getOne, getAll, addOne, updateOne, deleteOne, getQuery }
+  from './logic.js'
 
 dotenv.config()
 
@@ -19,12 +20,16 @@ function getValuesMap (req) {
 
 const climbRouter = express.Router()
 
+climbRouter.get('/', (req, res) => {
+  getAll(res, process.env.CLIMB_TABLE_NAME)
+})
+
 climbRouter.get('/:id', (req, res) => {
   getOne(res, process.env.CLIMB_TABLE_NAME, req.params.id)
 })
 
-climbRouter.get('/', (req, res) => {
-  getAll(res, process.env.CLIMB_TABLE_NAME)
+climbRouter.get('/query/:query', (req, res) => {
+  getQuery(res, process.env.CLIMB_TABLE_NAME, req.params.query)
 })
 
 climbRouter.post('/', (req, res) => {
