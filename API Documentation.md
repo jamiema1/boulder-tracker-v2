@@ -107,6 +107,54 @@ curl -X GET http://localhost:3001/climb
 }
 ```
 
+## List all climbs from a query
+
+# TODO
+
+This method returns all climbs from an encoded URI SQL query
+
+```
+GET /climb/query/:query
+```
+
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully listed climbs
+400 | Error occurred
+
+### Example
+
+```
+curl -X GET http://localhost:3001/climb/query/%7B%22select%22%3A%5B%22id%22%2C%22boulderId%22%2C%22sessionId%22%2C%22attempts%22%2C%22sends%22%2C%22climbStartTime%22%2C%22climbEndTime%22%5D%2C%22where%22%3A%22%22%2C%22orderby%22%3A%5B%7B%22id%22%3A%22DESC%22%7D%5D%2C%22limit%22%3A%222%22%7D
+```
+
+```
+{
+    "data": [
+        {
+            "id": 27,
+            "boulderId": 1,
+            "sessionId": 2,
+            "attempts": 1,
+            "sends": 4,
+            "climbStartTime": "0000-00-00 00:00:00",
+            "climbEndTime": "2023-08-01T09:41:00.000Z"
+        },
+        {
+            "id": 26,
+            "boulderId": 1,
+            "sessionId": 2,
+            "attempts": 1,
+            "sends": 4,
+            "climbStartTime": "0000-00-00 00:00:00",
+            "climbEndTime": "2023-08-01T09:41:00.000Z"
+        }
+    ]
+}
+```
+
 ## Add climb
 
 This method adds a climb
