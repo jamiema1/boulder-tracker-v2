@@ -27,6 +27,7 @@ export default function Locations(props) {
   }
 
   useEffect(() => {
+    setSelectedLocation(0)
     if (gymId !== selectedGym) return
     getAllLocations()
   }, [selectedGym])
@@ -37,7 +38,9 @@ export default function Locations(props) {
         if (selectedGym === gymId) {
           return (
             <li key={location.id}>
-              <button onClick={() => setSelectedLocation(location.id)}></button>
+              <button onClick={() => setSelectedLocation(location.id)}>
+                v
+              </button>
               <div>{location.id}</div>
               <div>{location.name}</div>
               <Boulders

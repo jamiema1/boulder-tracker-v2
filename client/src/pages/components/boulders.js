@@ -27,6 +27,7 @@ export default function Boulders(props) {
   }
 
   useEffect(() => {
+    setSelectedBoulder(0)
     if (locationId !== selectedLocation) return
     getAllBoulders()
   }, [selectedLocation])
@@ -37,7 +38,7 @@ export default function Boulders(props) {
         if (selectedLocation === locationId) {
           return (
             <li key={boulder.id}>
-              <button onClick={() => setSelectedBoulder(boulder.id)}></button>
+              <button onClick={() => setSelectedBoulder(boulder.id)}>v</button>
               <div>{boulder.id}</div>
               <div>{boulder.rating}</div>
               <div>{boulder.colour}</div>
