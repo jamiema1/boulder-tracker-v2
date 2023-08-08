@@ -1,4 +1,5 @@
 {
+    "editor.tabSize": 2,
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
     "editor.formatOnPaste": false, // required 
     "editor.formatOnType": false, // required

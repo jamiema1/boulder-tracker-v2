@@ -81,6 +81,15 @@ boulderRouter.put('/', (req, res) => {
   })
 })
 
+boulderRouter.delete('/:id', (req, res) => {
+  const q = 'DELETE FROM boulders_old WHERE id = ' + req.params.id + ';'
+
+  db.query(q, (err, data) => {
+    if (err) return res.json('Error - ' + err)
+    res.send(data)
+  })
+})
+
 boulderRouter.get('/', (req, res) => {
   const url = decodeURIComponent(req.url.substring(2))
   const query = JSON.parse(url)
@@ -142,15 +151,6 @@ boulderRouter.get('/', (req, res) => {
     }
     return 'LIMIT ' + limit
   }
-
-  db.query(q, (err, data) => {
-    if (err) return res.json('Error - ' + err)
-    res.send(data)
-  })
-})
-
-boulderRouter.delete('/:id', (req, res) => {
-  const q = 'DELETE FROM boulders_old WHERE id = ' + req.params.id + ';'
 
   db.query(q, (err, data) => {
     if (err) return res.json('Error - ' + err)
