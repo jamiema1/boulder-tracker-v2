@@ -3,11 +3,26 @@ import Axios from "../../api/Axios"
 import Locations from "./locations"
 
 export default function Gyms() {
-  const [gymData, setGymData] = useState([])
-  const [selectedGym, setSelectedGym] = useState(0)
-  const [editingGym, setEditingGym] = useState(0)
+  /*
+   * React Hooks:
+   *
+   * States:
+   *  - gymData: array of gyms
+   *  - viewingGym: id of the gym being viewed, 0 if none
+   *  - edingGym: id of the gym being edited, 0 if none
+   *  - addingGym: true if a gym is being added, false if not
+   *
+   * Refs:
+   *  - newGymName: reference to new name
+   *  - newGymAddress: reference to new address
+   *  - new GymCity: reference to new city
+   */
 
+  const [gymData, setGymData] = useState([])
+  const [viewingGym, setViewingGym] = useState(0)
+  const [editingGym, setEditingGym] = useState(0)
   const [addingGym, setAddingGym] = useState(false)
+
   const newGymName = useRef("")
   const newGymAddress = useRef("")
   const newGymCity = useRef("")
@@ -15,6 +30,10 @@ export default function Gyms() {
   useEffect(() => {
     getAllGyms()
   }, [])
+
+  /*
+   * APIs
+   */
 
   function getAllGyms() {
     Axios.get("/gym")
@@ -27,11 +46,7 @@ export default function Gyms() {
   }
 
   function addGym() {
-    const newGym = {
-      name: newGymName.current.value,
-      address: newGymAddress.current.value,
-      city: newGymCity.current.value,
-    }
+    const newGym = getNewGym()
 
     Axios.post("/gym", newGym)
       .then((res) => {
@@ -44,30 +59,17 @@ export default function Gyms() {
       })
   }
 
-  function clearGymRefs() {
-    newGymName.current.value = ""
-    newGymAddress.current.value = ""
-    newGymCity.current.value = ""
-    setAddingGym(false)
-    setEditingGym(0)
-  }
-
   function editGym(gymId) {
-    const newGym = {
-      name: newGymName.current.value,
-      address: newGymAddress.current.value,
-      city: newGymCity.current.value,
-    }
+    const newGym = getNewGym()
 
     Axios.put("/gym/" + gymId, newGym)
       .then((res) => {
+        clearGymRefs()
         if (res.status === 202) {
-          clearGymRefs()
           alert(res.data.error)
           return
         }
         getAllGyms() // TODO: update the gym from gymData without GET API call
-        clearGymRefs()
         alert("Successfully edited gym " + res.data.data[0].id)
       })
       .catch((err) => {
@@ -86,104 +88,111 @@ export default function Gyms() {
       })
   }
 
+  /*
+   * Helper functions
+   */
+
+  function clearGymRefs() {
+    newGymName.current.value = ""
+    newGymAddress.current.value = ""
+    newGymCity.current.value = ""
+    changeStates(0, 0, false)
+  }
+
+  function getNewGym() {
+    return {
+      name: newGymName.current.value,
+      address: newGymAddress.current.value,
+      city: newGymCity.current.value,
+    }
+  }
+
+  function changeStates(viewingGym, editingGym, addingGym) {
+    setViewingGym(viewingGym)
+    setEditingGym(editingGym)
+    setAddingGym(addingGym)
+  }
+
+  /*
+   * Return value
+   */
+
   return (
-    <div>
-      <button
-        onClick={() => {
-          setSelectedGym(0)
-          setEditingGym(0)
-          setAddingGym(true)
-        }}
-      >
-        Add a Gym
-      </button>
-      <ul>
-        {gymData.map((gym) => {
-          return (
-            <div key={gym.id}>
-              {editingGym !== gym.id && (
-                <li>
-                  <button
-                    onClick={() => {
-                      setSelectedGym(gym.id)
-                      setEditingGym(0)
-                      setAddingGym(false)
-                    }}
-                  >
-                    View
+    <ul>
+      {gymData.map((gym) => {
+        return (
+          <div key={gym.id}>
+            {editingGym !== gym.id && (
+              <li>
+                <button onClick={() => changeStates(gym.id, 0, false)}>
+                  View
+                </button>
+                <button onClick={() => changeStates(0, gym.id, false)}>
+                  Edit
+                </button>
+                <button onClick={() => deleteGym(gym.id)}>Delete</button>
+                <div>ID: {gym.id}</div>
+                <div>Name: {gym.name}</div>
+                <div>Address: {gym.address}</div>
+                <div>City: {gym.city}</div>
+                <Locations gymId={gym.id} viewingGym={viewingGym}></Locations>
+              </li>
+            )}
+            {editingGym == gym.id && (
+              <li>
+                <form>
+                  <label>Name:</label>
+                  <input
+                    type="text"
+                    ref={newGymName}
+                    defaultValue={gym.name}
+                  ></input>
+                  <label>Address:</label>
+                  <input
+                    type="text"
+                    ref={newGymAddress}
+                    defaultValue={gym.address}
+                  ></input>
+                  <label>City:</label>
+                  <input
+                    type="text"
+                    ref={newGymCity}
+                    defaultValue={gym.city}
+                  ></input>
+                  <button type="button" onClick={() => editGym(gym.id)}>
+                    Confirm
                   </button>
                   <button
-                    onClick={() => {
-                      setSelectedGym(0)
-                      setEditingGym(gym.id)
-                      setAddingGym(false)
-                    }}
+                    type="button"
+                    onClick={() => changeStates(0, 0, false)}
                   >
-                    Edit
+                    Cancel
                   </button>
-                  <button onClick={() => deleteGym(gym.id)}>Delete</button>
-                  <div>ID: {gym.id}</div>
-                  <div>Name: {gym.name}</div>
-                  <div>Address: {gym.address}</div>
-                  <div>City: {gym.city}</div>
-                  <Locations
-                    gymId={gym.id}
-                    selectedGym={selectedGym}
-                  ></Locations>
-                </li>
-              )}
-              {editingGym == gym.id && (
-                <li>
-                  <form>
-                    <label>Name:</label>
-                    <input
-                      type="text"
-                      ref={newGymName}
-                      defaultValue={gym.name}
-                    ></input>
-                    <label>Address:</label>
-                    <input
-                      type="text"
-                      ref={newGymAddress}
-                      defaultValue={gym.address}
-                    ></input>
-                    <label>City:</label>
-                    <input
-                      type="text"
-                      ref={newGymCity}
-                      defaultValue={gym.city}
-                    ></input>
-                    <button type="button" onClick={() => editGym(gym.id)}>
-                      Confirm
-                    </button>
-                    <button type="button" onClick={() => setEditingGym(0)}>
-                      Cancel
-                    </button>
-                  </form>
-                </li>
-              )}
-            </div>
-          )
-        })}
-        {addingGym && (
-          <li>
-            <form>
-              <label>Name:</label>
-              <input type="text" ref={newGymName}></input>
-              <label>Address:</label>
-              <input type="text" ref={newGymAddress}></input>
-              <label>City:</label>
-              <input type="text" ref={newGymCity}></input>
-              <button type="button" onClick={() => addGym()}>
-                Add
-              </button>
-              <button type="button" onClick={() => clearGymRefs()}>
-                Cancel
-              </button>
-            </form>
-          </li>
-        )}
-      </ul>
-    </div>
+                </form>
+              </li>
+            )}
+          </div>
+        )
+      })}
+      {addingGym && (
+        <li>
+          <form>
+            <label>Name:</label>
+            <input type="text" ref={newGymName}></input>
+            <label>Address:</label>
+            <input type="text" ref={newGymAddress}></input>
+            <label>City:</label>
+            <input type="text" ref={newGymCity}></input>
+            <button type="button" onClick={() => addGym()}>
+              Add
+            </button>
+            <button type="button" onClick={() => clearGymRefs()}>
+              Cancel
+            </button>
+          </form>
+        </li>
+      )}
+      <button onClick={() => changeStates(0, 0, true)}>Add a Gym</button>
+    </ul>
   )
 }

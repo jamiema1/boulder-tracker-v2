@@ -5,11 +5,11 @@ export default function Climbs(props) {
   const [climbData, setClimbData] = useState([])
 
   const boulderId = props.boulderId
-  const selectedBoulder = props.selectedBoulder
+  const viewingBoulder = props.viewingBoulder
 
   function getAllClimbs() {
     let params = {
-      where: "boulderId = " + selectedBoulder,
+      where: "boulderId = " + viewingBoulder,
     }
 
     const uri = encodeURIComponent(JSON.stringify(params))
@@ -25,14 +25,14 @@ export default function Climbs(props) {
   }
 
   useEffect(() => {
-    if (boulderId !== selectedBoulder) return
+    if (boulderId !== viewingBoulder) return
     getAllClimbs()
-  }, [selectedBoulder])
+  }, [viewingBoulder])
 
   return (
     <ul>
       {climbData.map((climb) => {
-        if (selectedBoulder === boulderId) {
+        if (viewingBoulder === boulderId) {
           return (
             <li key={climb.id}>
               <div>{climb.attempts}</div>
