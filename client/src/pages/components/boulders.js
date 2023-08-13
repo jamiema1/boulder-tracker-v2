@@ -54,7 +54,20 @@ export default function Boulders(props) {
 
     Axios.get("/boulder/query/" + uri)
       .then((res) => {
-        setBoulderData(res.data.data)
+        const data = res.data.data
+        data.forEach((boulder, index, data) => {
+          data[index] = {
+            id: boulder.id,
+            locationId: boulder.locationId,
+            rating: boulder.rating,
+            colour: boulder.colour,
+            boulderType: boulder.boulderType,
+            description: boulder.description,
+            setStartDate: convertToDate(boulder.setStartDate),
+            setEndDate: convertToDate(boulder.setEndDate),
+          }
+        })
+        setBoulderData(data)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -80,6 +93,7 @@ export default function Boulders(props) {
 
   function editBoulder(boulderId) {
     const newBoulder = getNewBoulder()
+    console.log(newBoulder)
 
     Axios.put("/boulder/" + boulderId, newBoulder)
       .then((res) => {
@@ -124,7 +138,6 @@ export default function Boulders(props) {
   }
 
   function getNewBoulder() {
-    // TODO: dates are not properly being pulled & added
     return {
       locationId: locationId,
       rating: parseInt(newBoulderRating.current.value),
@@ -142,6 +155,13 @@ export default function Boulders(props) {
     setAddingBoulder(addingBoulder)
   }
 
+  function convertToDate(dateTime) {
+    if (dateTime === null) {
+      return "0000-00-00" // TODO: unsure about this return value
+    }
+    return dateTime.split("T")[0]
+  }
+
   /*
    * Return value
    */
@@ -156,7 +176,11 @@ export default function Boulders(props) {
                 <button onClick={() => changeStates(boulder.id, 0, false)}>
                   View
                 </button>
-                <button onClick={() => changeStates(0, boulder.id, false)}>
+                <button
+                  onClick={() => {
+                    changeStates(0, boulder.id, false)
+                  }}
+                >
                   Edit
                 </button>
                 <button onClick={() => deleteBoulder(boulder.id)}>
