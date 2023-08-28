@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import Locations from "./locations"
+import "./gyms.css"
 
 export default function Gyms() {
   /*
@@ -107,15 +108,23 @@ export default function Gyms() {
     }
   }
 
-  function changeStates(viewingGym, editingGym, addingGym) {
-    setViewingGym(viewingGym)
-    setEditingGym(editingGym)
-    setAddingGym(addingGym)
+  function changeStates(newViewingGym, newEditingGym, newAddingGym) {
+    if (viewingGym === newViewingGym) {
+      newViewingGym = 0
+    }
+    setViewingGym(newViewingGym)
+    setEditingGym(newEditingGym)
+    setAddingGym(newAddingGym)
   }
 
   /*
    * Return value
    */
+
+  /* <div>ID: {gym.id}</div>
+  <div>Name: {gym.name}</div>
+  <div>Address: {gym.address}</div>
+  <div>City: {gym.city}</div> */
 
   return (
     <ul>
@@ -123,51 +132,58 @@ export default function Gyms() {
         return (
           <div key={gym.id}>
             {editingGym !== gym.id && (
-              <li>
-                <button onClick={() => changeStates(gym.id, 0, false)}>
-                  View
-                </button>
-                <button onClick={() => changeStates(0, gym.id, false)}>
-                  Edit
-                </button>
-                <button onClick={() => deleteGym(gym.id)}>Delete</button>
-                <div>ID: {gym.id}</div>
-                <div>Name: {gym.name}</div>
-                <div>Address: {gym.address}</div>
-                <div>City: {gym.city}</div>
+              <li className="gym">
+                <div className="components">
+                  <div
+                    className="data viewData"
+                    onClick={() => changeStates(gym.id, 0, false)}
+                  >
+                    {gym.id} - {gym.city}
+                  </div>
+                  <div className="buttons">
+                    <button onClick={() => changeStates(0, gym.id, false)}>
+                      Edit
+                    </button>
+                    <button onClick={() => deleteGym(gym.id)}>Delete</button>
+                  </div>
+                </div>
                 <Locations gymId={gym.id} viewingGym={viewingGym}></Locations>
               </li>
             )}
             {editingGym == gym.id && (
-              <li>
-                <form>
-                  <label>Name:</label>
-                  <input
-                    type="text"
-                    ref={newGymName}
-                    defaultValue={gym.name}
-                  ></input>
-                  <label>Address:</label>
-                  <input
-                    type="text"
-                    ref={newGymAddress}
-                    defaultValue={gym.address}
-                  ></input>
-                  <label>City:</label>
-                  <input
-                    type="text"
-                    ref={newGymCity}
-                    defaultValue={gym.city}
-                  ></input>
-                  <button type="button" onClick={() => editGym(gym.id)}>
-                    Confirm
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => changeStates(0, 0, false)}
-                  >
-                    Cancel
-                  </button>
+              <li className="gym">
+                <form className="components">
+                  <div className="data">
+                    {/* <label>Name:</label> */}
+                    <input
+                      type="text"
+                      ref={newGymName}
+                      defaultValue={gym.name}
+                    ></input>
+                    {/* <label>Address:</label> */}
+                    <input
+                      type="text"
+                      ref={newGymAddress}
+                      defaultValue={gym.address}
+                    ></input>
+                    {/* <label>City:</label> */}
+                    <input
+                      type="text"
+                      ref={newGymCity}
+                      defaultValue={gym.city}
+                    ></input>
+                  </div>
+                  <div className="buttons">
+                    <button type="button" onClick={() => editGym(gym.id)}>
+                      Confirm
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => changeStates(0, 0, false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </form>
               </li>
             )}

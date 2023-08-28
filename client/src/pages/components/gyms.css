@@ -1,0 +1,34 @@
+ul {
+  list-style-type: none;
+  padding: 10px;
+}
+
+.gym {
+  padding: 10px;
+  width: 40%;
+}
+
+.components {
+  display: flex;
+  border: 2px solid red;
+}
+
+.data {
+  display: flex;
+  border: 2px solid black;
+  padding: 10px;
+  flex-grow: 1;
+}
+
+.viewData:hover {
+  background-color: beige;
+}
+
+.buttons {
+  display: flex;
+  justify-content: right;
+}
+
+.buttons > * {
+  margin: 5px;
+}
