@@ -2,6 +2,11 @@ import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import Locations from "./locations"
 import "./gyms.css"
+import editIcon from "../../images/editIcon.png"
+import deleteIcon from "../../images/deleteIcon.png"
+import cancelIcon from "../../images/cancelIcon.png"
+import confirmIcon from "../../images/confirmIcon.png"
+import addIcon from "../../images/addIcon.png"
 
 export default function Gyms() {
   /*
@@ -135,16 +140,18 @@ export default function Gyms() {
               <li className="gym">
                 <div className="components">
                   <div
-                    className="data viewData"
+                    className="data"
                     onClick={() => changeStates(gym.id, 0, false)}
                   >
                     {gym.id} - {gym.city}
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, gym.id, false)}>
-                      Edit
+                      <img src={editIcon}></img>
                     </button>
-                    <button onClick={() => deleteGym(gym.id)}>Delete</button>
+                    <button onClick={() => deleteGym(gym.id)}>
+                      <img src={deleteIcon}></img>
+                    </button>
                   </div>
                 </div>
                 <Locations gymId={gym.id} viewingGym={viewingGym}></Locations>
@@ -175,13 +182,13 @@ export default function Gyms() {
                   </div>
                   <div className="buttons">
                     <button type="button" onClick={() => editGym(gym.id)}>
-                      Confirm
+                      <img src={confirmIcon}></img>
                     </button>
                     <button
                       type="button"
                       onClick={() => changeStates(0, 0, false)}
                     >
-                      Cancel
+                      <img src={cancelIcon}></img>
                     </button>
                   </div>
                 </form>
@@ -191,20 +198,24 @@ export default function Gyms() {
         )
       })}
       {addingGym && (
-        <li>
-          <form>
-            <label>Name:</label>
-            <input type="text" ref={newGymName}></input>
-            <label>Address:</label>
-            <input type="text" ref={newGymAddress}></input>
-            <label>City:</label>
-            <input type="text" ref={newGymCity}></input>
-            <button type="button" onClick={() => addGym()}>
-              Add
-            </button>
-            <button type="button" onClick={() => clearGymRefs()}>
-              Cancel
-            </button>
+        <li className="gym">
+          <form className="components">
+            <div className="data">
+              {/* <label>Name:</label> */}
+              <input type="text" ref={newGymName}></input>
+              {/* <label>Address:</label> */}
+              <input type="text" ref={newGymAddress}></input>
+              {/* <label>City:</label> */}
+              <input type="text" ref={newGymCity}></input>
+            </div>
+            <div className="buttons">
+              <button type="button" onClick={() => addGym()}>
+                <img src={addIcon}></img>
+              </button>
+              <button type="button" onClick={() => clearGymRefs()}>
+                <img src={cancelIcon}></img>
+              </button>
+            </div>
           </form>
         </li>
       )}

@@ -120,10 +120,18 @@ export default function Locations(props) {
     }
   }
 
-  function changeStates(viewingLocation, editingLocation, addingLocation) {
-    setViewingLocation(viewingLocation)
-    setEditingLocation(editingLocation)
-    setAddingLocation(addingLocation)
+  function changeStates(
+    newViewingLocation,
+    newEditingLocation,
+    newAddingLocation
+  ) {
+    if (viewingLocation === newViewingLocation) {
+      newViewingLocation = 0
+    }
+
+    setViewingLocation(newViewingLocation)
+    setEditingLocation(newEditingLocation)
+    setAddingLocation(newAddingLocation)
   }
 
   /*
@@ -137,17 +145,22 @@ export default function Locations(props) {
           <div key={location.id}>
             {editingLocation !== location.id && (
               <li>
-                <button onClick={() => changeStates(location.id, 0, false)}>
-                  View
-                </button>
-                <button onClick={() => changeStates(0, location.id, false)}>
-                  Edit
-                </button>
-                <button onClick={() => deleteLocation(location.id)}>
-                  Delete
-                </button>
-                <div>ID: {location.id}</div>
-                <div>Name: {location.name}</div>
+                <div className="components">
+                  <div
+                    className="data viewData"
+                    onClick={() => changeStates(location.id, 0, false)}
+                  >
+                    {location.id} - {location.name}
+                  </div>
+                  <div className="buttons">
+                    <button onClick={() => changeStates(0, location.id, false)}>
+                      Edit
+                    </button>
+                    <button onClick={() => deleteLocation(location.id)}>
+                      Delete
+                    </button>
+                  </div>
+                </div>
                 <Boulders
                   locationId={location.id}
                   viewingLocation={viewingLocation}
@@ -156,25 +169,29 @@ export default function Locations(props) {
             )}
             {editingLocation == location.id && (
               <li>
-                <form>
-                  <label>Name:</label>
-                  <input
-                    type="text"
-                    ref={newLocationName}
-                    defaultValue={location.name}
-                  ></input>
-                  <button
-                    type="button"
-                    onClick={() => editLocation(location.id)}
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => changeStates(0, 0, false)}
-                  >
-                    Cancel
-                  </button>
+                <form className="components">
+                  <div className="data">
+                    {/* <label>Name:</label> */}
+                    <input
+                      type="text"
+                      ref={newLocationName}
+                      defaultValue={location.name}
+                    ></input>
+                  </div>
+                  <div className="buttons">
+                    <button
+                      type="button"
+                      onClick={() => editLocation(location.id)}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => changeStates(0, 0, false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </form>
               </li>
             )}
@@ -183,15 +200,19 @@ export default function Locations(props) {
       })}
       {addingLocation && (
         <li>
-          <form>
-            <label>Name:</label>
-            <input type="text" ref={newLocationName}></input>
-            <button type="button" onClick={() => addLocation()}>
-              Add
-            </button>
-            <button type="button" onClick={() => clearLocationRefs()}>
-              Cancel
-            </button>
+          <form className="components">
+            <div className="data">
+              {/* <label>Name:</label> */}
+              <input type="text" ref={newLocationName}></input>
+            </div>
+            <div className="buttons">
+              <button type="button" onClick={() => addLocation()}>
+                Add
+              </button>
+              <button type="button" onClick={() => clearLocationRefs()}>
+                Cancel
+              </button>
+            </div>
           </form>
         </li>
       )}
