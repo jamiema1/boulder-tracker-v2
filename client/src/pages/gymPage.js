@@ -1,5 +1,5 @@
 import React from "react"
-import Gyms from "./components/gyms"
+import Gyms from "./gymPageComponents/gyms"
 import "./gymPage.css"
 
 export default function GymPage() {

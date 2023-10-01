@@ -1,6 +1,11 @@
 import React, {useEffect, useState, useRef} from "react"
 import Axios from "../../api/Axios"
 import Boulders from "./boulders"
+import editIcon from "../../images/editIcon.png"
+import deleteIcon from "../../images/deleteIcon.png"
+import cancelIcon from "../../images/cancelIcon.png"
+import confirmIcon from "../../images/confirmIcon.png"
+import addIcon from "../../images/addIcon.png"
 
 export default function Locations(props) {
   /*
@@ -154,10 +159,10 @@ export default function Locations(props) {
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, location.id, false)}>
-                      Edit
+                      <img src={editIcon}></img>
                     </button>
                     <button onClick={() => deleteLocation(location.id)}>
-                      Delete
+                      <img src={deleteIcon}></img>
                     </button>
                   </div>
                 </div>
@@ -171,7 +176,7 @@ export default function Locations(props) {
               <li>
                 <form className="components">
                   <div className="data">
-                    {/* <label>Name:</label> */}
+                    <label>Name:</label>
                     <input
                       type="text"
                       ref={newLocationName}
@@ -183,13 +188,13 @@ export default function Locations(props) {
                       type="button"
                       onClick={() => editLocation(location.id)}
                     >
-                      Confirm
+                      <img src={confirmIcon}></img>
                     </button>
                     <button
                       type="button"
                       onClick={() => changeStates(0, 0, false)}
                     >
-                      Cancel
+                      <img src={cancelIcon}></img>
                     </button>
                   </div>
                 </form>
@@ -202,15 +207,15 @@ export default function Locations(props) {
         <li>
           <form className="components">
             <div className="data">
-              {/* <label>Name:</label> */}
+              <label>Name:</label>
               <input type="text" ref={newLocationName}></input>
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addLocation()}>
-                Add
+                <img src={addIcon}></img>
               </button>
               <button type="button" onClick={() => clearLocationRefs()}>
-                Cancel
+                <img src={cancelIcon}></img>
               </button>
             </div>
           </form>

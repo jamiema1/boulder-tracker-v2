@@ -161,19 +161,19 @@ export default function Gyms() {
               <li className="gym">
                 <form className="components">
                   <div className="data">
-                    {/* <label>Name:</label> */}
+                    <label>Name:</label>
                     <input
                       type="text"
                       ref={newGymName}
                       defaultValue={gym.name}
                     ></input>
-                    {/* <label>Address:</label> */}
+                    <label>Address:</label>
                     <input
                       type="text"
                       ref={newGymAddress}
                       defaultValue={gym.address}
                     ></input>
-                    {/* <label>City:</label> */}
+                    <label>City:</label>
                     <input
                       type="text"
                       ref={newGymCity}
@@ -201,11 +201,11 @@ export default function Gyms() {
         <li className="gym">
           <form className="components">
             <div className="data">
-              {/* <label>Name:</label> */}
+              <label>Name:</label>
               <input type="text" ref={newGymName}></input>
-              {/* <label>Address:</label> */}
+              <label>Address:</label>
               <input type="text" ref={newGymAddress}></input>
-              {/* <label>City:</label> */}
+              <label>City:</label>
               <input type="text" ref={newGymCity}></input>
             </div>
             <div className="buttons">
