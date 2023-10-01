@@ -8,6 +8,11 @@ ul {
   width: 40%;
 }
 
+.session {
+  padding: 10px;
+  width: 40%;
+}
+
 .components {
   display: flex;
   border: 1px solid black;
@@ -30,4 +35,8 @@ ul {
 
 .buttons > * {
   margin: 5px;
+}
+
+img {
+  width: 25px;
 }

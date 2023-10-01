@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import Locations from "./locations"
-import "./gyms.css"
 import editIcon from "../../images/editIcon.png"
 import deleteIcon from "../../images/deleteIcon.png"
 import cancelIcon from "../../images/cancelIcon.png"
