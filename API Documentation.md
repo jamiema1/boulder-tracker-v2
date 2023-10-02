@@ -109,8 +109,6 @@ curl -X GET http://localhost:3001/climb
 
 ## List all climbs from a query
 
-# TODO
-
 This method returns all climbs from an encoded URI SQL query
 
 ```
@@ -186,7 +184,7 @@ curl -d '{ "boulderId": 1, "sessionId": 2, "attempts": 1, "sends": 5, "climbStar
 }
 ```
 
-## Update boulder
+## Update climb
 
 This method adds a climb
 
@@ -369,6 +367,248 @@ PUT /boulder
 ```
 Delete /boulder/:id
 ```
+
+
+# Gyms
+
+## Attributes
+
+attribute | description | type | example
+--- | --- | --- | ---
+id | Gym ID | Integer | ``` 1 ``` 
+name | Name of gym | String | ``` The Hive Bouldering Gym ```
+address | Address of gym | String | ``` 520 Industrial Ave, Vancouver, BC, V6A 2P3 ```
+city | City of Gym | String | ``` Vancouver ```
+
+## List a gym
+
+This method returns the data for a single gym.
+
+```
+GET /gym/:id
+```
+
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully listed gym
+400 | Error occurred
+404 | Id not found
+
+### Example
+
+```
+curl -X GET http://localhost:3001/gym/1
+```
+
+```
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "The Hive Bouldering Gym",
+            "address": "520 Industrial Ave, Vancouver, BC, V6A 2P3",
+            "city": "Vancouver"
+        }
+    ]
+}
+```
+
+
+
+## List all gym
+
+This method returns all gyms
+
+```
+GET /gym
+```
+
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully listed gyms
+400 | Error occurred
+
+### Example
+
+```
+curl -X GET http://localhost:3001/gym
+```
+
+```
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "The Hive Bouldering Gym",
+            "address": "520 Industrial Ave, Vancouver, BC, V6A 2P3",
+            "city": "Vancouver"
+        },
+        {
+            "id": 2,
+            "name": "The Hive Surrey Climbing and Fitness",
+            "address": "101 – B   11125 124 Street, Surrey, BC, V3V 4",
+            "city": "Surrey"
+        },
+        {
+            "id": 3,
+            "name": "The Hive PoCo",
+            "address": "Unit 145, 815 Village Drive, Port Coquitlam, ",
+            "city": "Port Coquitlam"
+        },
+        {
+            "id": 4,
+            "name": "The Hive North Shore Climbing and Fitness",
+            "address": "140 – 2270 Dollarton Hwy, North Vancouver, BC",
+            "city": "North Vancouver"
+        }
+    ]
+}
+```
+
+## List all gyms from a query
+
+This method returns all gyms from an encoded URI SQL query
+
+```
+GET /gym/query/:query
+```
+
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully listed gyms
+400 | Error occurred
+
+### Example
+
+```
+curl -X GET http://localhost:3001/gym/query/%7B%22select%22%3A%5B%22id%22%2C%22name%22%2C%22address%22%2C%22city%22%5D%2C%22where%22%3A%22%22%2C%22orderby%22%3A%5B%7B%22id%22%3A%22DESC%22%7D%5D%2C%22limit%22%3A%222%22%7D
+```
+
+```
+{
+    "data": [
+        {
+            "id": 4,
+            "name": "The Hive North Shore Climbing and Fitness",
+            "address": "140 – 2270 Dollarton Hwy, North Vancouver, BC",
+            "city": "North Vancouver"
+        },
+        {
+            "id": 3,
+            "name": "The Hive PoCo",
+            "address": "Unit 145, 815 Village Drive, Port Coquitlam, ",
+            "city": "Port Coquitlam"
+        }
+    ]
+}
+```
+
+## Add gym
+
+This method adds a gym
+
+```
+POST /gym
+```
+
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully add gym
+400 | Error occurred
+
+### Example
+
+```
+curl -d '{ "name": "New Gym", "address": "123 Test Street", "city": "Climbington" }' -H "Content-Type: application/json" -X POST http://localhost:3001/gym
+```
+
+```
+{
+    "data": [
+        {
+            "id": 21
+        }
+    ]
+}
+```
+
+## Update gym
+
+This method adds a gym
+
+```
+PUT /gym/:id
+```
+
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully updated gym
+202 | No data updated
+400 | Error occurred
+404 | Id not found
+
+### Example
+
+```
+curl -d '{ "name": "New Gym 2", "address": "123 Test Street", "city": "Climbington" }' -H "Content-Type: application/json" -X PUT http://localhost:3001/gym/21
+```
+
+```
+{
+    "data": [
+        {
+            "id": 21
+        }
+    ]
+}
+```
+
+## Delete gym
+
+This method deletes a gym
+
+```
+DELETE /gym/:id
+```
+
+### Status Codes
+
+Code | description
+--- | ---
+200 | Successfully deleted gym
+400 | Error occurred
+404 | Id not found
+
+### Example
+
+```
+curl -X DELETE http://localhost:3001/gym/21
+```
+
+```
+{
+    "data": [
+        {
+            "id": 21
+        }
+    ]
+}
+```
+
+
+
+
+
 
 # Users
 
