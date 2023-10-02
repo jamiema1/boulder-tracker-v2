@@ -1,18 +1,36 @@
 html {
-  font-family: "Courier New", Courier, monospace;
+  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: "Courier New", Courier, monospace; */
   font-size: small;
   background-color: rgb(230, 230, 230);
+  /* border: 2px solid black; */
 }
 
-.componentTitle {
-  font-size: xx-large;
-  font-weight: 700;
-  padding: 10px 0px 25px 0px;
+.pages {
+  --width: 3px;
+  --radius: 10px;
+  --colour: black;
+  --margin: 10px;
+
+  border-bottom: var(--width) solid var(--colour);
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  padding: 0px 0px 0px 10px;
+}
+
+.pages > * {
+  border-top: var(--width) solid var(--colour);
+  border-left: var(--width) solid var(--colour);
+  border-right: var(--width) solid var(--colour);
+  border-top-right-radius: var(--radius);
+  border-top-left-radius: var(--radius);
+
+  padding: 5px 20px 5px 20px;
+  margin-left: var(--margin);
+  margin-right: var(--margin);
+
+  font-size: x-large;
   display: flex;
   justify-content: center;
-}
-
-.title {
-  font-weight: 700;
-  font-size: large;
 }

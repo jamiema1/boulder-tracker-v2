@@ -131,12 +131,12 @@ export default function Gyms() {
   <div>City: {gym.city}</div> */
 
   return (
-    <ul>
+    <ul className="dataList outerList">
       {gymData.map((gym) => {
         return (
           <div key={gym.id}>
             {editingGym !== gym.id && (
-              <li className="gym">
+              <li className="item">
                 <div className="components">
                   <div
                     className="data"
@@ -157,7 +157,7 @@ export default function Gyms() {
               </li>
             )}
             {editingGym == gym.id && (
-              <li className="gym">
+              <li className="item">
                 <form className="components">
                   <div className="data">
                     <label>Name:</label>
@@ -197,7 +197,7 @@ export default function Gyms() {
         )
       })}
       {addingGym && (
-        <li className="gym">
+        <li className="item">
           <form className="components">
             <div className="data">
               <label>Name:</label>

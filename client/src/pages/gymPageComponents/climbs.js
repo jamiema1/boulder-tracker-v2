@@ -30,7 +30,7 @@ export default function Climbs(props) {
   }, [viewingBoulder])
 
   return (
-    <ul>
+    <ul className="dataList">
       {climbData.map((climb) => {
         if (viewingBoulder === boulderId) {
           return (

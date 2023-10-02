@@ -5,7 +5,7 @@ import "./gymPage.css"
 export default function SessionPage() {
   return (
     <div>
-      <div>Sessions</div>
+      <div className="pageTitle">Sessions</div>
       <Sessions></Sessions>
     </div>
   )

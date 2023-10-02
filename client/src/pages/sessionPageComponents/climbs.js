@@ -3,6 +3,9 @@ import Axios from "../../api/Axios"
 
 export default function Climbs(props) {
   const [climbData, setClimbData] = useState([])
+  // const [viewingClimb, setViewingClimb] = useState(0)
+  // const [editingClimb, setEditingClimb] = useState(0)
+  // const [addingClimb, setAddingClimb] = useState(false)
 
   const sessionId = props.sessionId
   const viewingSession = props.viewingSession
@@ -29,8 +32,14 @@ export default function Climbs(props) {
     getAllClimbs()
   }, [viewingSession])
 
+  // function changeStates(viewingClimb, editingClimb, addingClimb) {
+  //   setViewingClimb(viewingClimb)
+  //   setEditingClimb(editingClimb)
+  //   setAddingClimb(addingClimb)
+  // }
+
   return (
-    <ul>
+    <ul className="dataList">
       {climbData.map((climb) => {
         if (viewingSession === sessionId) {
           return (
@@ -43,6 +52,10 @@ export default function Climbs(props) {
           )
         }
       })}
+      {viewingSession === sessionId && (
+        // <button onClick={() => changeStates(0, 0, true)}>Add a Climb</button>
+        <button>Add a Climb</button>
+      )}
     </ul>
   )
 }

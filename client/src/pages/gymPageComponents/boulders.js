@@ -167,7 +167,7 @@ export default function Boulders(props) {
    */
 
   return (
-    <ul>
+    <ul className="dataList">
       {boulderData.map((boulder) => {
         return (
           <div key={boulder.id}>

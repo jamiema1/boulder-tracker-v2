@@ -144,7 +144,7 @@ export default function Locations(props) {
    */
 
   return (
-    <ul>
+    <ul className="dataList">
       {locationData.map((location) => {
         return (
           <div key={location.id}>

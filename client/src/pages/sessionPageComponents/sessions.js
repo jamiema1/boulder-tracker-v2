@@ -44,6 +44,7 @@ export default function Sessions() {
     Axios.get("/session")
       .then((res) => {
         setSessionData(res.data.data)
+        console.log(res.data.data)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -142,12 +143,12 @@ export default function Sessions() {
    */
 
   return (
-    <ul>
+    <ul className="dataList outerList">
       {sessionData.map((session) => {
         return (
           <div key={session.id}>
             {editingSession !== session.id && (
-              <li className="session">
+              <li className="item">
                 <div className="components">
                   <div
                     className="data"
@@ -172,7 +173,7 @@ export default function Sessions() {
               </li>
             )}
             {editingSession == session.id && (
-              <li className="session">
+              <li className="item">
                 <form className="components">
                   <div className="data">
                     <label>Gym ID:</label>
@@ -215,7 +216,7 @@ export default function Sessions() {
         )
       })}
       {addingSession && (
-        <li className="session">
+        <li className="item">
           <form className="components">
             <div className="data">
               <label>Gym ID:</label>
