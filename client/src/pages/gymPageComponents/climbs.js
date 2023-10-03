@@ -34,11 +34,13 @@ export default function Climbs(props) {
       {climbData.map((climb) => {
         if (viewingBoulder === boulderId) {
           return (
-            <li key={climb.id}>
-              <div>{climb.attempts}</div>
-              <div>{climb.sends}</div>
-              <div>{climb.climbStartTime}</div>
-              <div>{climb.climbEndTime}</div>
+            <li key={climb.id} className="item">
+              <div className="components">
+                <div className="data">
+                  {climb.id} - {climb.sessionId} | {climb.attempts} |{" "}
+                  {climb.sends} | {climb.climbStartTime} | {climb.climbEndTime}
+                </div>
+              </div>
             </li>
           )
         }

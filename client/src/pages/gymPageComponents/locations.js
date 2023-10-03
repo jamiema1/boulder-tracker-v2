@@ -1,11 +1,8 @@
 import React, {useEffect, useState, useRef} from "react"
 import Axios from "../../api/Axios"
 import Boulders from "./boulders"
-import editIcon from "../../images/editIcon.png"
-import deleteIcon from "../../images/deleteIcon.png"
-import cancelIcon from "../../images/cancelIcon.png"
-import confirmIcon from "../../images/confirmIcon.png"
-import addIcon from "../../images/addIcon.png"
+
+import images from "../../images/images.js"
 
 export default function Locations(props) {
   /*
@@ -149,7 +146,7 @@ export default function Locations(props) {
         return (
           <div key={location.id}>
             {editingLocation !== location.id && (
-              <li>
+              <li className="item">
                 <div className="components">
                   <div
                     className="data viewData"
@@ -159,10 +156,10 @@ export default function Locations(props) {
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, location.id, false)}>
-                      <img src={editIcon}></img>
+                      <img src={images.editIcon}></img>
                     </button>
                     <button onClick={() => deleteLocation(location.id)}>
-                      <img src={deleteIcon}></img>
+                      <img src={images.deleteIcon}></img>
                     </button>
                   </div>
                 </div>
@@ -173,7 +170,7 @@ export default function Locations(props) {
               </li>
             )}
             {editingLocation == location.id && (
-              <li>
+              <li className="item">
                 <form className="components">
                   <div className="data">
                     <label>Name:</label>
@@ -188,13 +185,13 @@ export default function Locations(props) {
                       type="button"
                       onClick={() => editLocation(location.id)}
                     >
-                      <img src={confirmIcon}></img>
+                      <img src={images.confirmIcon}></img>
                     </button>
                     <button
                       type="button"
                       onClick={() => changeStates(0, 0, false)}
                     >
-                      <img src={cancelIcon}></img>
+                      <img src={images.cancelIcon}></img>
                     </button>
                   </div>
                 </form>
@@ -204,7 +201,7 @@ export default function Locations(props) {
         )
       })}
       {addingLocation && (
-        <li>
+        <li className="item">
           <form className="components">
             <div className="data">
               <label>Name:</label>
@@ -212,16 +209,16 @@ export default function Locations(props) {
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addLocation()}>
-                <img src={addIcon}></img>
+                <img src={images.addIcon}></img>
               </button>
               <button type="button" onClick={() => clearLocationRefs()}>
-                <img src={cancelIcon}></img>
+                <img src={images.cancelIcon}></img>
               </button>
             </div>
           </form>
         </li>
       )}
-      {viewingGym === gymId && (
+      {viewingGym === gymId && !addingLocation && (
         <button onClick={() => changeStates(0, 0, true)}>Add a Location</button>
       )}
     </ul>

@@ -1,11 +1,8 @@
 import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import Climbs from "./climbs"
-import editIcon from "../../images/editIcon.png"
-import deleteIcon from "../../images/deleteIcon.png"
-import cancelIcon from "../../images/cancelIcon.png"
-import confirmIcon from "../../images/confirmIcon.png"
-import addIcon from "../../images/addIcon.png"
+
+import images from "../../images/images.js"
 
 export default function Sessions() {
   /*
@@ -159,10 +156,10 @@ export default function Sessions() {
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, session.id, false)}>
-                      <img src={editIcon}></img>
+                      <img src={images.editIcon}></img>
                     </button>
                     <button onClick={() => deleteSession(session.id)}>
-                      <img src={deleteIcon}></img>
+                      <img src={images.deleteIcon}></img>
                     </button>
                   </div>
                 </div>{" "}
@@ -200,13 +197,13 @@ export default function Sessions() {
                       type="button"
                       onClick={() => editSession(session.id)}
                     >
-                      <img src={confirmIcon}></img>
+                      <img src={images.confirmIcon}></img>
                     </button>
                     <button
                       type="button"
                       onClick={() => changeStates(0, 0, false)}
                     >
-                      <img src={cancelIcon}></img>
+                      <img src={images.cancelIcon}></img>
                     </button>
                   </div>
                 </form>
@@ -228,10 +225,10 @@ export default function Sessions() {
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addSession()}>
-                <img src={addIcon}></img>
+                <img src={images.addIcon}></img>
               </button>
               <button type="button" onClick={() => clearSessionRefs()}>
-                <img src={cancelIcon}></img>
+                <img src={images.cancelIcon}></img>
               </button>
             </div>
           </form>

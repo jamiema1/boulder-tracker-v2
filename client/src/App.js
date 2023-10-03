@@ -1,6 +1,6 @@
 import React from "react"
 import {HashRouter as Router, Routes, Route, Link} from "react-router-dom"
-import Homepage from "./components/homepage/homepage"
+import Homepage from "./pages/homepage"
 import GymPage from "./pages/gymPage"
 import SessionPage from "./pages/sessionPage"
 import "./App.css"

@@ -1,6 +1,8 @@
+/* eslint-disable max-lines */
 import React, {useEffect, useState, useRef} from "react"
 import Axios from "../../api/Axios"
 import Climbs from "./climbs"
+import images from "../../images/images.js"
 
 export default function Boulders(props) {
   /*
@@ -149,10 +151,17 @@ export default function Boulders(props) {
     }
   }
 
-  function changeStates(viewingBoulder, editingBoulder, addingBoulder) {
-    setViewingBoulder(viewingBoulder)
-    setEditingBoulder(editingBoulder)
-    setAddingBoulder(addingBoulder)
+  function changeStates(
+    newViewingBoulder,
+    newEditingBoulder,
+    newAddingBoulder
+  ) {
+    if (viewingBoulder === newViewingBoulder) {
+      newViewingBoulder = 0
+    }
+    setViewingBoulder(newViewingBoulder)
+    setEditingBoulder(newEditingBoulder)
+    setAddingBoulder(newAddingBoulder)
   }
 
   function convertToDate(dateTime) {
@@ -172,27 +181,31 @@ export default function Boulders(props) {
         return (
           <div key={boulder.id}>
             {editingBoulder !== boulder.id && (
-              <li>
-                <button onClick={() => changeStates(boulder.id, 0, false)}>
-                  View
-                </button>
-                <button
-                  onClick={() => {
-                    changeStates(0, boulder.id, false)
-                  }}
-                >
-                  Edit
-                </button>
-                <button onClick={() => deleteBoulder(boulder.id)}>
-                  Delete
-                </button>
-                <div>ID: {boulder.id}</div>
-                <div>Rating: {boulder.rating}</div>
-                <div>Colour: {boulder.colour}</div>
-                <div>Boulder Type: {boulder.boulderType}</div>
-                <div>Description: {boulder.description}</div>
-                <div>Set Start Date: {boulder.setStartDate}</div>
-                <div>Set End Date: {boulder.setEndDate}</div>
+              <li className="item">
+                <div className="components">
+                  <div
+                    className="data"
+                    onClick={() => changeStates(boulder.id, 0, false)}
+                  >
+                    <div>
+                      {boulder.id} - {boulder.rating} | {boulder.colour} |{" "}
+                      {boulder.boulderType} | {boulder.description} |{" "}
+                      {boulder.setStartDate} | {boulder.setEndDate}
+                    </div>
+                  </div>
+                  <div className="buttons">
+                    <button
+                      onClick={() => {
+                        changeStates(0, boulder.id, false)
+                      }}
+                    >
+                      <img src={images.editIcon}></img>
+                    </button>
+                    <button onClick={() => deleteBoulder(boulder.id)}>
+                      <img src={images.deleteIcon}></img>
+                    </button>
+                  </div>
+                </div>
                 <Climbs
                   boulderId={boulder.id}
                   viewingBoulder={viewingBoulder}
@@ -200,53 +213,60 @@ export default function Boulders(props) {
               </li>
             )}
             {editingBoulder == boulder.id && (
-              <li>
-                <form>
-                  <label>Rating:</label>
-                  <input
-                    type="number"
-                    ref={newBoulderRating}
-                    defaultValue={boulder.rating}
-                  ></input>
-                  <label>Colour:</label>
-                  <input
-                    type="text"
-                    ref={newBoulderColour}
-                    defaultValue={boulder.colour}
-                  ></input>
-                  <label>Boulder Type:</label>
-                  <input
-                    type="text"
-                    ref={newBoulderBoulderType}
-                    defaultValue={boulder.boulderType}
-                  ></input>
-                  <label>Description:</label>
-                  <input
-                    type="text"
-                    ref={newBoulderDescription}
-                    defaultValue={boulder.description}
-                  ></input>
-                  <label>Set Start Date:</label>
-                  <input
-                    type="date"
-                    ref={newBoulderSetStartDate}
-                    defaultValue={boulder.setStartDate}
-                  ></input>
-                  <label>Set End Date:</label>
-                  <input
-                    type="date"
-                    ref={newBoulderSetEndDate}
-                    defaultValue={boulder.setEndDate}
-                  ></input>
-                  <button type="button" onClick={() => editBoulder(boulder.id)}>
-                    Confirm
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => changeStates(0, 0, false)}
-                  >
-                    Cancel
-                  </button>
+              <li className="item">
+                <form className="components">
+                  <div className="data">
+                    <label>Rating:</label>
+                    <input
+                      type="number"
+                      ref={newBoulderRating}
+                      defaultValue={boulder.rating}
+                    ></input>
+                    <label>Colour:</label>
+                    <input
+                      type="text"
+                      ref={newBoulderColour}
+                      defaultValue={boulder.colour}
+                    ></input>
+                    <label>Boulder Type:</label>
+                    <input
+                      type="text"
+                      ref={newBoulderBoulderType}
+                      defaultValue={boulder.boulderType}
+                    ></input>
+                    <label>Description:</label>
+                    <input
+                      type="text"
+                      ref={newBoulderDescription}
+                      defaultValue={boulder.description}
+                    ></input>
+                    <label>Set Start Date:</label>
+                    <input
+                      type="date"
+                      ref={newBoulderSetStartDate}
+                      defaultValue={boulder.setStartDate}
+                    ></input>
+                    <label>Set End Date:</label>
+                    <input
+                      type="date"
+                      ref={newBoulderSetEndDate}
+                      defaultValue={boulder.setEndDate}
+                    ></input>
+                  </div>
+                  <div className="buttons">
+                    <button
+                      type="button"
+                      onClick={() => editBoulder(boulder.id)}
+                    >
+                      <img src={images.confirmIcon}></img>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => changeStates(0, 0, false)}
+                    >
+                      <img src={images.cancelIcon}></img>
+                    </button>
+                  </div>
                 </form>
               </li>
             )}
@@ -254,30 +274,34 @@ export default function Boulders(props) {
         )
       })}
       {addingBoulder && (
-        <li>
-          <form>
-            <label>Rating:</label>
-            <input type="number" ref={newBoulderRating}></input>
-            <label>Colour:</label>
-            <input type="text" ref={newBoulderColour}></input>
-            <label>Boulder Type:</label>
-            <input type="text" ref={newBoulderBoulderType}></input>
-            <label>Description:</label>
-            <input type="text" ref={newBoulderDescription}></input>
-            <label>Set Start Date:</label>
-            <input type="date" ref={newBoulderSetStartDate}></input>
-            <label>Set End Date:</label>
-            <input type="date" ref={newBoulderSetEndDate}></input>
-            <button type="button" onClick={() => addBoulder()}>
-              Add
-            </button>
-            <button type="button" onClick={() => clearBoulderRefs()}>
-              Cancel
-            </button>
+        <li className="item">
+          <form className="components">
+            <div className="data">
+              <label>Rating:</label>
+              <input type="number" ref={newBoulderRating}></input>
+              <label>Colour:</label>
+              <input type="text" ref={newBoulderColour}></input>
+              <label>Boulder Type:</label>
+              <input type="text" ref={newBoulderBoulderType}></input>
+              <label>Description:</label>
+              <input type="text" ref={newBoulderDescription}></input>
+              <label>Set Start Date:</label>
+              <input type="date" ref={newBoulderSetStartDate}></input>
+              <label>Set End Date:</label>
+              <input type="date" ref={newBoulderSetEndDate}></input>
+            </div>
+            <div className="buttons">
+              <button type="button" onClick={() => addBoulder()}>
+                <img src={images.addIcon}></img>
+              </button>
+              <button type="button" onClick={() => clearBoulderRefs()}>
+                <img src={images.cancelIcon}></img>
+              </button>
+            </div>
           </form>
         </li>
       )}
-      {viewingLocation === locationId && (
+      {viewingLocation === locationId && !addingBoulder && (
         <button onClick={() => changeStates(0, 0, true)}>Add a Boulder</button>
       )}
     </ul>

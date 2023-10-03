@@ -1,11 +1,8 @@
 import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import Locations from "./locations"
-import editIcon from "../../images/editIcon.png"
-import deleteIcon from "../../images/deleteIcon.png"
-import cancelIcon from "../../images/cancelIcon.png"
-import confirmIcon from "../../images/confirmIcon.png"
-import addIcon from "../../images/addIcon.png"
+
+import images from "../../images/images.js"
 
 export default function Gyms() {
   /*
@@ -125,11 +122,6 @@ export default function Gyms() {
    * Return value
    */
 
-  /* <div>ID: {gym.id}</div>
-  <div>Name: {gym.name}</div>
-  <div>Address: {gym.address}</div>
-  <div>City: {gym.city}</div> */
-
   return (
     <ul className="dataList outerList">
       {gymData.map((gym) => {
@@ -142,14 +134,14 @@ export default function Gyms() {
                     className="data"
                     onClick={() => changeStates(gym.id, 0, false)}
                   >
-                    {gym.id} - {gym.city}
+                    {gym.id} - {gym.city} | {gym.name} | {gym.address}
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, gym.id, false)}>
-                      <img src={editIcon}></img>
+                      <img src={images.editIcon}></img>
                     </button>
                     <button onClick={() => deleteGym(gym.id)}>
-                      <img src={deleteIcon}></img>
+                      <img src={images.deleteIcon}></img>
                     </button>
                   </div>
                 </div>
@@ -181,13 +173,13 @@ export default function Gyms() {
                   </div>
                   <div className="buttons">
                     <button type="button" onClick={() => editGym(gym.id)}>
-                      <img src={confirmIcon}></img>
+                      <img src={images.confirmIcon}></img>
                     </button>
                     <button
                       type="button"
                       onClick={() => changeStates(0, 0, false)}
                     >
-                      <img src={cancelIcon}></img>
+                      <img src={images.cancelIcon}></img>
                     </button>
                   </div>
                 </form>
@@ -209,16 +201,18 @@ export default function Gyms() {
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addGym()}>
-                <img src={addIcon}></img>
+                <img src={images.addIcon}></img>
               </button>
               <button type="button" onClick={() => clearGymRefs()}>
-                <img src={cancelIcon}></img>
+                <img src={images.cancelIcon}></img>
               </button>
             </div>
           </form>
         </li>
       )}
-      <button onClick={() => changeStates(0, 0, true)}>Add a Gym</button>
+      {!addingGym && (
+        <button onClick={() => changeStates(0, 0, true)}>Add a Gym</button>
+      )}
     </ul>
   )
 }
