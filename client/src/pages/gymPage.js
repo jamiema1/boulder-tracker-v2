@@ -1,10 +1,11 @@
 import React from "react"
-import Gyms from "./components/gyms"
+import Gyms from "./gymPageComponents/gyms"
+import "./gymPage.css"
 
 export default function GymPage() {
   return (
     <div>
-      <div>Gyms</div>
+      <div className="pageTitle">Gyms</div>
       <Gyms></Gyms>
     </div>
   )

@@ -5,7 +5,8 @@ import { getOne, getAll, addOne, updateOne, deleteOne, getQuery }
 
 dotenv.config()
 
-const stringValues = ['colour', 'boulderType', 'description']
+const stringValues = ['colour', 'boulderType', 'description',
+  'setStartDate', 'setEndDate']
 
 function getValuesMap (req) {
   return new Map([
@@ -13,7 +14,9 @@ function getValuesMap (req) {
     ['rating', req.body.rating],
     ['colour', req.body.colour],
     ['boulderType', req.body.boulderType],
-    ['description', req.body.description]
+    ['description', req.body.description],
+    ['setStartDate', req.body.setStartDate],
+    ['setEndDate', req.body.setEndDate]
   ])
 }
 
