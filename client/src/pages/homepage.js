@@ -1,19 +1,7 @@
 import React from "react"
-import {useNavigate} from "react-router-dom"
 import "./homepage.css"
 
 export default function Homepage() {
-  const navigate = useNavigate()
-
-  function login() {
-    navigate("/user/login")
-  }
-
-  function guest() {
-    navigate("/user/guest/data")
-    localStorage.setItem("user", "guest")
-  }
-
   return (
     <div>
       <div className="homepage">
@@ -64,8 +52,6 @@ export default function Homepage() {
           </li>
         </ul>
       </div>
-      <button onClick={login}>Log In</button>
-      <button onClick={guest}>Continue as Guest</button>
     </div>
   )
 }

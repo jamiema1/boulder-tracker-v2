@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import Climbs from "./climbs"
-
+// import Session from "../../classes/session.js"
 import images from "../../images/images.js"
 
 export default function Sessions() {
@@ -41,7 +41,6 @@ export default function Sessions() {
     Axios.get("/session")
       .then((res) => {
         setSessionData(res.data.data)
-        console.log(res.data.data)
       })
       .catch((err) => {
         alert(err.response.data.error)
