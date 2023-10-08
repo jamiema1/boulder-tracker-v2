@@ -3,6 +3,12 @@ import React, {useEffect, useState, useRef} from "react"
 import Axios from "../../api/Axios"
 import Climbs from "./climbs"
 import images from "../../images/images.js"
+import {
+  getCurrentDate,
+  getCurrentDateTime,
+  convertToViewDate,
+  convertToEditDate,
+} from "../helpers.js"
 
 export default function Boulders(props) {
   /*
@@ -49,7 +55,8 @@ export default function Boulders(props) {
 
   function getAllBoulders() {
     let params = {
-      where: "locationId = " + viewingLocation,
+      where:
+        "(locationId = " + viewingLocation + " AND setEndDate = '0000-00-00')",
     }
 
     const uri = encodeURIComponent(JSON.stringify(params))
@@ -57,18 +64,6 @@ export default function Boulders(props) {
     Axios.get("/boulder/query/" + uri)
       .then((res) => {
         const data = res.data.data
-        data.forEach((boulder, index, data) => {
-          data[index] = {
-            id: boulder.id,
-            locationId: boulder.locationId,
-            rating: boulder.rating,
-            colour: boulder.colour,
-            boulderType: boulder.boulderType,
-            description: boulder.description,
-            setStartDate: convertToDate(boulder.setStartDate),
-            setEndDate: convertToDate(boulder.setEndDate),
-          }
-        })
         setBoulderData(data)
       })
       .catch((err) => {
@@ -86,7 +81,7 @@ export default function Boulders(props) {
           {id: res.data.data[0].id, ...newBoulder},
         ])
         clearBoulderRefs()
-        alert("Successfully added boulder " + res.data.data[0].id)
+        // alert("Successfully added boulder " + res.data.data[0].id)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -95,7 +90,6 @@ export default function Boulders(props) {
 
   function editBoulder(boulderId) {
     const newBoulder = getNewBoulder()
-    console.log(newBoulder)
 
     Axios.put("/boulder/" + boulderId, newBoulder)
       .then((res) => {
@@ -106,7 +100,7 @@ export default function Boulders(props) {
         }
         // TODO: update the boulder from boulderData without GET API call
         getAllBoulders()
-        alert("Successfully edited boulder " + res.data.data[0].id)
+        // alert("Successfully edited boulder " + res.data.data[0].id)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -164,11 +158,29 @@ export default function Boulders(props) {
     setAddingBoulder(newAddingBoulder)
   }
 
-  function convertToDate(dateTime) {
-    if (dateTime === null) {
-      return "0000-00-00" // TODO: unsure about this return value
+  function closeBoulder(boulder) {
+    const newBoulder = {
+      locationId: locationId,
+      rating: boulder.rating,
+      colour: boulder.colour,
+      boulderType: boulder.boulderType,
+      description: boulder.description,
+      setStartDate: boulder.setStartDate,
+      setEndDate: getCurrentDateTime(),
     }
-    return dateTime.split("T")[0]
+
+    console.log(newBoulder)
+    Axios.put("/boulder/" + boulder.id, newBoulder)
+      .then((res) => {
+        if (res.status === 202) {
+          alert(res.data.error)
+          return
+        }
+        getAllBoulders()
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
   }
 
   /*
@@ -193,10 +205,20 @@ export default function Boulders(props) {
                     <div>
                       {boulder.id} - {boulder.rating} | {boulder.colour} |{" "}
                       {boulder.boulderType} | {boulder.description} |{" "}
-                      {boulder.setStartDate} | {boulder.setEndDate}
+                      {convertToViewDate(
+                        boulder.setStartDate,
+                        boulder.setEndDate
+                      )}
                     </div>
                   </div>
                   <div className="buttons">
+                    <button
+                      onClick={() => {
+                        closeBoulder(boulder)
+                      }}
+                    >
+                      Close
+                    </button>
                     <button
                       onClick={() => {
                         changeStates(0, boulder.id, false)
@@ -247,13 +269,13 @@ export default function Boulders(props) {
                     <input
                       type="date"
                       ref={newBoulderSetStartDate}
-                      defaultValue={boulder.setStartDate}
+                      defaultValue={convertToEditDate(boulder.setStartDate)}
                     ></input>
                     <label>Set End Date:</label>
                     <input
                       type="date"
                       ref={newBoulderSetEndDate}
-                      defaultValue={boulder.setEndDate}
+                      defaultValue={convertToEditDate(boulder.setEndDate)}
                     ></input>
                   </div>
                   <div className="buttons">
@@ -289,7 +311,11 @@ export default function Boulders(props) {
               <label>Description:</label>
               <input type="text" ref={newBoulderDescription}></input>
               <label>Set Start Date:</label>
-              <input type="date" ref={newBoulderSetStartDate}></input>
+              <input
+                type="date"
+                ref={newBoulderSetStartDate}
+                defaultValue={getCurrentDate()}
+              ></input>
               <label>Set End Date:</label>
               <input type="date" ref={newBoulderSetEndDate}></input>
             </div>

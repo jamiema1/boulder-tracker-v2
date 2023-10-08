@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import Climbs from "./climbs"
 // import Session from "../../classes/session.js"
-import {convertToViewDate, convertToEditDate} from "../helpers.js"
+import {convertToViewDateTime, convertToEditDateTime} from "../helpers.js"
 import images from "../../images/images.js"
 
 export default function Sessions() {
@@ -147,7 +147,7 @@ export default function Sessions() {
                     onClick={() => changeStates(session.id, 0, false)}
                   >
                     {session.id} - {session.gymId} |{" "}
-                    {convertToViewDate(
+                    {convertToViewDateTime(
                       session.sessionStartTime,
                       session.sessionEndTime
                     )}
@@ -181,13 +181,17 @@ export default function Sessions() {
                     <input
                       type="datetime-local"
                       ref={newSessionStartTime}
-                      defaultValue={convertToEditDate(session.sessionStartTime)}
+                      defaultValue={convertToEditDateTime(
+                        session.sessionStartTime
+                      )}
                     ></input>
                     <label>End Time:</label>
                     <input
                       type="datetime-local"
                       ref={newSessionEndTime}
-                      defaultValue={convertToEditDate(session.sessionEndTime)}
+                      defaultValue={convertToEditDateTime(
+                        session.sessionEndTime
+                      )}
                     ></input>
                   </div>
                   <div className="buttons">

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react"
 import Axios from "../../api/Axios"
-import {convertToViewDate} from "../helpers.js"
+import {convertToViewDateTime} from "../helpers.js"
 
 export default function Climbs(props) {
   const [climbData, setClimbData] = useState([])
@@ -20,8 +20,7 @@ export default function Climbs(props) {
         setClimbData(res.data.data)
       })
       .catch((err) => {
-        console.log(err)
-        console.log(err.response.data.error)
+        alert(err.response.data.error)
       })
   }
 
@@ -44,7 +43,7 @@ export default function Climbs(props) {
                   <div className="data">
                     {climb.id} - {climb.sessionId} | {climb.attempts} |{" "}
                     {climb.sends} |{" "}
-                    {convertToViewDate(
+                    {convertToViewDateTime(
                       climb.climbStartTime,
                       climb.climbEndTime
                     )}

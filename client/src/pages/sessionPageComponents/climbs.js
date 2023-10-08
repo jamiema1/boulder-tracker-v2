@@ -1,6 +1,10 @@
 import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
-import {convertToViewDate, convertToEditDate} from "../helpers.js"
+import {
+  convertToViewDateTime,
+  convertToEditDateTime,
+  getCurrentDateTime,
+} from "../helpers.js"
 import images from "../../images/images.js"
 
 export default function Climbs(props) {
@@ -25,7 +29,6 @@ export default function Climbs(props) {
   const [addingClimb, setAddingClimb] = useState(false)
 
   const newBoulderId = useRef(0)
-  const newSessionId = useRef(0)
   const newAttempts = useRef(0)
   const newSends = useRef(0)
   const newClimbStartTime = useRef("")
@@ -71,7 +74,7 @@ export default function Climbs(props) {
       .then((res) => {
         setClimbData([...climbData, {id: res.data.data[0].id, ...newClimb}])
         clearClimbRefs()
-        alert("Successfully added climb " + res.data.data[0].id)
+        // alert("Successfully added climb " + res.data.data[0].id)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -92,7 +95,7 @@ export default function Climbs(props) {
         }
         getAllClimbs()
         // TODO: update the climb from climbData without GET API call
-        alert("Successfully edited climb " + res.data.data[0].id)
+        // alert("Successfully edited climb " + res.data.data[0].id)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -117,7 +120,6 @@ export default function Climbs(props) {
 
   function clearClimbRefs() {
     newBoulderId.current.value = 0
-    newSessionId.current.value = 0
     newAttempts.current.value = 0
     newSends.current.value = 0
     newClimbStartTime.current.value = ""
@@ -128,7 +130,7 @@ export default function Climbs(props) {
   function getNewClimb() {
     return {
       boulderId: parseInt(newBoulderId.current.value),
-      sessionId: parseInt(newSessionId.current.value),
+      sessionId: sessionId,
       attempts: parseInt(newAttempts.current.value),
       sends: parseInt(newSends.current.value),
       climbStartTime: newClimbStartTime.current.value,
@@ -164,7 +166,7 @@ export default function Climbs(props) {
                   >
                     {climb.id} - {climb.boulderId} | {climb.sessionId} |{" "}
                     {climb.attempts} | {climb.sends} |{" "}
-                    {convertToViewDate(
+                    {convertToViewDateTime(
                       climb.climbStartTime,
                       climb.climbEndTime
                     )}
@@ -190,12 +192,6 @@ export default function Climbs(props) {
                       ref={newBoulderId}
                       defaultValue={climb.boulderId}
                     ></input>
-                    <label>Session ID:</label>
-                    <input
-                      type="number"
-                      ref={newSessionId}
-                      defaultValue={climb.sessionId}
-                    ></input>
                     <label>Attempts:</label>
                     <input
                       type="number"
@@ -212,13 +208,13 @@ export default function Climbs(props) {
                     <input
                       type="datetime-local"
                       ref={newClimbStartTime}
-                      defaultValue={convertToEditDate(climb.climbStartTime)}
+                      defaultValue={convertToEditDateTime(climb.climbStartTime)}
                     ></input>
                     <label>End Time:</label>
                     <input
                       type="datetime-local"
                       ref={newClimbEndTime}
-                      defaultValue={convertToEditDate(climb.climbEndTime)}
+                      defaultValue={convertToEditDateTime(climb.climbEndTime)}
                     ></input>
                   </div>
                   <div className="buttons">
@@ -244,16 +240,22 @@ export default function Climbs(props) {
             <div className="data">
               <label>Boulder ID:</label>
               <input type="number" ref={newBoulderId}></input>
-              <label>Session ID:</label>
-              <input type="number" ref={newSessionId}></input>
               <label>Attempts:</label>
               <input type="number" ref={newAttempts}></input>
               <label>Sends:</label>
               <input type="number" ref={newSends}></input>
               <label>Start Time:</label>
-              <input type="datetime-local" ref={newClimbStartTime}></input>
+              <input
+                type="datetime-local"
+                ref={newClimbStartTime}
+                defaultValue={getCurrentDateTime()}
+              ></input>
               <label>End Time:</label>
-              <input type="datetime-local" ref={newClimbEndTime}></input>
+              <input
+                type="datetime-local"
+                ref={newClimbEndTime}
+                defaultValue={getCurrentDateTime()}
+              ></input>
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addClimb()}>
