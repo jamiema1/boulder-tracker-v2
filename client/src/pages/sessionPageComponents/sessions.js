@@ -146,11 +146,26 @@ export default function Sessions() {
                     className="data"
                     onClick={() => changeStates(session.id, 0, false)}
                   >
-                    {session.id} - {session.gymId} |{" "}
-                    {convertToViewDateTime(
-                      session.sessionStartTime,
-                      session.sessionEndTime
-                    )}
+                    <div className="icons">
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "aqua"}}
+                      >
+                        {session.id}
+                      </div>
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "grey"}}
+                      >
+                        {session.gymId}
+                      </div>
+                    </div>
+                    <div className="date">
+                      {convertToViewDateTime(
+                        session.sessionStartTime,
+                        session.sessionEndTime
+                      )}
+                    </div>
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, session.id, false)}>

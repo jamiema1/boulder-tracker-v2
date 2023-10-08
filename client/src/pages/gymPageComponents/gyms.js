@@ -135,7 +135,18 @@ export default function Gyms() {
                     className="data"
                     onClick={() => changeStates(gym.id, 0, false)}
                   >
-                    {gym.id} - {gym.city} | {gym.name} | {gym.address}
+                    <div className="icons">
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "grey"}}
+                      >
+                        {gym.id}
+                      </div>
+                      <div className="text">
+                        {gym.city} - {gym.name}
+                      </div>
+                    </div>
+                    <div className="date">{gym.address}</div>
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, gym.id, false)}>

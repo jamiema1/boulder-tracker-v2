@@ -150,10 +150,18 @@ export default function Locations(props) {
               <li className="item">
                 <div className="components">
                   <div
-                    className="data viewData"
+                    className="data"
                     onClick={() => changeStates(location.id, 0, false)}
                   >
-                    {location.id} - {location.name}
+                    <div className="icons">
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "teal"}}
+                      >
+                        {location.id}
+                      </div>
+                      <div className="text">{location.name}</div>
+                    </div>
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, location.id, false)}>

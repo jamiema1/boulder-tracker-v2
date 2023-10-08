@@ -183,6 +183,27 @@ export default function Boulders(props) {
       })
   }
 
+  function getHexImage(rating) {
+    switch (rating) {
+    case -1:
+      return images.sixHex
+    case 0:
+      return images.sixHex
+    case 1:
+      return images.oneHex
+    case 2:
+      return images.twoHex
+    case 3:
+      return images.threeHex
+    case 4:
+      return images.fourHex
+    case 5:
+      return images.fiveHex
+    case 6:
+      return images.sixHex
+    }
+  }
+
   /*
    * Return value
    */
@@ -202,9 +223,24 @@ export default function Boulders(props) {
                     className="data"
                     onClick={() => changeStates(boulder.id, 0, false)}
                   >
-                    <div>
-                      {boulder.id} - {boulder.rating} | {boulder.colour} |{" "}
-                      {boulder.boulderType} | {boulder.description} |{" "}
+                    <div className="icons">
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: boulder.colour}}
+                      >
+                        {boulder.id}
+                      </div>
+                      <div className="hex">
+                        <img
+                          className="hexImage"
+                          src={getHexImage(boulder.rating)}
+                        ></img>
+                      </div>
+                      <div className="text">
+                        {boulder.boulderType} - {boulder.description}
+                      </div>
+                    </div>
+                    <div className="date">
                       {convertToViewDate(
                         boulder.setStartDate,
                         boulder.setEndDate

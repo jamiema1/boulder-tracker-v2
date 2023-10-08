@@ -161,15 +161,32 @@ export default function Climbs(props) {
               <li className="item">
                 <div className="components">
                   <div
-                    className="data viewData"
+                    className="data"
                     onClick={() => changeStates(climb.id, 0, false)}
                   >
-                    {climb.id} - {climb.boulderId} | {climb.sessionId} |{" "}
-                    {climb.attempts} | {climb.sends} |{" "}
-                    {convertToViewDateTime(
-                      climb.climbStartTime,
-                      climb.climbEndTime
-                    )}
+                    <div className="icons">
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "magenta"}}
+                      >
+                        {climb.id}
+                      </div>
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "teal"}}
+                      >
+                        {climb.boulderId}
+                      </div>
+                      <div className="text">
+                        Completion Rate: {climb.sends} / {climb.attempts}
+                      </div>
+                    </div>
+                    <div className="date">
+                      {convertToViewDateTime(
+                        climb.climbStartTime,
+                        climb.climbEndTime
+                      )}
+                    </div>
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, climb.id, false)}>

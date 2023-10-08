@@ -41,12 +41,29 @@ export default function Climbs(props) {
               <li className="item">
                 <div className="components">
                   <div className="data">
-                    {climb.id} - {climb.sessionId} | {climb.attempts} |{" "}
-                    {climb.sends} |{" "}
-                    {convertToViewDateTime(
-                      climb.climbStartTime,
-                      climb.climbEndTime
-                    )}
+                    <div className="icons">
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "magenta"}}
+                      >
+                        {climb.id}
+                      </div>
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "aqua"}}
+                      >
+                        {climb.sessionId}
+                      </div>
+                      <div className="text">
+                        Completion Rate: {climb.sends} / {climb.attempts}
+                      </div>
+                    </div>
+                    <div className="date">
+                      {convertToViewDateTime(
+                        climb.climbStartTime,
+                        climb.climbEndTime
+                      )}
+                    </div>
                   </div>
                 </div>
               </li>
