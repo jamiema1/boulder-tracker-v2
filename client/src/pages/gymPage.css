@@ -3,6 +3,10 @@
   /* font-weight: 600; */
 }
 
+.sectionTitle {
+  font-size: x-large;
+}
+
 .dataList {
   --width: 1px;
   --radius: 10px;

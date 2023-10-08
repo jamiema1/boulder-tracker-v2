@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import Climbs from "./climbs"
 // import Session from "../../classes/session.js"
+import {convertToViewDate, convertToEditDate} from "../helpers.js"
 import images from "../../images/images.js"
 
 export default function Sessions() {
@@ -49,6 +50,8 @@ export default function Sessions() {
 
   function addSession() {
     const newSession = getNewSession()
+
+    console.log(newSession)
 
     Axios.post("/session", newSession)
       .then((res) => {
@@ -127,13 +130,6 @@ export default function Sessions() {
     setAddingSession(newAddingSession)
   }
 
-  function convertToDate(dateTime) {
-    if (dateTime === null) {
-      return "0000-00-00" // TODO: unsure about this return value
-    }
-    return dateTime.split("T")[0]
-  }
-
   /*
    * Return value
    */
@@ -151,7 +147,10 @@ export default function Sessions() {
                     onClick={() => changeStates(session.id, 0, false)}
                   >
                     {session.id} - {session.gymId} |{" "}
-                    {convertToDate(session.sessionStartTime)}
+                    {convertToViewDate(
+                      session.sessionStartTime,
+                      session.sessionEndTime
+                    )}
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, session.id, false)}>
@@ -182,13 +181,13 @@ export default function Sessions() {
                     <input
                       type="datetime-local"
                       ref={newSessionStartTime}
-                      defaultValue={session.sessionStartTime.split("Z")[0]}
+                      defaultValue={convertToEditDate(session.sessionStartTime)}
                     ></input>
                     <label>End Time:</label>
                     <input
                       type="datetime-local"
                       ref={newSessionEndTime}
-                      defaultValue={session.sessionEndTime.split("Z")[0]}
+                      defaultValue={convertToEditDate(session.sessionEndTime)}
                     ></input>
                   </div>
                   <div className="buttons">

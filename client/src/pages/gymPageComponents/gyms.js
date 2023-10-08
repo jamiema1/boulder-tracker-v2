@@ -124,6 +124,7 @@ export default function Gyms() {
 
   return (
     <ul className="dataList outerList">
+      <div className="pageTitle">Gyms</div>
       {gymData.map((gym) => {
         return (
           <div key={gym.id}>

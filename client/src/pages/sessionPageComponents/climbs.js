@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
-
+import {convertToViewDate, convertToEditDate} from "../helpers.js"
 import images from "../../images/images.js"
 
 export default function Climbs(props) {
@@ -146,20 +146,6 @@ export default function Climbs(props) {
     setAddingClimb(newAddingClimb)
   }
 
-  function convertToDate(dateTime) {
-    if (dateTime === null) {
-      return "0000-00-00" // TODO: unsure about this return value
-    }
-    return dateTime.split("T")[0]
-  }
-
-  function removeSeconds(dateTime) {
-    if (dateTime === null) {
-      return "0000-00-00" // TODO: unsure about this return value
-    }
-    return dateTime.split("Z")[0]
-  }
-
   /*
    * Return value
    */
@@ -178,8 +164,10 @@ export default function Climbs(props) {
                   >
                     {climb.id} - {climb.boulderId} | {climb.sessionId} |{" "}
                     {climb.attempts} | {climb.sends} |{" "}
-                    {convertToDate(climb.climbStartTime)} |{" "}
-                    {convertToDate(climb.climbEndTime)}
+                    {convertToViewDate(
+                      climb.climbStartTime,
+                      climb.climbEndTime
+                    )}
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, climb.id, false)}>
@@ -224,13 +212,13 @@ export default function Climbs(props) {
                     <input
                       type="datetime-local"
                       ref={newClimbStartTime}
-                      defaultValue={removeSeconds(climb.climbStartTime)}
+                      defaultValue={convertToEditDate(climb.climbStartTime)}
                     ></input>
                     <label>End Time:</label>
                     <input
                       type="datetime-local"
                       ref={newClimbEndTime}
-                      defaultValue={removeSeconds(climb.climbEndTime)}
+                      defaultValue={convertToEditDate(climb.climbEndTime)}
                     ></input>
                   </div>
                   <div className="buttons">

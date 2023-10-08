@@ -177,6 +177,9 @@ export default function Boulders(props) {
 
   return (
     <ul className="dataList">
+      {viewingLocation === locationId && (
+        <div className="sectionTitle">Boulders</div>
+      )}
       {boulderData.map((boulder) => {
         return (
           <div key={boulder.id}>

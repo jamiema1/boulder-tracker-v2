@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react"
 import Axios from "../../api/Axios"
+import {convertToViewDate} from "../helpers.js"
 
 export default function Climbs(props) {
   const [climbData, setClimbData] = useState([])
@@ -31,19 +32,28 @@ export default function Climbs(props) {
 
   return (
     <ul className="dataList">
+      {viewingBoulder === boulderId && (
+        <div className="sectionTitle">Climbs</div>
+      )}
       {climbData.map((climb) => {
-        if (viewingBoulder === boulderId) {
-          return (
-            <li key={climb.id} className="item">
-              <div className="components">
-                <div className="data">
-                  {climb.id} - {climb.sessionId} | {climb.attempts} |{" "}
-                  {climb.sends} | {climb.climbStartTime} | {climb.climbEndTime}
+        return (
+          <div key={climb.id}>
+            {viewingBoulder === boulderId && (
+              <li className="item">
+                <div className="components">
+                  <div className="data">
+                    {climb.id} - {climb.sessionId} | {climb.attempts} |{" "}
+                    {climb.sends} |{" "}
+                    {convertToViewDate(
+                      climb.climbStartTime,
+                      climb.climbEndTime
+                    )}
+                  </div>
                 </div>
-              </div>
-            </li>
-          )
-        }
+              </li>
+            )}
+          </div>
+        )
       })}
     </ul>
   )

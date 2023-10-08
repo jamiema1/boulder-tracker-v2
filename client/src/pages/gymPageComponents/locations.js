@@ -142,6 +142,7 @@ export default function Locations(props) {
 
   return (
     <ul className="dataList">
+      {viewingGym === gymId && <div className="sectionTitle">Locations</div>}
       {locationData.map((location) => {
         return (
           <div key={location.id}>
