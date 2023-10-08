@@ -169,7 +169,7 @@ export default function Boulders(props) {
       setEndDate: getCurrentDateTime(),
     }
 
-    console.log(newBoulder)
+    // TODO: use existing EDIT function instead of creating new one
     Axios.put("/boulder/" + boulder.id, newBoulder)
       .then((res) => {
         if (res.status === 202) {
