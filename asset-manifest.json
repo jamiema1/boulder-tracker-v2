@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/boulder-tracker/static/css/main.5a59b5d7.css",
-    "main.js": "/boulder-tracker/static/js/main.31e30fa7.js",
-    "static/media/confirmIcon.png": "/boulder-tracker/static/media/confirmIcon.71f7ed54feb9e28c8bf2.png",
-    "static/media/cancelIcon.png": "/boulder-tracker/static/media/cancelIcon.b6899e6c84b97dcc941c.png",
-    "static/media/addIcon.png": "/boulder-tracker/static/media/addIcon.50eb5d06afd5b96abcb2.png",
-    "static/media/editIcon.png": "/boulder-tracker/static/media/editIcon.0f46e2728eb984e21ce8.png",
-    "index.html": "/boulder-tracker/index.html",
-    "main.5a59b5d7.css.map": "/boulder-tracker/static/css/main.5a59b5d7.css.map",
-    "main.31e30fa7.js.map": "/boulder-tracker/static/js/main.31e30fa7.js.map"
+    "main.css": "/boulder-tracker-v2/static/css/main.5a59b5d7.css",
+    "main.js": "/boulder-tracker-v2/static/js/main.46e6a4cc.js",
+    "static/media/confirmIcon.png": "/boulder-tracker-v2/static/media/confirmIcon.71f7ed54feb9e28c8bf2.png",
+    "static/media/cancelIcon.png": "/boulder-tracker-v2/static/media/cancelIcon.b6899e6c84b97dcc941c.png",
+    "static/media/addIcon.png": "/boulder-tracker-v2/static/media/addIcon.50eb5d06afd5b96abcb2.png",
+    "static/media/editIcon.png": "/boulder-tracker-v2/static/media/editIcon.0f46e2728eb984e21ce8.png",
+    "index.html": "/boulder-tracker-v2/index.html",
+    "main.5a59b5d7.css.map": "/boulder-tracker-v2/static/css/main.5a59b5d7.css.map",
+    "main.46e6a4cc.js.map": "/boulder-tracker-v2/static/js/main.46e6a4cc.js.map"
   },
   "entrypoints": [
     "static/css/main.5a59b5d7.css",
-    "static/js/main.31e30fa7.js"
+    "static/js/main.46e6a4cc.js"
   ]
 }
