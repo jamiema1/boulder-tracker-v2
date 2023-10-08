@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react"
 import Axios from "../../api/Axios"
+import {convertToViewDateTime} from "../helpers.js"
 
 export default function Climbs(props) {
   const [climbData, setClimbData] = useState([])
@@ -19,8 +20,7 @@ export default function Climbs(props) {
         setClimbData(res.data.data)
       })
       .catch((err) => {
-        console.log(err)
-        console.log(err.response.data.error)
+        alert(err.response.data.error)
       })
   }
 
@@ -31,19 +31,45 @@ export default function Climbs(props) {
 
   return (
     <ul className="dataList">
+      {viewingBoulder === boulderId && (
+        <div className="sectionTitle">Climbs</div>
+      )}
       {climbData.map((climb) => {
-        if (viewingBoulder === boulderId) {
-          return (
-            <li key={climb.id} className="item">
-              <div className="components">
-                <div className="data">
-                  {climb.id} - {climb.sessionId} | {climb.attempts} |{" "}
-                  {climb.sends} | {climb.climbStartTime} | {climb.climbEndTime}
+        return (
+          <div key={climb.id}>
+            {viewingBoulder === boulderId && (
+              <li className="item">
+                <div className="components">
+                  <div className="data">
+                    <div className="icons">
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "magenta"}}
+                      >
+                        {climb.id}
+                      </div>
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "aqua"}}
+                      >
+                        {climb.sessionId}
+                      </div>
+                      <div className="text">
+                        Completion Rate: {climb.sends} / {climb.attempts}
+                      </div>
+                    </div>
+                    <div className="date">
+                      {convertToViewDateTime(
+                        climb.climbStartTime,
+                        climb.climbEndTime
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </li>
-          )
-        }
+              </li>
+            )}
+          </div>
+        )
       })}
     </ul>
   )

@@ -1,7 +1,8 @@
 import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import Climbs from "./climbs"
-
+// import Session from "../../classes/session.js"
+import {convertToViewDateTime, convertToEditDateTime} from "../helpers.js"
 import images from "../../images/images.js"
 
 export default function Sessions() {
@@ -41,7 +42,6 @@ export default function Sessions() {
     Axios.get("/session")
       .then((res) => {
         setSessionData(res.data.data)
-        console.log(res.data.data)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -50,6 +50,8 @@ export default function Sessions() {
 
   function addSession() {
     const newSession = getNewSession()
+
+    console.log(newSession)
 
     Axios.post("/session", newSession)
       .then((res) => {
@@ -128,13 +130,6 @@ export default function Sessions() {
     setAddingSession(newAddingSession)
   }
 
-  function convertToDate(dateTime) {
-    if (dateTime === null) {
-      return "0000-00-00" // TODO: unsure about this return value
-    }
-    return dateTime.split("T")[0]
-  }
-
   /*
    * Return value
    */
@@ -151,8 +146,26 @@ export default function Sessions() {
                     className="data"
                     onClick={() => changeStates(session.id, 0, false)}
                   >
-                    {session.id} - {session.gymId} |{" "}
-                    {convertToDate(session.sessionStartTime)}
+                    <div className="icons">
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "aqua"}}
+                      >
+                        {session.id}
+                      </div>
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "grey"}}
+                      >
+                        {session.gymId}
+                      </div>
+                    </div>
+                    <div className="date">
+                      {convertToViewDateTime(
+                        session.sessionStartTime,
+                        session.sessionEndTime
+                      )}
+                    </div>
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, session.id, false)}>
@@ -183,13 +196,17 @@ export default function Sessions() {
                     <input
                       type="datetime-local"
                       ref={newSessionStartTime}
-                      defaultValue={session.sessionStartTime.split("Z")[0]}
+                      defaultValue={convertToEditDateTime(
+                        session.sessionStartTime
+                      )}
                     ></input>
                     <label>End Time:</label>
                     <input
                       type="datetime-local"
                       ref={newSessionEndTime}
-                      defaultValue={session.sessionEndTime.split("Z")[0]}
+                      defaultValue={convertToEditDateTime(
+                        session.sessionEndTime
+                      )}
                     ></input>
                   </div>
                   <div className="buttons">

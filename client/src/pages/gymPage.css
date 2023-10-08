@@ -3,6 +3,10 @@
   /* font-weight: 600; */
 }
 
+.sectionTitle {
+  font-size: x-large;
+}
+
 .dataList {
   --width: 1px;
   --radius: 10px;
@@ -29,22 +33,56 @@
 
 .item {
   padding: 10px;
-  /* width: 60%; */
 }
 
 .components {
   display: flex;
+  height: 40px;
   border: var(--width) solid var(--colour);
-}
-
-.data {
-  display: flex;
-  padding: 10px;
-  flex-grow: 1;
 }
 
 .components:hover {
   background-color: beige;
+}
+
+.data {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.icons {
+  display: flex;
+}
+
+.colourBar {
+  width: 20px;
+  color: #bdbdbd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hex {
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hexImage {
+  width: 35px;
+  height: 35px;
+}
+
+.text {
+  align-self: center;
+  padding-left: 10px;
+}
+
+.date {
+  align-self: center;
+  padding-right: 10px;
 }
 
 .buttons {

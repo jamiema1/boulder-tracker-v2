@@ -10,6 +10,9 @@ function App() {
     <Router>
       <ul className="pages">
         <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
           <Link to="/sessions">Sessions</Link>
         </li>
         <li>
