@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useState, useRef} from "react"
-import Axios from "../../api/Axios"
+import Axios from "../../api/axios.js"
 import Climbs from "./climbs"
 import images from "../../images/images.js"
 import {
@@ -91,8 +91,7 @@ export default function Boulders(props) {
 
     Axios.get("/boulder/query/" + uri)
       .then((res) => {
-        const data = res.data.data
-        setBoulderData(data)
+        setBoulderData(res.data.data)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -169,7 +168,10 @@ export default function Boulders(props) {
       boulderType: newBoulderBoulderType.current.value,
       description: newBoulderDescription.current.value,
       setStartDate: newBoulderSetStartDate.current.value,
-      setEndDate: newBoulderSetEndDate.current.value,
+      setEndDate:
+        newBoulderSetEndDate.current.value === ""
+          ? "0000-00-00"
+          : newBoulderSetEndDate.current.value,
     }
   }
 
@@ -312,7 +314,7 @@ export default function Boulders(props) {
                         defaultValue={boulder.rating}
                       >
                         {Array.from(colours).map(([key, value]) => {
-                          return getOptions([key, value])
+                          return getOptions(key, value)
                         })}
                       </select>
                     </div>
@@ -323,7 +325,7 @@ export default function Boulders(props) {
                         defaultValue={boulder.colour}
                       >
                         {Array.from(colours).map(([key, value]) => {
-                          return getOptions([key, value])
+                          return getOptions(key, value)
                         })}
                       </select>
                     </div>
@@ -334,7 +336,7 @@ export default function Boulders(props) {
                         defaultValue={boulder.boulderType}
                       >
                         {Array.from(boulderType).map(([key, value]) => {
-                          return getOptions([key, value])
+                          return getOptions(key, value)
                         })}
                       </select>
                     </div>
@@ -385,7 +387,7 @@ export default function Boulders(props) {
                 <label>Rating:</label>
                 <select ref={newBoulderRating}>
                   {Array.from(ratings).map(([key, value]) => {
-                    return getOptions([key, value])
+                    return getOptions(key, value)
                   })}
                 </select>
               </div>
@@ -393,7 +395,7 @@ export default function Boulders(props) {
                 <label>Colour:</label>
                 <select ref={newBoulderColour}>
                   {Array.from(colours).map(([key, value]) => {
-                    return getOptions([key, value])
+                    return getOptions(key, value)
                   })}
                 </select>
               </div>
@@ -401,7 +403,7 @@ export default function Boulders(props) {
                 <label>Boulder Type:</label>
                 <select ref={newBoulderBoulderType}>
                   {Array.from(boulderType).map(([key, value]) => {
-                    return getOptions([key, value])
+                    return getOptions(key, value)
                   })}
                 </select>
               </div>

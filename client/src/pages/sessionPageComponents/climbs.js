@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
-import Axios from "../../api/Axios"
+import Axios from "../../api/axios.js"
 import {
   convertToViewDateTime,
   convertToEditDateTime,
@@ -27,8 +27,9 @@ export default function Climbs(props) {
    */
 
   const [climbData, setClimbData] = useState([])
-  const [locationData, setLocationData] = useState(new Map())
-  const [boulderData, setBoulderData] = useState(new Map())
+  const [locationData, setLocationData] = useState([])
+  const [selectedBoulderData, setSelectedBoulderData] = useState([])
+  const [boulderData, setBoulderData] = useState([])
   const [viewingClimb, setViewingClimb] = useState(0)
   const [editingClimb, setEditingClimb] = useState(0)
   const [addingClimb, setAddingClimb] = useState(false)
@@ -48,12 +49,14 @@ export default function Climbs(props) {
     setViewingClimb(0)
     if (sessionId !== viewingSession) {
       setClimbData([])
-      setBoulderData(new Map())
-      setLocationData(new Map())
+      setSelectedBoulderData([])
+      setBoulderData([])
+      setLocationData([])
       changeStates(0, 0, false)
       return
     }
     getAllClimbs()
+    getAllBoulders()
     getLocations()
   }, [viewingSession])
 
@@ -70,9 +73,7 @@ export default function Climbs(props) {
 
     Axios.get("/location/query/" + uri)
       .then((res) => {
-        res.data.data.forEach((location) => {
-          locationData.set(location.name, location.id)
-        })
+        setLocationData(res.data.data)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -80,8 +81,7 @@ export default function Climbs(props) {
   }
 
   function getBoulders(locationId) {
-    boulderData.clear()
-    setBoulderData(new Map())
+    setSelectedBoulderData([])
     let params = {
       where: "(locationId = " + locationId + " AND setEndDate = '0000-00-00')",
     }
@@ -90,19 +90,23 @@ export default function Climbs(props) {
 
     Axios.get("/boulder/query/" + uri)
       .then((res) => {
-        res.data.data.forEach((boulder) => {
-          boulderData.set(
-            boulder.rating +
-              " | " +
-              boulder.colour +
-              " | " +
-              boulder.boulderType +
-              " | " +
-              boulder.description.substring(0, 50),
-            boulder.id
-          )
-        })
-        setBoulderData(boulderData)
+        setSelectedBoulderData(res.data.data)
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
+  }
+
+  function getAllBoulders() {
+    let params = {
+      where: "setEndDate = '0000-00-00'",
+    }
+
+    const uri = encodeURIComponent(JSON.stringify(params))
+
+    Axios.get("/boulder/query/" + uri)
+      .then((res) => {
+        setBoulderData(res.data.data)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -207,11 +211,30 @@ export default function Climbs(props) {
   }
 
   function loadInitialBoulders() {
-    // eslint-disable-next-line no-unused-vars
-    Array.from(locationData).some(([key, value]) => {
-      getBoulders(value)
+    locationData.some((location) => {
+      getBoulders(location.id)
       return true
     })
+  }
+
+  function boulderText(climb) {
+    const boulder = boulderData.find((boulder) => {
+      return boulder.id === climb.boulderId
+    })
+
+    if (boulder === undefined) {
+      return
+    }
+
+    return ""
+      .concat(boulder.rating)
+      .concat(" - ")
+      .concat(boulder.colour)
+      .concat(" - ")
+      .concat(boulder.boulderType)
+      .concat(" - ")
+      .concat(boulder.description)
+      .concat(" | ")
   }
   /*
    * Return value
@@ -243,6 +266,7 @@ export default function Climbs(props) {
                         {climb.boulderId}
                       </div>
                       <div className="text">
+                        {boulderText(climb)}
                         Completion Rate: {climb.sends} / {climb.attempts}
                       </div>
                     </div>
@@ -279,16 +303,25 @@ export default function Climbs(props) {
                         ref={newLocationId}
                         onChange={(e) => getBoulders(e.target.value)}
                       >
-                        {Array.from(locationData).map(([key, value]) => {
-                          return getOptions([key, value])
+                        {locationData.map((location) => {
+                          return getOptions(location.name, location.id)
                         })}
                       </select>
                     </div>
                     <div className="field">
                       <label>Boulder:</label>
                       <select ref={newBoulderId} defaultValue={climb.boulderId}>
-                        {Array.from(boulderData).map(([key, value]) => {
-                          return getOptions([key, value])
+                        {selectedBoulderData.map((boulder) => {
+                          return getOptions(
+                            boulder.rating +
+                              " | " +
+                              boulder.colour +
+                              " | " +
+                              boulder.boulderType +
+                              " | " +
+                              boulder.description.substring(0, 50),
+                            boulder.id
+                          )
                         })}
                       </select>
                     </div>
@@ -339,16 +372,25 @@ export default function Climbs(props) {
                   ref={newLocationId}
                   onChange={(e) => getBoulders(e.target.value)}
                 >
-                  {Array.from(locationData).map(([key, value]) => {
-                    return getOptions([key, value])
+                  {locationData.map((location) => {
+                    return getOptions(location.name, location.id)
                   })}
                 </select>
               </div>
               <div className="field">
                 <label>Boulder:</label>
                 <select ref={newBoulderId}>
-                  {Array.from(boulderData).map(([key, value]) => {
-                    return getOptions([key, value])
+                  {selectedBoulderData.map((boulder) => {
+                    return getOptions(
+                      boulder.rating +
+                        " | " +
+                        boulder.colour +
+                        " | " +
+                        boulder.boulderType +
+                        " | " +
+                        boulder.description.substring(0, 50),
+                      boulder.id
+                    )
                   })}
                 </select>
               </div>

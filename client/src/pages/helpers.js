@@ -55,7 +55,7 @@ function getDateTimeString(date) {
  * React
  */
 
-export function getOptions([key, value]) {
+export function getOptions(key, value) {
   return (
     <option key={key} value={value}>
       {key}

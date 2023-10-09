@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from "react"
-import Axios from "../../api/Axios"
+import Axios from "../../api/axios.js"
 import Boulders from "./boulders"
 
 import images from "../../images/images.js"

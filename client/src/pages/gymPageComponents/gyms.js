@@ -1,9 +1,9 @@
 import React, {useEffect, useRef, useState} from "react"
-import Axios from "../../api/Axios"
 import Locations from "./locations"
 
 import images from "../../images/images.js"
 import {getInput} from "../helpers.js"
+import {getAll, add, edit, remove, gymEndpoint} from "../../api/endpoints.js"
 
 export default function Gyms() {
   /*
@@ -39,56 +39,19 @@ export default function Gyms() {
    */
 
   function getAllGyms() {
-    Axios.get("/gym")
-      .then((res) => {
-        setGymData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getAll(gymEndpoint, setGymData)
   }
 
   function addGym() {
-    const newGym = getNewGym()
-
-    Axios.post("/gym", newGym)
-      .then((res) => {
-        setGymData([...gymData, {id: res.data.data[0].id, ...newGym}])
-        clearGymRefs()
-        // alert("Successfully added gym " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    add(gymEndpoint, getNewGym(), setGymData, gymData, clearGymRefs)
   }
 
   function editGym(gymId) {
-    const newGym = getNewGym()
-
-    Axios.put("/gym/" + gymId, newGym)
-      .then((res) => {
-        clearGymRefs()
-        if (res.status === 202) {
-          alert(res.data.error)
-          return
-        }
-        getAllGyms() // TODO: update the gym from gymData without GET API call
-        // alert("Successfully edited gym " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    edit(gymEndpoint, gymId, getNewGym(), setGymData, clearGymRefs)
   }
 
   function deleteGym(gymId) {
-    Axios.delete("/gym/" + gymId)
-      .then((res) => {
-        getAllGyms() // TODO: remove the gym from gymData without GET API call
-        alert("Successfully removed gym " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    remove(gymEndpoint, gymId, setGymData)
   }
 
   /*

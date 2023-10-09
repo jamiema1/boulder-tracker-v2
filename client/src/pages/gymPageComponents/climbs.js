@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react"
-import Axios from "../../api/Axios"
+import Axios from "../../api/axios.js"
 import {convertToViewDateTime} from "../helpers.js"
 
 export default function Climbs(props) {

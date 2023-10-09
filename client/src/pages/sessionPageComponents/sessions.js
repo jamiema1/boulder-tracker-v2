@@ -1,7 +1,5 @@
 import React, {useEffect, useRef, useState} from "react"
-import Axios from "../../api/Axios"
 import Climbs from "./climbs"
-// import Session from "../../classes/session.js"
 import {
   convertToViewDateTime,
   convertToEditDateTime,
@@ -10,6 +8,15 @@ import {
   getInput,
 } from "../helpers.js"
 import images from "../../images/images.js"
+import {
+  getAll,
+  // get,
+  add,
+  edit,
+  remove,
+  gymEndpoint,
+  sessionEndpoint,
+} from "../../api/endpoints.js"
 
 export default function Sessions() {
   /*
@@ -29,6 +36,7 @@ export default function Sessions() {
 
   const [sessionData, setSessionData] = useState([])
   const [gymData, setGymData] = useState([])
+  // const [gymData, setGymData] = useState([])
   const [viewingSession, setViewingSession] = useState(0)
   const [editingSession, setEditingSession] = useState(0)
   const [addingSession, setAddingSession] = useState(false)
@@ -47,77 +55,39 @@ export default function Sessions() {
    */
 
   function getAllGyms() {
-    Axios.get("/gym")
-      .then((res) => {
-        let map = new Map()
-        res.data.data.map((gym) => {
-          map.set(gym.city, gym.id)
-        })
-        setGymData(map)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getAll(gymEndpoint, setGymData)
   }
 
+  // function getGym(gymId) {
+  //   get(gymEndpoint, gymId, setGymData)
+  // }
+
   function getAllSessions() {
-    Axios.get("/session")
-      .then((res) => {
-        setSessionData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getAll(sessionEndpoint, setSessionData)
   }
 
   function addSession() {
-    const newSession = getNewSession()
-
-    console.log(newSession)
-
-    Axios.post("/session", newSession)
-      .then((res) => {
-        setSessionData([
-          ...sessionData,
-          {id: res.data.data[0].id, ...newSession},
-        ])
-        clearSessionRefs()
-        alert("Successfully added session " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    add(
+      sessionEndpoint,
+      getNewSession(),
+      setSessionData,
+      sessionData,
+      clearSessionRefs
+    )
   }
 
   function editSession(sessionId) {
-    const newSession = getNewSession()
-
-    Axios.put("/session/" + sessionId, newSession)
-      .then((res) => {
-        clearSessionRefs()
-        if (res.status === 202) {
-          alert(res.data.error)
-          return
-        }
-        getAllSessions()
-        // TODO: update the session from sessionData without GET API call
-        alert("Successfully edited session " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    edit(
+      sessionEndpoint,
+      sessionId,
+      getNewSession(),
+      setSessionData,
+      clearSessionRefs
+    )
   }
 
   function deleteSession(sessionId) {
-    Axios.delete("/session/" + sessionId)
-      .then((res) => {
-        getAllSessions()
-        // TODO: remove the session from sessionData without GET API call
-        alert("Successfully removed session " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    remove(sessionEndpoint, sessionId, setSessionData)
   }
 
   /*
@@ -135,7 +105,10 @@ export default function Sessions() {
     return {
       gymId: parseInt(newGymId.current.value),
       sessionStartTime: newSessionStartTime.current.value,
-      sessionEndTime: newSessionEndTime.current.value,
+      sessionEndTime:
+        newSessionEndTime.current.value === ""
+          ? "0000-00-00 00:00:00"
+          : newSessionEndTime.current.value,
     }
   }
 
@@ -181,6 +154,13 @@ export default function Sessions() {
                       >
                         {session.gymId}
                       </div>
+                      <div className="text">
+                        {
+                          gymData.find((gym) => {
+                            return gym.id === session.gymId
+                          })?.city
+                        }
+                      </div>
                     </div>
                     <div className="date">
                       {convertToViewDateTime(
@@ -211,8 +191,8 @@ export default function Sessions() {
                   <div className="data">
                     <label>Gym ID:</label>
                     <select ref={newGymId} defaultValue={session.gymId}>
-                      {Array.from(gymData).map(([key, value]) => {
-                        return getOptions([key, value])
+                      {gymData.map((gym) => {
+                        return getOptions(gym.city, gym.id)
                       })}
                     </select>
                     {getInput(
@@ -254,8 +234,8 @@ export default function Sessions() {
             <div className="data">
               <label>Gym ID:</label>
               <select ref={newGymId}>
-                {Array.from(gymData).map(([key, value]) => {
-                  return getOptions([key, value])
+                {gymData.map((gym) => {
+                  return getOptions(gym.city, gym.id)
                 })}
               </select>
               {getInput(
