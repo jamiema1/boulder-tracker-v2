@@ -3,6 +3,7 @@ import Axios from "../../api/Axios"
 import Locations from "./locations"
 
 import images from "../../images/images.js"
+import {getInput} from "../helpers.js"
 
 export default function Gyms() {
   /*
@@ -54,7 +55,7 @@ export default function Gyms() {
       .then((res) => {
         setGymData([...gymData, {id: res.data.data[0].id, ...newGym}])
         clearGymRefs()
-        alert("Successfully added gym " + res.data.data[0].id)
+        // alert("Successfully added gym " + res.data.data[0].id)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -72,7 +73,7 @@ export default function Gyms() {
           return
         }
         getAllGyms() // TODO: update the gym from gymData without GET API call
-        alert("Successfully edited gym " + res.data.data[0].id)
+        // alert("Successfully edited gym " + res.data.data[0].id)
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -164,24 +165,9 @@ export default function Gyms() {
               <li className="item">
                 <form className="components">
                   <div className="data">
-                    <label>Name:</label>
-                    <input
-                      type="text"
-                      ref={newGymName}
-                      defaultValue={gym.name}
-                    ></input>
-                    <label>Address:</label>
-                    <input
-                      type="text"
-                      ref={newGymAddress}
-                      defaultValue={gym.address}
-                    ></input>
-                    <label>City:</label>
-                    <input
-                      type="text"
-                      ref={newGymCity}
-                      defaultValue={gym.city}
-                    ></input>
+                    {getInput("Name", "text", newGymName, gym.name)}
+                    {getInput("Address", "text", newGymAddress, gym.address)}
+                    {getInput("City", "text", newGymCity, gym.city)}
                   </div>
                   <div className="buttons">
                     <button type="button" onClick={() => editGym(gym.id)}>
@@ -204,12 +190,9 @@ export default function Gyms() {
         <li className="item">
           <form className="components">
             <div className="data">
-              <label>Name:</label>
-              <input type="text" ref={newGymName}></input>
-              <label>Address:</label>
-              <input type="text" ref={newGymAddress}></input>
-              <label>City:</label>
-              <input type="text" ref={newGymCity}></input>
+              {getInput("Name", "text", newGymName, null)}
+              {getInput("Address", "text", newGymAddress, null)}
+              {getInput("City", "text", newGymCity, null)}
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addGym()}>

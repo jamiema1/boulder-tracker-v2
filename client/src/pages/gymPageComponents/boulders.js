@@ -9,6 +9,7 @@ import {
   convertToViewDate,
   convertToEditDate,
   getOptions,
+  getInput,
 } from "../helpers.js"
 
 export default function Boulders(props) {
@@ -304,51 +305,57 @@ export default function Boulders(props) {
               <li className="item">
                 <form className="components">
                   <div className="data">
-                    <label>Rating:</label>
-                    <select
-                      ref={newBoulderRating}
-                      defaultValue={boulder.rating}
-                    >
-                      {Array.from(colours).map(([key, value]) => {
-                        return getOptions([key, value])
-                      })}
-                    </select>
-                    <label>Colour:</label>
-                    <select
-                      ref={newBoulderColour}
-                      defaultValue={boulder.colour}
-                    >
-                      {Array.from(colours).map(([key, value]) => {
-                        return getOptions([key, value])
-                      })}
-                    </select>
-                    <label>Boulder Type:</label>
-                    <select
-                      ref={newBoulderBoulderType}
-                      defaultValue={boulder.boulderType}
-                    >
-                      {Array.from(boulderType).map(([key, value]) => {
-                        return getOptions([key, value])
-                      })}
-                    </select>
-                    <label>Description:</label>
-                    <input
-                      type="text"
-                      ref={newBoulderDescription}
-                      defaultValue={boulder.description}
-                    ></input>
-                    <label>Set Start Date:</label>
-                    <input
-                      type="date"
-                      ref={newBoulderSetStartDate}
-                      defaultValue={convertToEditDate(boulder.setStartDate)}
-                    ></input>
-                    <label>Set End Date:</label>
-                    <input
-                      type="date"
-                      ref={newBoulderSetEndDate}
-                      defaultValue={convertToEditDate(boulder.setEndDate)}
-                    ></input>
+                    <div className="field">
+                      <label>Rating:</label>
+                      <select
+                        ref={newBoulderRating}
+                        defaultValue={boulder.rating}
+                      >
+                        {Array.from(colours).map(([key, value]) => {
+                          return getOptions([key, value])
+                        })}
+                      </select>
+                    </div>
+                    <div className="field">
+                      <label>Colour:</label>
+                      <select
+                        ref={newBoulderColour}
+                        defaultValue={boulder.colour}
+                      >
+                        {Array.from(colours).map(([key, value]) => {
+                          return getOptions([key, value])
+                        })}
+                      </select>
+                    </div>
+                    <div className="field">
+                      <label>Boulder Type:</label>
+                      <select
+                        ref={newBoulderBoulderType}
+                        defaultValue={boulder.boulderType}
+                      >
+                        {Array.from(boulderType).map(([key, value]) => {
+                          return getOptions([key, value])
+                        })}
+                      </select>
+                    </div>
+                    {getInput(
+                      "Description",
+                      "text",
+                      newBoulderDescription,
+                      boulder.description
+                    )}
+                    {getInput(
+                      "Set Start Date",
+                      "date",
+                      newBoulderSetStartDate,
+                      convertToEditDate(boulder.setStartDate)
+                    )}
+                    {getInput(
+                      "Set End Date",
+                      "date",
+                      newBoulderSetEndDate,
+                      convertToEditDate(boulder.setEndDate)
+                    )}
                   </div>
                   <div className="buttons">
                     <button
@@ -374,34 +381,38 @@ export default function Boulders(props) {
         <li className="item">
           <form className="components">
             <div className="data">
-              <label>Rating:</label>
-              <select ref={newBoulderRating}>
-                {Array.from(ratings).map(([key, value]) => {
-                  return getOptions([key, value])
-                })}
-              </select>
-              <label>Colour:</label>
-              <select ref={newBoulderColour}>
-                {Array.from(colours).map(([key, value]) => {
-                  return getOptions([key, value])
-                })}
-              </select>
-              <label>Boulder Type:</label>
-              <select ref={newBoulderBoulderType}>
-                {Array.from(boulderType).map(([key, value]) => {
-                  return getOptions([key, value])
-                })}
-              </select>
-              <label>Description:</label>
-              <input type="text" ref={newBoulderDescription}></input>
-              <label>Set Start Date:</label>
-              <input
-                type="date"
-                ref={newBoulderSetStartDate}
-                defaultValue={getCurrentDate()}
-              ></input>
-              <label>Set End Date:</label>
-              <input type="date" ref={newBoulderSetEndDate}></input>
+              <div className="field">
+                <label>Rating:</label>
+                <select ref={newBoulderRating}>
+                  {Array.from(ratings).map(([key, value]) => {
+                    return getOptions([key, value])
+                  })}
+                </select>
+              </div>
+              <div className="field">
+                <label>Colour:</label>
+                <select ref={newBoulderColour}>
+                  {Array.from(colours).map(([key, value]) => {
+                    return getOptions([key, value])
+                  })}
+                </select>
+              </div>
+              <div className="field">
+                <label>Boulder Type:</label>
+                <select ref={newBoulderBoulderType}>
+                  {Array.from(boulderType).map(([key, value]) => {
+                    return getOptions([key, value])
+                  })}
+                </select>
+              </div>
+              {getInput("Description", "text", newBoulderDescription, null)}
+              {getInput(
+                "Set Start Date",
+                "date",
+                newBoulderSetStartDate,
+                getCurrentDate()
+              )}
+              {getInput("Set End Date", "date", newBoulderSetEndDate, null)}
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addBoulder()}>

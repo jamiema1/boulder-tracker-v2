@@ -62,3 +62,12 @@ export function getOptions([key, value]) {
     </option>
   )
 }
+
+export function getInput(name, type, ref, defaultValue) {
+  return (
+    <div className="field">
+      <label>{name}:</label>
+      <input type={type} ref={ref} defaultValue={defaultValue}></input>
+    </div>
+  )
+}

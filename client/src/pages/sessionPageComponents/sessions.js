@@ -7,6 +7,7 @@ import {
   convertToEditDateTime,
   getOptions,
   getCurrentDateTime,
+  getInput,
 } from "../helpers.js"
 import images from "../../images/images.js"
 
@@ -196,7 +197,7 @@ export default function Sessions() {
                       <img src={images.deleteIcon}></img>
                     </button>
                   </div>
-                </div>{" "}
+                </div>
                 <Climbs
                   sessionId={session.id}
                   viewingSession={viewingSession}
@@ -214,22 +215,18 @@ export default function Sessions() {
                         return getOptions([key, value])
                       })}
                     </select>
-                    <label>Start Time:</label>
-                    <input
-                      type="datetime-local"
-                      ref={newSessionStartTime}
-                      defaultValue={convertToEditDateTime(
-                        session.sessionStartTime
-                      )}
-                    ></input>
-                    <label>End Time:</label>
-                    <input
-                      type="datetime-local"
-                      ref={newSessionEndTime}
-                      defaultValue={convertToEditDateTime(
-                        session.sessionEndTime
-                      )}
-                    ></input>
+                    {getInput(
+                      "Start Time",
+                      "datetime-local",
+                      newSessionStartTime,
+                      convertToEditDateTime(session.sessionStartTime)
+                    )}
+                    {getInput(
+                      "End Time",
+                      "datetime-local",
+                      newSessionEndTime,
+                      convertToEditDateTime(session.sessionEndTime)
+                    )}
                   </div>
                   <div className="buttons">
                     <button
@@ -261,14 +258,13 @@ export default function Sessions() {
                   return getOptions([key, value])
                 })}
               </select>
-              <label>Start Time:</label>
-              <input
-                type="datetime-local"
-                ref={newSessionStartTime}
-                defaultValue={getCurrentDateTime()}
-              ></input>
-              <label>End Time:</label>
-              <input type="datetime-local" ref={newSessionEndTime}></input>
+              {getInput(
+                "Start Time",
+                "datetime-local",
+                newSessionStartTime,
+                convertToEditDateTime(getCurrentDateTime())
+              )}
+              {getInput("End Time", "datetime-local", newSessionEndTime, null)}
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addSession()}>

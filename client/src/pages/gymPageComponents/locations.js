@@ -3,6 +3,7 @@ import Axios from "../../api/Axios"
 import Boulders from "./boulders"
 
 import images from "../../images/images.js"
+import {getInput} from "../helpers.js"
 
 export default function Locations(props) {
   /*
@@ -182,12 +183,7 @@ export default function Locations(props) {
               <li className="item">
                 <form className="components">
                   <div className="data">
-                    <label>Name:</label>
-                    <input
-                      type="text"
-                      ref={newLocationName}
-                      defaultValue={location.name}
-                    ></input>
+                    {getInput("Name", "text", newLocationName, location.name)}
                   </div>
                   <div className="buttons">
                     <button
@@ -213,8 +209,7 @@ export default function Locations(props) {
         <li className="item">
           <form className="components">
             <div className="data">
-              <label>Name:</label>
-              <input type="text" ref={newLocationName}></input>
+              {getInput("Name", "text", newLocationName, null)}
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addLocation()}>
