@@ -2,7 +2,12 @@ import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import Climbs from "./climbs"
 // import Session from "../../classes/session.js"
-import {convertToViewDateTime, convertToEditDateTime} from "../helpers.js"
+import {
+  convertToViewDateTime,
+  convertToEditDateTime,
+  getOptions,
+  getCurrentDateTime,
+} from "../helpers.js"
 import images from "../../images/images.js"
 
 export default function Sessions() {
@@ -22,6 +27,7 @@ export default function Sessions() {
    */
 
   const [sessionData, setSessionData] = useState([])
+  const [gymData, setGymData] = useState([])
   const [viewingSession, setViewingSession] = useState(0)
   const [editingSession, setEditingSession] = useState(0)
   const [addingSession, setAddingSession] = useState(false)
@@ -32,11 +38,26 @@ export default function Sessions() {
 
   useEffect(() => {
     getAllSessions()
+    getAllGyms()
   }, [])
 
   /*
    * APIs
    */
+
+  function getAllGyms() {
+    Axios.get("/gym")
+      .then((res) => {
+        let map = new Map()
+        res.data.data.map((gym) => {
+          map.set(gym.city, gym.id)
+        })
+        setGymData(map)
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
+  }
 
   function getAllSessions() {
     Axios.get("/session")
@@ -179,6 +200,7 @@ export default function Sessions() {
                 <Climbs
                   sessionId={session.id}
                   viewingSession={viewingSession}
+                  gymId={session.gymId}
                 ></Climbs>
               </li>
             )}
@@ -187,11 +209,11 @@ export default function Sessions() {
                 <form className="components">
                   <div className="data">
                     <label>Gym ID:</label>
-                    <input
-                      type="number"
-                      ref={newGymId}
-                      defaultValue={session.gymId}
-                    ></input>
+                    <select ref={newGymId} defaultValue={session.gymId}>
+                      {Array.from(gymData).map(([key, value]) => {
+                        return getOptions([key, value])
+                      })}
+                    </select>
                     <label>Start Time:</label>
                     <input
                       type="datetime-local"
@@ -234,9 +256,17 @@ export default function Sessions() {
           <form className="components">
             <div className="data">
               <label>Gym ID:</label>
-              <input type="number" ref={newGymId}></input>
+              <select ref={newGymId}>
+                {Array.from(gymData).map(([key, value]) => {
+                  return getOptions([key, value])
+                })}
+              </select>
               <label>Start Time:</label>
-              <input type="datetime-local" ref={newSessionStartTime}></input>
+              <input
+                type="datetime-local"
+                ref={newSessionStartTime}
+                defaultValue={getCurrentDateTime()}
+              ></input>
               <label>End Time:</label>
               <input type="datetime-local" ref={newSessionEndTime}></input>
             </div>

@@ -1,9 +1,11 @@
+/* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
 import Axios from "../../api/Axios"
 import {
   convertToViewDateTime,
   convertToEditDateTime,
   getCurrentDateTime,
+  getOptions,
 } from "../helpers.js"
 import images from "../../images/images.js"
 
@@ -24,6 +26,7 @@ export default function Climbs(props) {
    */
 
   const [climbData, setClimbData] = useState([])
+  const [boulderData, setBoulderData] = useState(new Map())
   const [viewingClimb, setViewingClimb] = useState(0)
   const [editingClimb, setEditingClimb] = useState(0)
   const [addingClimb, setAddingClimb] = useState(false)
@@ -36,20 +39,73 @@ export default function Climbs(props) {
 
   const sessionId = props.sessionId
   let viewingSession = props.viewingSession
+  const gymId = props.gymId
 
   useEffect(() => {
     setViewingClimb(0)
     if (sessionId !== viewingSession) {
       setClimbData([])
+      setBoulderData(new Map())
       changeStates(0, 0, false)
       return
     }
     getAllClimbs()
+    getGym()
   }, [viewingSession])
 
   /*
    * APIs
    */
+
+  function getGym() {
+    let params = {
+      where: "gymId = " + gymId,
+    }
+
+    const uri = encodeURIComponent(JSON.stringify(params))
+
+    Axios.get("/location/query/" + uri)
+      .then((res) => {
+        // console.log("locations")
+        // console.log(res.data.data)
+        res.data.data.forEach((location) => {
+          getAllBoulders(location.id)
+        })
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
+  }
+
+  function getAllBoulders(locationId) {
+    let params = {
+      where: "(locationId = " + locationId + " AND setEndDate = '0000-00-00')",
+    }
+
+    const uri = encodeURIComponent(JSON.stringify(params))
+
+    Axios.get("/boulder/query/" + uri)
+      .then((res) => {
+        res.data.data.map((boulder) => {
+          boulderData.set(
+            boulder.rating +
+              " | " +
+              boulder.colour +
+              " | " +
+              boulder.boulderType +
+              " | " +
+              boulder.description.substring(0, 50),
+            boulder.id
+          )
+        })
+        // setGymData(map)
+        // console.log("boulders")
+        // console.log(data)
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
+  }
 
   function getAllClimbs() {
     let params = {
@@ -204,11 +260,11 @@ export default function Climbs(props) {
                 <form className="components">
                   <div className="data">
                     <label>Boulder ID:</label>
-                    <input
-                      type="number"
-                      ref={newBoulderId}
-                      defaultValue={climb.boulderId}
-                    ></input>
+                    <select ref={newBoulderId} defaultValue={climb.boulderId}>
+                      {Array.from(boulderData).map(([key, value]) => {
+                        return getOptions([key, value])
+                      })}
+                    </select>
                     <label>Attempts:</label>
                     <input
                       type="number"
@@ -256,7 +312,11 @@ export default function Climbs(props) {
           <form className="components">
             <div className="data">
               <label>Boulder ID:</label>
-              <input type="number" ref={newBoulderId}></input>
+              <select ref={newBoulderId}>
+                {Array.from(boulderData).map(([key, value]) => {
+                  return getOptions([key, value])
+                })}
+              </select>
               <label>Attempts:</label>
               <input type="number" ref={newAttempts}></input>
               <label>Sends:</label>

@@ -8,6 +8,7 @@ import {
   getCurrentDateTime,
   convertToViewDate,
   convertToEditDate,
+  getOptions,
 } from "../helpers.js"
 
 export default function Boulders(props) {
@@ -38,6 +39,32 @@ export default function Boulders(props) {
 
   const locationId = props.locationId
   const viewingLocation = props.viewingLocation
+
+  const ratings = new Map([
+    ["Unrated", -1],
+    ["1 Hex", 1],
+    ["2 Hex", 2],
+    ["3 Hex", 3],
+    ["4 Hex", 4],
+    ["5 Hex", 5],
+    ["6 Hex", 6],
+  ])
+
+  const colours = new Map([
+    ["Black", "Black"],
+    ["Blue", "Blue"],
+    ["Green", "Green"],
+    ["Orange", "Orange"],
+    ["Pink", "Pink"],
+    ["Purple", "Purple"],
+    ["Red", "Red"],
+    ["Yellow", "Yellow"],
+  ])
+
+  const boulderType = new Map([
+    ["Slab", "Slab"],
+    ["Overhang", "Overhang"],
+  ])
 
   useEffect(() => {
     setViewingBoulder(0)
@@ -278,23 +305,32 @@ export default function Boulders(props) {
                 <form className="components">
                   <div className="data">
                     <label>Rating:</label>
-                    <input
-                      type="number"
+                    <select
                       ref={newBoulderRating}
                       defaultValue={boulder.rating}
-                    ></input>
+                    >
+                      {Array.from(colours).map(([key, value]) => {
+                        return getOptions([key, value])
+                      })}
+                    </select>
                     <label>Colour:</label>
-                    <input
-                      type="text"
+                    <select
                       ref={newBoulderColour}
                       defaultValue={boulder.colour}
-                    ></input>
+                    >
+                      {Array.from(colours).map(([key, value]) => {
+                        return getOptions([key, value])
+                      })}
+                    </select>
                     <label>Boulder Type:</label>
-                    <input
-                      type="text"
+                    <select
                       ref={newBoulderBoulderType}
                       defaultValue={boulder.boulderType}
-                    ></input>
+                    >
+                      {Array.from(boulderType).map(([key, value]) => {
+                        return getOptions([key, value])
+                      })}
+                    </select>
                     <label>Description:</label>
                     <input
                       type="text"
@@ -339,11 +375,23 @@ export default function Boulders(props) {
           <form className="components">
             <div className="data">
               <label>Rating:</label>
-              <input type="number" ref={newBoulderRating}></input>
+              <select ref={newBoulderRating}>
+                {Array.from(ratings).map(([key, value]) => {
+                  return getOptions([key, value])
+                })}
+              </select>
               <label>Colour:</label>
-              <input type="text" ref={newBoulderColour}></input>
+              <select ref={newBoulderColour}>
+                {Array.from(colours).map(([key, value]) => {
+                  return getOptions([key, value])
+                })}
+              </select>
               <label>Boulder Type:</label>
-              <input type="text" ref={newBoulderBoulderType}></input>
+              <select ref={newBoulderBoulderType}>
+                {Array.from(boulderType).map(([key, value]) => {
+                  return getOptions([key, value])
+                })}
+              </select>
               <label>Description:</label>
               <input type="text" ref={newBoulderDescription}></input>
               <label>Set Start Date:</label>
