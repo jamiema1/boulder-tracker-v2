@@ -15,8 +15,8 @@ export function get(endpoint, id, setData) {
     .then((res) => {
       setData(res.data.data)
     })
-    .catch((err) => {
-      alert(err.response.data.error)
+    .catch((error) => {
+      handleError(error)
     })
 }
 
@@ -25,8 +25,8 @@ export function getAll(endpoint, setData) {
     .then((res) => {
       setData(res.data.data)
     })
-    .catch((err) => {
-      alert(err.response.data.error)
+    .catch((error) => {
+      handleError(error)
     })
 }
 
@@ -35,10 +35,9 @@ export function add(endpoint, newData, setData, data, clearRefs) {
     .then((res) => {
       setData([...data, {id: res.data.data[0].id, ...newData}])
       clearRefs()
-      // alert("Successfully added gym " + res.data.data[0].id)
     })
-    .catch((err) => {
-      alert(err.response.data.error)
+    .catch((error) => {
+      handleError(error)
     })
 }
 
@@ -50,12 +49,11 @@ export function edit(endpoint, id, newData, setData, clearRefs) {
         alert(res.data.error)
         return
       }
-      // TODO: update the gym from gymData without GET API call
+      // TODO: update the newData from data without GET API call
       getAll(endpoint, setData)
-      // alert("Successfully edited gym " + res.data.data[0].id)
     })
-    .catch((err) => {
-      alert(err.response.data.error)
+    .catch((error) => {
+      handleError(error)
     })
 }
 
@@ -63,11 +61,14 @@ export function remove(endpoint, id, setData) {
   Axios.delete(endpoint + "/" + id)
     // eslint-disable-next-line no-unused-vars
     .then((res) => {
-      // TODO: remove the gym from gymData without GET API call
+      // TODO: remove the oldData from data without GET API call
       getAll(endpoint, setData)
-      // alert("Successfully removed gym " + res.data.data[0].id)
     })
-    .catch((err) => {
-      alert(err.response.data.error)
+    .catch((error) => {
+      handleError(error)
     })
+}
+
+function handleError(error) {
+  alert(error.message + " : " + error.response.data.error)
 }

@@ -40,7 +40,6 @@ export function getAll (res, tableName) {
 
 export function getQuery (res, tableName, query) {
   const sqlQuery = makeGetQueryString(JSON.parse(query))
-  // console.log(sqlQuery)
 
   function makeGetQueryString (query) {
     return ''.concat(
@@ -101,7 +100,7 @@ export function getQuery (res, tableName, query) {
 
   db.query(sqlQuery, (err, data) => {
     if (err) {
-      return res.status(400).json({ error: err })
+      return res.status(400).json({ error: err.sqlMessage })
     }
     res.status(200).json({ data })
   })
@@ -127,7 +126,7 @@ export function addOne (res, tableName, values, stringValues) {
 
   db.query(query, valueArray, (err, data) => {
     if (err) {
-      return res.status(400).json({ error: err })
+      return res.status(400).json({ error: err.sqlMessage })
     }
     res.status(200)
       .json({ data: [{ id: JSON.parse(JSON.stringify(data)).insertId }] })
@@ -151,7 +150,7 @@ export function updateOne (res, tableName, id, values, stringValues) {
 
   db.query(query, (err, data) => {
     if (err) {
-      return res.status(400).json({ error: err })
+      return res.status(400).json({ error: err.sqlMessage })
     }
     if (JSON.parse(JSON.stringify(data)).affectedRows === 0) {
       return res.status(404).json(IdNotFoundError)
@@ -168,7 +167,7 @@ export function deleteOne (res, tableName, id) {
 
   db.query(query, (err, data) => {
     if (err) {
-      return res.status(400).json({ error: err })
+      return res.status(400).json({ error: err.sqlMessage })
     }
     if (JSON.parse(JSON.stringify(data)).affectedRows === 0) {
       return res.status(404).json(IdNotFoundError)

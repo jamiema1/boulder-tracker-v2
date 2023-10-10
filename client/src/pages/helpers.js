@@ -1,5 +1,20 @@
 import React from "react"
 
+export function getTimeDifferenceString(startDateTime, endDateTime) {
+  const startTime = new Date(startDateTime)
+  const endTime =
+    endDateTime === "0000-00-00 00:00:00" ? new Date() : new Date(endDateTime)
+  let minutes = Math.floor((endTime - startTime) / (1000 * 60))
+  const hours = Math.floor(minutes / 60)
+  minutes -= hours * 60
+
+  let timeString = "".concat(hours).concat(" hr")
+  if (minutes > 0) {
+    timeString = timeString.concat(" ").concat(minutes).concat(" min")
+  }
+  return timeString
+}
+
 export function getCurrentDate() {
   return getDateString(new Date())
 }

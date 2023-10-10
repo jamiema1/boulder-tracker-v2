@@ -1,10 +1,12 @@
+/* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
 import Climbs from "./climbs"
 import {
-  convertToViewDateTime,
+  // convertToViewDateTime,
   convertToEditDateTime,
   getOptions,
   getCurrentDateTime,
+  getTimeDifferenceString,
   getInput,
 } from "../helpers.js"
 import images from "../../images/images.js"
@@ -16,6 +18,7 @@ import {
   remove,
   gymEndpoint,
   sessionEndpoint,
+  climbEndpoint,
 } from "../../api/endpoints.js"
 
 export default function Sessions() {
@@ -36,10 +39,14 @@ export default function Sessions() {
 
   const [sessionData, setSessionData] = useState([])
   const [gymData, setGymData] = useState([])
-  // const [gymData, setGymData] = useState([])
+  // TODO: does not update when a new climb is added
+  const [climbData, setClimbData] = useState([])
   const [viewingSession, setViewingSession] = useState(0)
   const [editingSession, setEditingSession] = useState(0)
   const [addingSession, setAddingSession] = useState(false)
+
+  // TODO: interim solution
+  const [reload, setReload] = useState(false)
 
   const newGymId = useRef(0)
   const newSessionStartTime = useRef("")
@@ -48,7 +55,8 @@ export default function Sessions() {
   useEffect(() => {
     getAllSessions()
     getAllGyms()
-  }, [])
+    getAllClimbs()
+  }, [reload])
 
   /*
    * APIs
@@ -58,9 +66,9 @@ export default function Sessions() {
     getAll(gymEndpoint, setGymData)
   }
 
-  // function getGym(gymId) {
-  //   get(gymEndpoint, gymId, setGymData)
-  // }
+  function getAllClimbs() {
+    getAll(climbEndpoint, setClimbData)
+  }
 
   function getAllSessions() {
     getAll(sessionEndpoint, setSessionData)
@@ -125,12 +133,36 @@ export default function Sessions() {
     setAddingSession(newAddingSession)
   }
 
+  function climbText(session) {
+    const filteredClimbData = climbData.filter((climb) => {
+      return climb.sessionId === session.id
+    })
+
+    let climbs = 0
+    let attempts = 0
+    let sends = 0
+    filteredClimbData.forEach((climb) => {
+      climbs += 1
+      attempts += climb.attempts
+      sends += climb.sends
+    })
+
+    return ""
+      .concat(climbs)
+      .concat(" Climbs, ")
+      .concat(sends)
+      .concat(" Sends, ")
+      .concat(attempts)
+      .concat(" Attempts, ")
+  }
+
   /*
    * Return value
    */
 
   return (
     <ul className="dataList outerList">
+      <button onClick={() => setReload(!reload)}>Refresh</button>
       {sessionData.map((session) => {
         return (
           <div key={session.id}>
@@ -155,19 +187,30 @@ export default function Sessions() {
                         {session.gymId}
                       </div>
                       <div className="text">
+                        {new Date(
+                          session.sessionStartTime
+                        ).toLocaleDateString()}
+                        {" - "}
                         {
                           gymData.find((gym) => {
                             return gym.id === session.gymId
                           })?.city
                         }
+                        {" - "}
+                        {getTimeDifferenceString(
+                          session.sessionStartTime,
+                          session.sessionEndTime
+                        )}
+                        {" - "}
+                        {climbText(session)}
                       </div>
                     </div>
-                    <div className="date">
+                    {/* <div className="date">
                       {convertToViewDateTime(
                         session.sessionStartTime,
                         session.sessionEndTime
                       )}
-                    </div>
+                    </div> */}
                   </div>
                   <div className="buttons">
                     <button onClick={() => changeStates(0, session.id, false)}>
