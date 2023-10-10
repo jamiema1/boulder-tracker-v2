@@ -1,9 +1,15 @@
 import React, {useEffect, useState, useRef} from "react"
-import Axios from "../../api/axios.js"
 import Boulders from "./boulders"
 
 import images from "../../images/images.js"
 import {getInput} from "../helpers.js"
+import {
+  getQuery,
+  add,
+  edit,
+  remove,
+  locationEndpoint,
+} from "../../api/endpoints.js"
 
 export default function Locations(props) {
   /*
@@ -44,67 +50,38 @@ export default function Locations(props) {
    */
 
   function getAllLocations() {
-    let params = {
-      where: "gymId = " + viewingGym,
-    }
-
-    const uri = encodeURIComponent(JSON.stringify(params))
-
-    Axios.get("/location/query/" + uri)
-      .then((res) => {
-        setLocationData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getQuery(
+      locationEndpoint,
+      {
+        where: "gymId = " + viewingGym,
+      },
+      setLocationData
+    )
   }
 
   function addLocation() {
-    const newLocation = getNewLocation()
-
-    Axios.post("/location", newLocation)
-      .then((res) => {
-        setLocationData([
-          ...locationData,
-          {id: res.data.data[0].id, ...newLocation},
-        ])
-        clearLocationRefs()
-        alert("Successfully added location " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    add(
+      locationEndpoint,
+      getNewLocation(),
+      locationData,
+      setLocationData,
+      clearLocationRefs
+    )
   }
 
   function editLocation(locationId) {
-    const newLocation = getNewLocation()
-
-    Axios.put("/location/" + locationId, newLocation)
-      .then((res) => {
-        clearLocationRefs()
-        if (res.status === 202) {
-          alert(res.data.error)
-          return
-        }
-        // TODO: update the location from locationData without GET API call
-        getAllLocations()
-        alert("Successfully edited location " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    edit(
+      locationEndpoint,
+      locationId,
+      getNewLocation(),
+      locationData,
+      setLocationData,
+      clearLocationRefs
+    )
   }
 
   function deleteLocation(locationId) {
-    Axios.delete("/location/" + locationId)
-      .then((res) => {
-        // TODO: remove the location from locationData without GET API call
-        getAllLocations()
-        alert("Successfully removed location " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    remove(locationEndpoint, locationId, locationData, setLocationData)
   }
 
   /*

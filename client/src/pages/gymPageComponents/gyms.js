@@ -43,15 +43,15 @@ export default function Gyms() {
   }
 
   function addGym() {
-    add(gymEndpoint, getNewGym(), setGymData, gymData, clearGymRefs)
+    add(gymEndpoint, getNewGym(), gymData, setGymData, clearGymRefs)
   }
 
   function editGym(gymId) {
-    edit(gymEndpoint, gymId, getNewGym(), setGymData, clearGymRefs)
+    edit(gymEndpoint, gymId, getNewGym(), gymData, setGymData, clearGymRefs)
   }
 
   function deleteGym(gymId) {
-    remove(gymEndpoint, gymId, setGymData)
+    remove(gymEndpoint, gymId, gymData, setGymData)
   }
 
   /*

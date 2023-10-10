@@ -78,8 +78,8 @@ export default function Sessions() {
     add(
       sessionEndpoint,
       getNewSession(),
-      setSessionData,
       sessionData,
+      setSessionData,
       clearSessionRefs
     )
   }
@@ -89,13 +89,14 @@ export default function Sessions() {
       sessionEndpoint,
       sessionId,
       getNewSession(),
+      sessionData,
       setSessionData,
       clearSessionRefs
     )
   }
 
   function deleteSession(sessionId) {
-    remove(sessionEndpoint, sessionId, setSessionData)
+    remove(sessionEndpoint, sessionId, sessionData, setSessionData)
   }
 
   /*

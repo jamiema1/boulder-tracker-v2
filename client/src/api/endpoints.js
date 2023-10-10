@@ -30,7 +30,17 @@ export function getAll(endpoint, setData) {
     })
 }
 
-export function add(endpoint, newData, setData, data, clearRefs) {
+export function getQuery(endpoint, params, setData) {
+  Axios.get(endpoint + "/query/" + encodeURIComponent(JSON.stringify(params)))
+    .then((res) => {
+      setData(res.data.data)
+    })
+    .catch((err) => {
+      alert(err.response.data.error)
+    })
+}
+
+export function add(endpoint, newData, data, setData, clearRefs) {
   Axios.post(endpoint, newData)
     .then((res) => {
       setData([...data, {id: res.data.data[0].id, ...newData}])
@@ -41,7 +51,7 @@ export function add(endpoint, newData, setData, data, clearRefs) {
     })
 }
 
-export function edit(endpoint, id, newData, setData, clearRefs) {
+export function edit(endpoint, id, newData, data, setData, clearRefs) {
   Axios.put(endpoint + "/" + id, newData)
     .then((res) => {
       clearRefs()
@@ -49,20 +59,26 @@ export function edit(endpoint, id, newData, setData, clearRefs) {
         alert(res.data.error)
         return
       }
-      // TODO: update the newData from data without GET API call
-      getAll(endpoint, setData)
+      newData.id = res.data.data[0].id
+
+      let newArray = data.map((item) => {
+        return item.id === id ? newData : item
+      })
+      setData(newArray)
     })
     .catch((error) => {
       handleError(error)
     })
 }
 
-export function remove(endpoint, id, setData) {
+export function remove(endpoint, id, data, setData) {
   Axios.delete(endpoint + "/" + id)
     // eslint-disable-next-line no-unused-vars
     .then((res) => {
-      // TODO: remove the oldData from data without GET API call
-      getAll(endpoint, setData)
+      let newArray = data.filter((item) => {
+        return item.id !== id
+      })
+      setData(newArray)
     })
     .catch((error) => {
       handleError(error)

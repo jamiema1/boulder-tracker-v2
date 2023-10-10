@@ -1,6 +1,5 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useState, useRef} from "react"
-import Axios from "../../api/axios.js"
 import Climbs from "./climbs"
 import images from "../../images/images.js"
 import {
@@ -11,6 +10,13 @@ import {
   getOptions,
   getInput,
 } from "../helpers.js"
+import {
+  getQuery,
+  add,
+  edit,
+  remove,
+  boulderEndpoint,
+} from "../../api/endpoints.js"
 
 export default function Boulders(props) {
   /*
@@ -82,68 +88,41 @@ export default function Boulders(props) {
    */
 
   function getAllBoulders() {
-    let params = {
-      where:
-        "(locationId = " + viewingLocation + " AND setEndDate = '0000-00-00')",
-    }
-
-    const uri = encodeURIComponent(JSON.stringify(params))
-
-    Axios.get("/boulder/query/" + uri)
-      .then((res) => {
-        setBoulderData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getQuery(
+      boulderEndpoint,
+      {
+        where:
+          "(locationId = " +
+          viewingLocation +
+          " AND setEndDate = '0000-00-00')",
+      },
+      setBoulderData
+    )
   }
 
   function addBoulder() {
-    const newBoulder = getNewBoulder()
-
-    Axios.post("/boulder", newBoulder)
-      .then((res) => {
-        setBoulderData([
-          ...boulderData,
-          {id: res.data.data[0].id, ...newBoulder},
-        ])
-        clearBoulderRefs()
-        // alert("Successfully added boulder " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    add(
+      boulderEndpoint,
+      getNewBoulder(),
+      boulderData,
+      setBoulderData,
+      clearBoulderRefs
+    )
   }
 
   function editBoulder(boulderId) {
-    const newBoulder = getNewBoulder()
-
-    Axios.put("/boulder/" + boulderId, newBoulder)
-      .then((res) => {
-        clearBoulderRefs()
-        if (res.status === 202) {
-          alert(res.data.error)
-          return
-        }
-        // TODO: update the boulder from boulderData without GET API call
-        getAllBoulders()
-        // alert("Successfully edited boulder " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    edit(
+      boulderEndpoint,
+      boulderId,
+      getNewBoulder(),
+      boulderData,
+      setBoulderData,
+      clearBoulderRefs
+    )
   }
 
   function deleteBoulder(boulderId) {
-    Axios.delete("/boulder/" + boulderId)
-      .then((res) => {
-        // TODO: remove the boulder from boulderData without GET API call
-        getAllBoulders()
-        alert("Successfully removed boulder " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    remove(boulderEndpoint, boulderId, boulderData, setBoulderData)
   }
 
   /*
@@ -200,17 +179,14 @@ export default function Boulders(props) {
     }
 
     // TODO: use existing EDIT function instead of creating new one
-    Axios.put("/boulder/" + boulder.id, newBoulder)
-      .then((res) => {
-        if (res.status === 202) {
-          alert(res.data.error)
-          return
-        }
-        getAllBoulders()
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    edit(
+      boulderEndpoint,
+      boulder.id,
+      newBoulder,
+      boulderData,
+      setBoulderData,
+      clearBoulderRefs
+    )
   }
 
   function getHexImage(rating) {

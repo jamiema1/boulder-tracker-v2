@@ -1,6 +1,5 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
-import Axios from "../../api/axios.js"
 import {
   convertToViewDateTime,
   convertToEditDateTime,
@@ -9,6 +8,15 @@ import {
   getInput,
 } from "../helpers.js"
 import images from "../../images/images.js"
+import {
+  getQuery,
+  add,
+  edit,
+  remove,
+  boulderEndpoint,
+  climbEndpoint,
+  locationEndpoint,
+} from "../../api/endpoints.js"
 
 export default function Climbs(props) {
   /*
@@ -65,115 +73,64 @@ export default function Climbs(props) {
    */
 
   function getLocations() {
-    let params = {
-      where: "gymId = " + gymId,
-    }
-
-    const uri = encodeURIComponent(JSON.stringify(params))
-
-    Axios.get("/location/query/" + uri)
-      .then((res) => {
-        setLocationData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getQuery(
+      locationEndpoint,
+      {
+        where: "gymId = " + gymId,
+      },
+      setLocationData
+    )
   }
 
   function getBoulders(locationId) {
     setSelectedBoulderData([])
-    let params = {
-      where: "(locationId = " + locationId + " AND setEndDate = '0000-00-00')",
-    }
-
-    const uri = encodeURIComponent(JSON.stringify(params))
-
-    Axios.get("/boulder/query/" + uri)
-      .then((res) => {
-        setSelectedBoulderData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getQuery(
+      boulderEndpoint,
+      {
+        where:
+          "(locationId = " + locationId + " AND setEndDate = '0000-00-00')",
+      },
+      setSelectedBoulderData
+    )
   }
 
   function getAllBoulders() {
-    let params = {
-      where: "setEndDate = '0000-00-00'",
-    }
-
-    const uri = encodeURIComponent(JSON.stringify(params))
-
-    Axios.get("/boulder/query/" + uri)
-      .then((res) => {
-        setBoulderData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getQuery(
+      boulderEndpoint,
+      {
+        where: "setEndDate = '0000-00-00'",
+      },
+      setBoulderData
+    )
   }
 
   function getAllClimbs() {
-    let params = {
-      where: "sessionId = " + viewingSession,
-    }
-
-    const uri = encodeURIComponent(JSON.stringify(params))
-
-    Axios.get("/climb/query/" + uri)
-      .then((res) => {
-        setClimbData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getQuery(
+      climbEndpoint,
+      {
+        where: "sessionId = " + viewingSession,
+      },
+      setClimbData
+    )
   }
 
   function addClimb() {
-    const newClimb = getNewClimb()
-
-    Axios.post("/climb", newClimb)
-      .then((res) => {
-        setClimbData([...climbData, {id: res.data.data[0].id, ...newClimb}])
-        clearClimbRefs()
-        // alert("Successfully added climb " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    add(climbEndpoint, getNewClimb(), climbData, setClimbData, clearClimbRefs)
   }
 
   function editClimb(climbId) {
-    const newClimb = getNewClimb()
-
-    console.log(newClimb)
-
-    Axios.put("/climb/" + climbId, newClimb)
-      .then((res) => {
-        clearClimbRefs()
-        if (res.status === 202) {
-          alert(res.data.error)
-          return
-        }
-        getAllClimbs()
-        // TODO: update the climb from climbData without GET API call
-        // alert("Successfully edited climb " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    edit(
+      climbEndpoint,
+      climbId,
+      getNewClimb(),
+      climbData,
+      setClimbData,
+      clearClimbRefs
+    )
   }
 
   function deleteClimb(climbId) {
-    Axios.delete("/climb/" + climbId)
-      .then((res) => {
-        getAllClimbs()
-        // TODO: remove the climb from climbData without GET API call
-        alert("Successfully removed climb " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    remove(climbEndpoint, climbId, climbData, setClimbData)
   }
 
   /*
