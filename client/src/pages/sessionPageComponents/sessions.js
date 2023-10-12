@@ -49,6 +49,7 @@ export default function Sessions() {
   const [reload, setReload] = useState(false)
 
   const newGymId = useRef(0)
+  const newUserId = useRef(0)
   const newSessionStartTime = useRef("")
   const newSessionEndTime = useRef("")
 
@@ -105,6 +106,7 @@ export default function Sessions() {
 
   function clearSessionRefs() {
     newGymId.current.value = 0
+    newUserId.current.value = 0
     newSessionStartTime.current.value = ""
     newSessionEndTime.current.value = ""
     changeStates(0, 0, false)
@@ -113,6 +115,7 @@ export default function Sessions() {
   function getNewSession() {
     return {
       gymId: parseInt(newGymId.current.value),
+      userId: parseInt(newUserId.current.value),
       sessionStartTime: newSessionStartTime.current.value,
       sessionEndTime:
         newSessionEndTime.current.value === ""
@@ -186,6 +189,12 @@ export default function Sessions() {
                         style={{backgroundColor: "grey"}}
                       >
                         {session.gymId}
+                      </div>
+                      <div
+                        className="colourBar"
+                        style={{backgroundColor: "purple"}}
+                      >
+                        {session.userId}
                       </div>
                       <div className="text">
                         {new Date(
