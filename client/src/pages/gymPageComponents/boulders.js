@@ -226,52 +226,52 @@ export default function Boulders(props) {
               <li className="item">
                 <div className="components">
                   <div
+                    className="colourBar"
+                    style={{backgroundColor: boulder.colour}}
+                  >
+                    {boulder.id}
+                  </div>
+                  <div
                     className="data"
                     onClick={() => changeStates(boulder.id, 0, false)}
                   >
-                    <div className="icons">
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: boulder.colour}}
-                      >
-                        {boulder.id}
-                      </div>
-                      <div className="hex">
-                        <img
-                          className="hexImage"
-                          src={getHexImage(boulder.rating)}
-                        ></img>
-                      </div>
-                      <div className="text">
-                        {boulder.boulderType} - {boulder.description}
-                      </div>
+                    <div className="text">
+                      {boulder.boulderType} - {boulder.description}
                     </div>
-                    <div className="date">
+                    <div className="text">
                       {convertToViewDate(
                         boulder.setStartDate,
                         boulder.setEndDate
                       )}
                     </div>
                   </div>
-                  <div className="buttons">
-                    <button
-                      onClick={() => {
-                        closeBoulder(boulder)
-                      }}
-                    >
-                      Close
-                    </button>
-                    <button
-                      onClick={() => {
-                        changeStates(0, boulder.id, false)
-                      }}
-                    >
-                      <img src={images.editIcon}></img>
-                    </button>
-                    <button onClick={() => deleteBoulder(boulder.id)}>
-                      <img src={images.deleteIcon}></img>
-                    </button>
+                  <div className="hex">
+                    <img
+                      className="hexImage"
+                      src={getHexImage(boulder.rating)}
+                    ></img>
                   </div>
+                  {viewingBoulder == boulder.id && (
+                    <div className="buttons">
+                      <button
+                        onClick={() => {
+                          closeBoulder(boulder)
+                        }}
+                      >
+                        Close
+                      </button>
+                      <button
+                        onClick={() => {
+                          changeStates(0, boulder.id, false)
+                        }}
+                      >
+                        <img src={images.editIcon}></img>
+                      </button>
+                      <button onClick={() => deleteBoulder(boulder.id)}>
+                        <img src={images.deleteIcon}></img>
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <Climbs
                   boulderId={boulder.id}

@@ -23,6 +23,11 @@
   border-bottom: var(--width) solid var(--colour);
   border-bottom-left-radius: var(--radius);
   border-bottom-right-radius: var(--radius);
+
+  @media (max-width: 600px) {
+    --margin: 5px;
+    padding: 5px;
+  }
 }
 
 .outerList {
@@ -32,12 +37,12 @@
 }
 
 .item {
-  padding: 10px;
+  padding: 3px;
 }
 
 .components {
   display: flex;
-  height: 40px;
+  /* height: 40px; */
   border: var(--width) solid var(--colour);
 }
 
@@ -48,7 +53,13 @@
 .data {
   display: flex;
   flex-grow: 1;
-  justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+  .data {
+    justify-content: space-between;
+    flex-direction: column;
+  }
 }
 
 .icons {
@@ -56,11 +67,15 @@
 }
 
 .colourBar {
-  width: 30px;
   color: #bdbdbd;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+  width: 30px;
+  @media (max-width: 600px) {
+    width: 20px;
+  }
 }
 
 .hex {
@@ -76,8 +91,9 @@
 }
 
 .text {
-  align-self: center;
   padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .date {
@@ -87,7 +103,9 @@
 
 .buttons {
   display: flex;
-  justify-content: right;
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 }
 
 .buttons > * {
@@ -95,5 +113,8 @@
 }
 
 img {
-  width: 20px;
+  width: 25px;
+  @media (max-width: 600px) {
+    width: 15px;
+  }
 }

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
 import {
-  convertToViewDateTime,
+  // convertToViewDateTime,
   convertToEditDateTime,
   getCurrentDateTime,
   getOptions,
@@ -184,15 +184,56 @@ export default function Climbs(props) {
     }
 
     return ""
-      .concat(boulder.rating)
-      .concat(" - ")
-      .concat(boulder.colour)
-      .concat(" - ")
       .concat(boulder.boulderType)
       .concat(" - ")
       .concat(boulder.description)
-      .concat(" | ")
   }
+
+  function getBoulderColour(climb) {
+    const boulder = boulderData.find((boulder) => {
+      return boulder.id === climb.boulderId
+    })
+
+    if (boulder === undefined) {
+      return
+    }
+
+    return boulder.colour
+  }
+
+  function getBoulderRating(climb) {
+    const boulder = boulderData.find((boulder) => {
+      return boulder.id === climb.boulderId
+    })
+
+    if (boulder === undefined) {
+      return
+    }
+
+    return boulder.rating
+  }
+
+  function getHexImage(rating) {
+    switch (rating) {
+    case -1:
+      return images.sixHex
+    case 0:
+      return images.sixHex
+    case 1:
+      return images.oneHex
+    case 2:
+      return images.twoHex
+    case 3:
+      return images.threeHex
+    case 4:
+      return images.fourHex
+    case 5:
+      return images.fiveHex
+    case 6:
+      return images.sixHex
+    }
+  }
+
   /*
    * Return value
    */
@@ -205,48 +246,58 @@ export default function Climbs(props) {
             {editingClimb !== climb.id && (
               <li className="item">
                 <div className="components">
+                  {/* <div
+                    className="colourBar"
+                    style={{backgroundColor: "magenta"}}
+                  >
+                    {climb.id}
+                  </div>
+                  <div
+                    className="colourBar"
+                    style={{backgroundColor: "teal"}}
+                  >
+                    {climb.boulderId}
+                  </div> */}
+                  <div
+                    className="colourBar"
+                    style={{backgroundColor: getBoulderColour(climb)}}
+                  ></div>
                   <div
                     className="data"
                     onClick={() => changeStates(climb.id, 0, false)}
                   >
-                    <div className="icons">
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "magenta"}}
-                      >
-                        {climb.id}
-                      </div>
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "teal"}}
-                      >
-                        {climb.boulderId}
-                      </div>
-                      <div className="text">
-                        {boulderText(climb)}
-                        Completion Rate: {climb.sends} / {climb.attempts}
-                      </div>
+                    <div className="text">{boulderText(climb)}</div>
+                    <div className="text">
+                      Completion Rate: {climb.sends} / {climb.attempts}
                     </div>
-                    <div className="date">
+                    {/* <div className="text">
                       {convertToViewDateTime(
                         climb.climbStartTime,
                         climb.climbEndTime
                       )}
+                    </div> */}
+                  </div>
+                  <div className="hex">
+                    <img
+                      className="hexImage"
+                      src={getHexImage(getBoulderRating(climb))}
+                    ></img>
+                  </div>
+                  {viewingClimb == climb.id && (
+                    <div className="buttons">
+                      <button
+                        onClick={() => {
+                          changeStates(0, climb.id, false)
+                          loadInitialBoulders()
+                        }}
+                      >
+                        <img src={images.editIcon}></img>
+                      </button>
+                      <button onClick={() => deleteClimb(climb.id)}>
+                        <img src={images.deleteIcon}></img>
+                      </button>
                     </div>
-                  </div>
-                  <div className="buttons">
-                    <button
-                      onClick={() => {
-                        changeStates(0, climb.id, false)
-                        loadInitialBoulders()
-                      }}
-                    >
-                      <img src={images.editIcon}></img>
-                    </button>
-                    <button onClick={() => deleteClimb(climb.id)}>
-                      <img src={images.deleteIcon}></img>
-                    </button>
-                  </div>
+                  )}
                 </div>{" "}
               </li>
             )}
@@ -345,7 +396,7 @@ export default function Climbs(props) {
                         " | " +
                         boulder.boulderType +
                         " | " +
-                        boulder.description.substring(0, 50),
+                        boulder.description.substring(0, 25),
                       boulder.id
                     )
                   })}

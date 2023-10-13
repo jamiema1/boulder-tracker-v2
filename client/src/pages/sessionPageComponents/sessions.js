@@ -174,47 +174,44 @@ export default function Sessions() {
               <li className="item">
                 <div className="components">
                   <div
+                    className="colourBar"
+                    style={{backgroundColor: "aqua"}}
+                  >
+                    {session.id}
+                  </div>
+                  {/* <div
+                    className="colourBar"
+                    style={{backgroundColor: "grey"}}
+                  >
+                    {session.gymId}
+                  </div>
+                  <div
+                    className="colourBar"
+                    style={{backgroundColor: "purple"}}
+                  >
+                    {session.userId}
+                  </div> */}
+                  <div
                     className="data"
                     onClick={() => changeStates(session.id, 0, false)}
                   >
-                    <div className="icons">
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "aqua"}}
-                      >
-                        {session.id}
-                      </div>
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "grey"}}
-                      >
-                        {session.gymId}
-                      </div>
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "purple"}}
-                      >
-                        {session.userId}
-                      </div>
-                      <div className="text">
-                        {new Date(
-                          session.sessionStartTime
-                        ).toLocaleDateString()}
-                        {" - "}
-                        {
-                          gymData.find((gym) => {
-                            return gym.id === session.gymId
-                          })?.city
-                        }
-                        {" - "}
-                        {getTimeDifferenceString(
-                          session.sessionStartTime,
-                          session.sessionEndTime
-                        )}
-                        {" - "}
-                        {climbText(session)}
-                      </div>
+                    <div className="text">
+                      {new Date(session.sessionStartTime).toLocaleDateString()}
+                      {" - "}
+                      {
+                        gymData.find((gym) => {
+                          return gym.id === session.gymId
+                        })?.city
+                      }
                     </div>
+                    <div className="text"></div>
+                    <div className="text">
+                      {getTimeDifferenceString(
+                        session.sessionStartTime,
+                        session.sessionEndTime
+                      )}
+                    </div>
+                    <div className="text">{climbText(session)}</div>
                     {/* <div className="date">
                       {convertToViewDateTime(
                         session.sessionStartTime,
@@ -222,14 +219,18 @@ export default function Sessions() {
                       )}
                     </div> */}
                   </div>
-                  <div className="buttons">
-                    <button onClick={() => changeStates(0, session.id, false)}>
-                      <img src={images.editIcon}></img>
-                    </button>
-                    <button onClick={() => deleteSession(session.id)}>
-                      <img src={images.deleteIcon}></img>
-                    </button>
-                  </div>
+                  {viewingSession == session.id && (
+                    <div className="buttons">
+                      <button
+                        onClick={() => changeStates(0, session.id, false)}
+                      >
+                        <img src={images.editIcon}></img>
+                      </button>
+                      <button onClick={() => deleteSession(session.id)}>
+                        <img src={images.deleteIcon}></img>
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <Climbs
                   sessionId={session.id}
@@ -248,6 +249,7 @@ export default function Sessions() {
                         return getOptions(gym.city, gym.id)
                       })}
                     </select>
+                    {getInput("User ID", "number", newUserId, session.userId)}
                     {getInput(
                       "Start Time",
                       "datetime-local",
@@ -291,6 +293,7 @@ export default function Sessions() {
                   return getOptions(gym.city, gym.id)
                 })}
               </select>
+              {getInput("User ID", "number", newUserId, 1)}
               {getInput(
                 "Start Time",
                 "datetime-local",

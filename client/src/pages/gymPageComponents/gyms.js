@@ -96,30 +96,30 @@ export default function Gyms() {
               <li className="item">
                 <div className="components">
                   <div
+                    className="colourBar"
+                    style={{backgroundColor: "grey"}}
+                  >
+                    {gym.id}
+                  </div>
+                  <div
                     className="data"
                     onClick={() => changeStates(gym.id, 0, false)}
                   >
-                    <div className="icons">
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "grey"}}
-                      >
-                        {gym.id}
-                      </div>
-                      <div className="text">
-                        {gym.city} - {gym.name}
-                      </div>
+                    <div className="text">
+                      {gym.city} - {gym.name}
                     </div>
-                    <div className="date">{gym.address}</div>
+                    <div className="text">{gym.address}</div>
                   </div>
-                  <div className="buttons">
-                    <button onClick={() => changeStates(0, gym.id, false)}>
-                      <img src={images.editIcon}></img>
-                    </button>
-                    <button onClick={() => deleteGym(gym.id)}>
-                      <img src={images.deleteIcon}></img>
-                    </button>
-                  </div>
+                  {viewingGym == gym.id && (
+                    <div className="buttons">
+                      <button onClick={() => changeStates(0, gym.id, false)}>
+                        <img src={images.editIcon}></img>
+                      </button>
+                      <button onClick={() => deleteGym(gym.id)}>
+                        <img src={images.deleteIcon}></img>
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <Locations gymId={gym.id} viewingGym={viewingGym}></Locations>
               </li>

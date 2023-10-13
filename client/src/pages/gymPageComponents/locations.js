@@ -128,27 +128,29 @@ export default function Locations(props) {
               <li className="item">
                 <div className="components">
                   <div
+                    className="colourBar"
+                    style={{backgroundColor: "teal"}}
+                  >
+                    {location.id}
+                  </div>
+                  <div
                     className="data"
                     onClick={() => changeStates(location.id, 0, false)}
                   >
-                    <div className="icons">
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "teal"}}
+                    <div className="text">{location.name}</div>
+                  </div>
+                  {viewingLocation == location.id && (
+                    <div className="buttons">
+                      <button
+                        onClick={() => changeStates(0, location.id, false)}
                       >
-                        {location.id}
-                      </div>
-                      <div className="text">{location.name}</div>
+                        <img src={images.editIcon}></img>
+                      </button>
+                      <button onClick={() => deleteLocation(location.id)}>
+                        <img src={images.deleteIcon}></img>
+                      </button>
                     </div>
-                  </div>
-                  <div className="buttons">
-                    <button onClick={() => changeStates(0, location.id, false)}>
-                      <img src={images.editIcon}></img>
-                    </button>
-                    <button onClick={() => deleteLocation(location.id)}>
-                      <img src={images.deleteIcon}></img>
-                    </button>
-                  </div>
+                  )}
                 </div>
                 <Boulders
                   locationId={location.id}

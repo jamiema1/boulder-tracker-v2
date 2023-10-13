@@ -34,25 +34,23 @@ export default function Climbs(props) {
             {viewingBoulder === boulderId && (
               <li className="item">
                 <div className="components">
+                  <div
+                    className="colourBar"
+                    style={{backgroundColor: "magenta"}}
+                  >
+                    {climb.id}
+                  </div>
+                  <div
+                    className="colourBar"
+                    style={{backgroundColor: "aqua"}}
+                  >
+                    {climb.sessionId}
+                  </div>
                   <div className="data">
-                    <div className="icons">
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "magenta"}}
-                      >
-                        {climb.id}
-                      </div>
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "aqua"}}
-                      >
-                        {climb.sessionId}
-                      </div>
-                      <div className="text">
-                        Completion Rate: {climb.sends} / {climb.attempts}
-                      </div>
+                    <div className="text">
+                      Completion Rate: {climb.sends} / {climb.attempts}
                     </div>
-                    <div className="date">
+                    <div className="text">
                       {convertToViewDateTime(
                         climb.climbStartTime,
                         climb.climbEndTime
