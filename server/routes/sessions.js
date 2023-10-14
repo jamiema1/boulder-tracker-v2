@@ -10,6 +10,7 @@ const stringValues = ['sessionStartTime', 'sessionEndTime']
 function getValuesMap (req) {
   return new Map([
     ['gymId', req.body.gymId],
+    ['userId', req.body.userId],
     ['sessionStartTime', req.body.sessionStartTime],
     ['sessionEndTime', req.body.sessionEndTime]
   ])

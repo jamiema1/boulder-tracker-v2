@@ -1,5 +1,5 @@
 {
-  "homepage": "http://jamiema1.github.io/boulder-tracker/#",
+  "homepage": "http://jamiema1.github.io/boulder-tracker-v2/#",
   "name": "client",
   "version": "0.1.0",
   "private": true,
@@ -9,7 +9,6 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.3.2",
     "chart.js": "^4.2.1",
-    "html-react-parser": "^4.2.2",
     "prettier": "^2.8.7",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",

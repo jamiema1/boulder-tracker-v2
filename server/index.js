@@ -7,9 +7,10 @@ import locationRoutes from './routes/locations.js'
 import boulderRoutes from './routes/boulders.js'
 import sessionRoutes from './routes/sessions.js'
 import climbRoutes from './routes/climbs.js'
+import userRoutes from './routes/users.js'
 
 import boulderOldRoutes from './routes/boulder_old.js'
-import userRoutes from './routes/user.js'
+import userOldRoutes from './routes/user_old.js'
 
 dotenv.config()
 
@@ -21,11 +22,16 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/gym', gymRoutes)
 app.use('/location', locationRoutes)
 app.use('/boulder', boulderRoutes)
-app.use('/session', sessionRoutes)
 app.use('/climb', climbRoutes)
+app.use('/session', sessionRoutes)
+app.use('/user', userRoutes)
 
 app.use('/boulder_old', boulderOldRoutes)
-app.use('/user', userRoutes)
+app.use('/user_old', userOldRoutes)
+
+app.get('/', (req, res) => {
+  res.json('This is the backend')
+})
 
 app.listen(process.env.PORT, () => {
   console.log('Connected to backend')

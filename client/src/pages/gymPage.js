@@ -5,6 +5,7 @@ import "./gymPage.css"
 export default function GymPage() {
   return (
     <div>
+      <div className="pageTitle">Gyms</div>
       <Gyms></Gyms>
     </div>
   )

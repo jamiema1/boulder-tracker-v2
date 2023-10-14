@@ -1,6 +1,5 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useState, useRef} from "react"
-import Axios from "../../api/Axios"
 import Climbs from "./climbs"
 import images from "../../images/images.js"
 import {
@@ -8,7 +7,16 @@ import {
   getCurrentDateTime,
   convertToViewDate,
   convertToEditDate,
+  getOptions,
+  getInput,
 } from "../helpers.js"
+import {
+  getQuery,
+  add,
+  edit,
+  remove,
+  boulderEndpoint,
+} from "../../api/endpoints.js"
 
 export default function Boulders(props) {
   /*
@@ -39,6 +47,32 @@ export default function Boulders(props) {
   const locationId = props.locationId
   const viewingLocation = props.viewingLocation
 
+  const ratings = new Map([
+    ["Unrated", -1],
+    ["1 Hex", 1],
+    ["2 Hex", 2],
+    ["3 Hex", 3],
+    ["4 Hex", 4],
+    ["5 Hex", 5],
+    ["6 Hex", 6],
+  ])
+
+  const colours = new Map([
+    ["Black", "Black"],
+    ["Blue", "Blue"],
+    ["Green", "Green"],
+    ["Orange", "Orange"],
+    ["Pink", "Pink"],
+    ["Purple", "Purple"],
+    ["Red", "Red"],
+    ["Yellow", "Yellow"],
+  ])
+
+  const boulderType = new Map([
+    ["Slab", "Slab"],
+    ["Overhang", "Overhang"],
+  ])
+
   useEffect(() => {
     setViewingBoulder(0)
     if (locationId !== viewingLocation) {
@@ -54,69 +88,42 @@ export default function Boulders(props) {
    */
 
   function getAllBoulders() {
-    let params = {
-      where:
-        "(locationId = " + viewingLocation + " AND setEndDate = '0000-00-00')",
-    }
-
-    const uri = encodeURIComponent(JSON.stringify(params))
-
-    Axios.get("/boulder/query/" + uri)
-      .then((res) => {
-        const data = res.data.data
-        setBoulderData(data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getQuery(
+      boulderEndpoint,
+      {
+        where:
+          "(locationId = " +
+          viewingLocation +
+          " AND setEndDate = '0000-00-00')",
+        orderby: [{id: "DESC"}],
+      },
+      setBoulderData
+    )
   }
 
   function addBoulder() {
-    const newBoulder = getNewBoulder()
-
-    Axios.post("/boulder", newBoulder)
-      .then((res) => {
-        setBoulderData([
-          ...boulderData,
-          {id: res.data.data[0].id, ...newBoulder},
-        ])
-        clearBoulderRefs()
-        // alert("Successfully added boulder " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    add(
+      boulderEndpoint,
+      getNewBoulder(),
+      boulderData,
+      setBoulderData,
+      clearBoulderRefs
+    )
   }
 
   function editBoulder(boulderId) {
-    const newBoulder = getNewBoulder()
-
-    Axios.put("/boulder/" + boulderId, newBoulder)
-      .then((res) => {
-        clearBoulderRefs()
-        if (res.status === 202) {
-          alert(res.data.error)
-          return
-        }
-        // TODO: update the boulder from boulderData without GET API call
-        getAllBoulders()
-        // alert("Successfully edited boulder " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    edit(
+      boulderEndpoint,
+      boulderId,
+      getNewBoulder(),
+      boulderData,
+      setBoulderData,
+      clearBoulderRefs
+    )
   }
 
   function deleteBoulder(boulderId) {
-    Axios.delete("/boulder/" + boulderId)
-      .then((res) => {
-        // TODO: remove the boulder from boulderData without GET API call
-        getAllBoulders()
-        alert("Successfully removed boulder " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    remove(boulderEndpoint, boulderId, boulderData, setBoulderData)
   }
 
   /*
@@ -135,13 +142,16 @@ export default function Boulders(props) {
 
   function getNewBoulder() {
     return {
-      locationId: locationId,
+      locationId: parseInt(locationId),
       rating: parseInt(newBoulderRating.current.value),
       colour: newBoulderColour.current.value,
       boulderType: newBoulderBoulderType.current.value,
       description: newBoulderDescription.current.value,
       setStartDate: newBoulderSetStartDate.current.value,
-      setEndDate: newBoulderSetEndDate.current.value,
+      setEndDate:
+        newBoulderSetEndDate.current.value === ""
+          ? "0000-00-00"
+          : newBoulderSetEndDate.current.value,
     }
   }
 
@@ -170,17 +180,14 @@ export default function Boulders(props) {
     }
 
     // TODO: use existing EDIT function instead of creating new one
-    Axios.put("/boulder/" + boulder.id, newBoulder)
-      .then((res) => {
-        if (res.status === 202) {
-          alert(res.data.error)
-          return
-        }
-        getAllBoulders()
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    edit(
+      boulderEndpoint,
+      boulder.id,
+      newBoulder,
+      boulderData,
+      setBoulderData,
+      clearBoulderRefs
+    )
   }
 
   function getHexImage(rating) {
@@ -213,6 +220,57 @@ export default function Boulders(props) {
       {viewingLocation === locationId && (
         <div className="sectionTitle">Boulders</div>
       )}
+      {viewingLocation === locationId && !addingBoulder && (
+        <button onClick={() => changeStates(0, 0, true)}>Add a Boulder</button>
+      )}
+      {addingBoulder && (
+        <li className="item">
+          <form className="components">
+            <div className="data">
+              <div className="field">
+                <label>Rating:</label>
+                <select ref={newBoulderRating}>
+                  {Array.from(ratings).map(([key, value]) => {
+                    return getOptions(key, value)
+                  })}
+                </select>
+              </div>
+              <div className="field">
+                <label>Colour:</label>
+                <select ref={newBoulderColour}>
+                  {Array.from(colours).map(([key, value]) => {
+                    return getOptions(key, value)
+                  })}
+                </select>
+              </div>
+              <div className="field">
+                <label>Boulder Type:</label>
+                <select ref={newBoulderBoulderType}>
+                  {Array.from(boulderType).map(([key, value]) => {
+                    return getOptions(key, value)
+                  })}
+                </select>
+              </div>
+              {getInput("Description", "text", newBoulderDescription, null)}
+              {getInput(
+                "Set Start Date",
+                "date",
+                newBoulderSetStartDate,
+                getCurrentDate()
+              )}
+              {getInput("Set End Date", "date", newBoulderSetEndDate, null)}
+            </div>
+            <div className="buttons">
+              <button type="button" onClick={() => addBoulder()}>
+                <img src={images.addIcon}></img>
+              </button>
+              <button type="button" onClick={() => clearBoulderRefs()}>
+                <img src={images.cancelIcon}></img>
+              </button>
+            </div>
+          </form>
+        </li>
+      )}
       {boulderData.map((boulder) => {
         return (
           <div key={boulder.id}>
@@ -220,99 +278,116 @@ export default function Boulders(props) {
               <li className="item">
                 <div className="components">
                   <div
+                    className="colourBar"
+                    style={{backgroundColor: boulder.colour}}
+                  >
+                    {boulder.id}
+                  </div>
+                  <div className="hex">
+                    <img
+                      className="hexImage"
+                      src={getHexImage(boulder.rating)}
+                    ></img>
+                  </div>
+                  <div
                     className="data"
                     onClick={() => changeStates(boulder.id, 0, false)}
                   >
-                    <div className="icons">
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: boulder.colour}}
-                      >
-                        {boulder.id}
-                      </div>
-                      <div className="hex">
-                        <img
-                          className="hexImage"
-                          src={getHexImage(boulder.rating)}
-                        ></img>
-                      </div>
-                      <div className="text">
-                        {boulder.boulderType} - {boulder.description}
-                      </div>
+                    <div className="text">
+                      {boulder.boulderType} - {boulder.description}
                     </div>
-                    <div className="date">
+                    <div className="text">
                       {convertToViewDate(
                         boulder.setStartDate,
                         boulder.setEndDate
                       )}
                     </div>
                   </div>
-                  <div className="buttons">
-                    <button
-                      onClick={() => {
-                        closeBoulder(boulder)
-                      }}
-                    >
-                      Close
-                    </button>
-                    <button
-                      onClick={() => {
-                        changeStates(0, boulder.id, false)
-                      }}
-                    >
-                      <img src={images.editIcon}></img>
-                    </button>
-                    <button onClick={() => deleteBoulder(boulder.id)}>
-                      <img src={images.deleteIcon}></img>
-                    </button>
-                  </div>
+                  {viewingBoulder == boulder.id && (
+                    <div className="buttons">
+                      <button
+                        onClick={() => {
+                          closeBoulder(boulder)
+                        }}
+                      >
+                        Close
+                      </button>
+                      <button
+                        onClick={() => {
+                          changeStates(0, boulder.id, false)
+                        }}
+                      >
+                        <img src={images.editIcon}></img>
+                      </button>
+                      <button onClick={() => deleteBoulder(boulder.id)}>
+                        <img src={images.deleteIcon}></img>
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <Climbs
-                  boulderId={boulder.id}
-                  viewingBoulder={viewingBoulder}
-                ></Climbs>
+                {viewingBoulder == boulder.id && (
+                  <Climbs
+                    boulderId={boulder.id}
+                    viewingBoulder={viewingBoulder}
+                  ></Climbs>
+                )}
               </li>
             )}
             {editingBoulder == boulder.id && (
               <li className="item">
                 <form className="components">
                   <div className="data">
-                    <label>Rating:</label>
-                    <input
-                      type="number"
-                      ref={newBoulderRating}
-                      defaultValue={boulder.rating}
-                    ></input>
-                    <label>Colour:</label>
-                    <input
-                      type="text"
-                      ref={newBoulderColour}
-                      defaultValue={boulder.colour}
-                    ></input>
-                    <label>Boulder Type:</label>
-                    <input
-                      type="text"
-                      ref={newBoulderBoulderType}
-                      defaultValue={boulder.boulderType}
-                    ></input>
-                    <label>Description:</label>
-                    <input
-                      type="text"
-                      ref={newBoulderDescription}
-                      defaultValue={boulder.description}
-                    ></input>
-                    <label>Set Start Date:</label>
-                    <input
-                      type="date"
-                      ref={newBoulderSetStartDate}
-                      defaultValue={convertToEditDate(boulder.setStartDate)}
-                    ></input>
-                    <label>Set End Date:</label>
-                    <input
-                      type="date"
-                      ref={newBoulderSetEndDate}
-                      defaultValue={convertToEditDate(boulder.setEndDate)}
-                    ></input>
+                    <div className="field">
+                      <label>Rating:</label>
+                      <select
+                        ref={newBoulderRating}
+                        defaultValue={boulder.rating}
+                      >
+                        {Array.from(ratings).map(([key, value]) => {
+                          return getOptions(key, value)
+                        })}
+                      </select>
+                    </div>
+                    <div className="field">
+                      <label>Colour:</label>
+                      <select
+                        ref={newBoulderColour}
+                        defaultValue={boulder.colour}
+                      >
+                        {Array.from(colours).map(([key, value]) => {
+                          return getOptions(key, value)
+                        })}
+                      </select>
+                    </div>
+                    <div className="field">
+                      <label>Boulder Type:</label>
+                      <select
+                        ref={newBoulderBoulderType}
+                        defaultValue={boulder.boulderType}
+                      >
+                        {Array.from(boulderType).map(([key, value]) => {
+                          return getOptions(key, value)
+                        })}
+                      </select>
+                    </div>
+                    {getInput(
+                      "Description",
+                      "text",
+                      newBoulderDescription,
+                      boulder.description
+                    )}
+                    {getInput(
+                      "Set Start Date",
+                      "date",
+                      newBoulderSetStartDate,
+                      convertToEditDate(boulder.setStartDate)
+                    )}
+                    {getInput(
+                      "Set End Date",
+                      "date",
+                      newBoulderSetEndDate,
+                      convertToEditDate(boulder.setEndDate)
+                    )}
                   </div>
                   <div className="buttons">
                     <button
@@ -334,41 +409,6 @@ export default function Boulders(props) {
           </div>
         )
       })}
-      {addingBoulder && (
-        <li className="item">
-          <form className="components">
-            <div className="data">
-              <label>Rating:</label>
-              <input type="number" ref={newBoulderRating}></input>
-              <label>Colour:</label>
-              <input type="text" ref={newBoulderColour}></input>
-              <label>Boulder Type:</label>
-              <input type="text" ref={newBoulderBoulderType}></input>
-              <label>Description:</label>
-              <input type="text" ref={newBoulderDescription}></input>
-              <label>Set Start Date:</label>
-              <input
-                type="date"
-                ref={newBoulderSetStartDate}
-                defaultValue={getCurrentDate()}
-              ></input>
-              <label>Set End Date:</label>
-              <input type="date" ref={newBoulderSetEndDate}></input>
-            </div>
-            <div className="buttons">
-              <button type="button" onClick={() => addBoulder()}>
-                <img src={images.addIcon}></img>
-              </button>
-              <button type="button" onClick={() => clearBoulderRefs()}>
-                <img src={images.cancelIcon}></img>
-              </button>
-            </div>
-          </form>
-        </li>
-      )}
-      {viewingLocation === locationId && !addingBoulder && (
-        <button onClick={() => changeStates(0, 0, true)}>Add a Boulder</button>
-      )}
     </ul>
   )
 }

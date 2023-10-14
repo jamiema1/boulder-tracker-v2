@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react"
-import Axios from "../../api/Axios"
 import {convertToViewDateTime} from "../helpers.js"
+import {getQuery, climbEndpoint} from "../../api/endpoints.js"
 
 export default function Climbs(props) {
   const [climbData, setClimbData] = useState([])
@@ -9,19 +9,14 @@ export default function Climbs(props) {
   const viewingBoulder = props.viewingBoulder
 
   function getAllClimbs() {
-    let params = {
-      where: "boulderId = " + viewingBoulder,
-    }
-
-    const uri = encodeURIComponent(JSON.stringify(params))
-
-    Axios.get("/climb/query/" + uri)
-      .then((res) => {
-        setClimbData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getQuery(
+      climbEndpoint,
+      {
+        where: "boulderId = " + viewingBoulder,
+        orderby: [{id: "DESC"}],
+      },
+      setClimbData
+    )
   }
 
   useEffect(() => {
@@ -40,25 +35,23 @@ export default function Climbs(props) {
             {viewingBoulder === boulderId && (
               <li className="item">
                 <div className="components">
+                  <div
+                    className="colourBar"
+                    style={{backgroundColor: "magenta"}}
+                  >
+                    {climb.id}
+                  </div>
+                  <div
+                    className="colourBar"
+                    style={{backgroundColor: "aqua"}}
+                  >
+                    {climb.sessionId}
+                  </div>
                   <div className="data">
-                    <div className="icons">
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "magenta"}}
-                      >
-                        {climb.id}
-                      </div>
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "aqua"}}
-                      >
-                        {climb.sessionId}
-                      </div>
-                      <div className="text">
-                        Completion Rate: {climb.sends} / {climb.attempts}
-                      </div>
+                    <div className="text">
+                      Completion Rate: {climb.sends} / {climb.attempts}
                     </div>
-                    <div className="date">
+                    <div className="text">
                       {convertToViewDateTime(
                         climb.climbStartTime,
                         climb.climbEndTime

@@ -1,7 +1,7 @@
 html {
   font-family: Arial, Helvetica, sans-serif;
   /* font-family: "Courier New", Courier, monospace; */
-  font-size: small;
+  font-size: 16px;
   background-color: rgb(230, 230, 230);
   /* border: 2px solid black; */
 }
@@ -10,13 +10,19 @@ html {
   --width: 3px;
   --radius: 10px;
   --colour: black;
-  --margin: 10px;
+  --margin: 15px;
 
   border-bottom: var(--width) solid var(--colour);
   list-style-type: none;
   display: flex;
-  flex-direction: row;
-  padding: 0px 0px 0px 10px;
+  padding: 0px;
+}
+
+@media (max-width: 600px) {
+  .pages {
+    --margin: 0px;
+    justify-content: space-around;
+  }
 }
 
 .pages > * {
@@ -26,11 +32,15 @@ html {
   border-top-right-radius: var(--radius);
   border-top-left-radius: var(--radius);
 
-  padding: 5px 20px 5px 20px;
+  padding: 5px 10px 5px 10px;
   margin-left: var(--margin);
   margin-right: var(--margin);
 
-  font-size: x-large;
-  display: flex;
-  justify-content: center;
+  font-size: 36px;
+}
+
+@media (max-width: 600px) {
+  .pages > * {
+    font-size: 24px;
+  }
 }

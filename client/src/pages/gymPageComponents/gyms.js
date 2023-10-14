@@ -1,8 +1,9 @@
 import React, {useEffect, useRef, useState} from "react"
-import Axios from "../../api/Axios"
 import Locations from "./locations"
 
 import images from "../../images/images.js"
+import {getInput} from "../helpers.js"
+import {getAll, add, edit, remove, gymEndpoint} from "../../api/endpoints.js"
 
 export default function Gyms() {
   /*
@@ -38,56 +39,19 @@ export default function Gyms() {
    */
 
   function getAllGyms() {
-    Axios.get("/gym")
-      .then((res) => {
-        setGymData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getAll(gymEndpoint, setGymData)
   }
 
   function addGym() {
-    const newGym = getNewGym()
-
-    Axios.post("/gym", newGym)
-      .then((res) => {
-        setGymData([...gymData, {id: res.data.data[0].id, ...newGym}])
-        clearGymRefs()
-        alert("Successfully added gym " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    add(gymEndpoint, getNewGym(), gymData, setGymData, clearGymRefs)
   }
 
   function editGym(gymId) {
-    const newGym = getNewGym()
-
-    Axios.put("/gym/" + gymId, newGym)
-      .then((res) => {
-        clearGymRefs()
-        if (res.status === 202) {
-          alert(res.data.error)
-          return
-        }
-        getAllGyms() // TODO: update the gym from gymData without GET API call
-        alert("Successfully edited gym " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    edit(gymEndpoint, gymId, getNewGym(), gymData, setGymData, clearGymRefs)
   }
 
   function deleteGym(gymId) {
-    Axios.delete("/gym/" + gymId)
-      .then((res) => {
-        getAllGyms() // TODO: remove the gym from gymData without GET API call
-        alert("Successfully removed gym " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    remove(gymEndpoint, gymId, gymData, setGymData)
   }
 
   /*
@@ -124,7 +88,30 @@ export default function Gyms() {
 
   return (
     <ul className="dataList outerList">
-      <div className="pageTitle">Gyms</div>
+      {!addingGym && (
+        <button className="topButtons" onClick={() => changeStates(0, 0, true)}>
+          Add a Gym
+        </button>
+      )}
+      {addingGym && (
+        <li className="item">
+          <form className="components">
+            <div className="data">
+              {getInput("Name", "text", newGymName, null)}
+              {getInput("Address", "text", newGymAddress, null)}
+              {getInput("City", "text", newGymCity, null)}
+            </div>
+            <div className="buttons">
+              <button type="button" onClick={() => addGym()}>
+                <img src={images.addIcon}></img>
+              </button>
+              <button type="button" onClick={() => clearGymRefs()}>
+                <img src={images.cancelIcon}></img>
+              </button>
+            </div>
+          </form>
+        </li>
+      )}
       {gymData.map((gym) => {
         return (
           <div key={gym.id}>
@@ -132,56 +119,43 @@ export default function Gyms() {
               <li className="item">
                 <div className="components">
                   <div
+                    className="colourBar"
+                    style={{backgroundColor: "grey"}}
+                  >
+                    {gym.id}
+                  </div>
+                  <div
                     className="data"
                     onClick={() => changeStates(gym.id, 0, false)}
                   >
-                    <div className="icons">
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "grey"}}
-                      >
-                        {gym.id}
-                      </div>
-                      <div className="text">
-                        {gym.city} - {gym.name}
-                      </div>
+                    <div className="text">
+                      {gym.city} - {gym.name}
                     </div>
-                    <div className="date">{gym.address}</div>
+                    <div className="text">{gym.address}</div>
                   </div>
-                  <div className="buttons">
-                    <button onClick={() => changeStates(0, gym.id, false)}>
-                      <img src={images.editIcon}></img>
-                    </button>
-                    <button onClick={() => deleteGym(gym.id)}>
-                      <img src={images.deleteIcon}></img>
-                    </button>
-                  </div>
+                  {viewingGym == gym.id && (
+                    <div className="buttons">
+                      <button onClick={() => changeStates(0, gym.id, false)}>
+                        <img src={images.editIcon}></img>
+                      </button>
+                      <button onClick={() => deleteGym(gym.id)}>
+                        <img src={images.deleteIcon}></img>
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <Locations gymId={gym.id} viewingGym={viewingGym}></Locations>
+                {viewingGym == gym.id && (
+                  <Locations gymId={gym.id} viewingGym={viewingGym}></Locations>
+                )}
               </li>
             )}
             {editingGym == gym.id && (
               <li className="item">
                 <form className="components">
                   <div className="data">
-                    <label>Name:</label>
-                    <input
-                      type="text"
-                      ref={newGymName}
-                      defaultValue={gym.name}
-                    ></input>
-                    <label>Address:</label>
-                    <input
-                      type="text"
-                      ref={newGymAddress}
-                      defaultValue={gym.address}
-                    ></input>
-                    <label>City:</label>
-                    <input
-                      type="text"
-                      ref={newGymCity}
-                      defaultValue={gym.city}
-                    ></input>
+                    {getInput("Name", "text", newGymName, gym.name)}
+                    {getInput("Address", "text", newGymAddress, gym.address)}
+                    {getInput("City", "text", newGymCity, gym.city)}
                   </div>
                   <div className="buttons">
                     <button type="button" onClick={() => editGym(gym.id)}>
@@ -200,31 +174,6 @@ export default function Gyms() {
           </div>
         )
       })}
-      {addingGym && (
-        <li className="item">
-          <form className="components">
-            <div className="data">
-              <label>Name:</label>
-              <input type="text" ref={newGymName}></input>
-              <label>Address:</label>
-              <input type="text" ref={newGymAddress}></input>
-              <label>City:</label>
-              <input type="text" ref={newGymCity}></input>
-            </div>
-            <div className="buttons">
-              <button type="button" onClick={() => addGym()}>
-                <img src={images.addIcon}></img>
-              </button>
-              <button type="button" onClick={() => clearGymRefs()}>
-                <img src={images.cancelIcon}></img>
-              </button>
-            </div>
-          </form>
-        </li>
-      )}
-      {!addingGym && (
-        <button onClick={() => changeStates(0, 0, true)}>Add a Gym</button>
-      )}
     </ul>
   )
 }

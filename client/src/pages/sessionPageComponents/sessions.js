@@ -1,9 +1,25 @@
+/* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
-import Axios from "../../api/Axios"
 import Climbs from "./climbs"
-// import Session from "../../classes/session.js"
-import {convertToViewDateTime, convertToEditDateTime} from "../helpers.js"
+import {
+  // convertToViewDateTime,
+  convertToEditDateTime,
+  getOptions,
+  getCurrentDateTime,
+  getTimeDifferenceString,
+} from "../helpers.js"
 import images from "../../images/images.js"
+import {
+  getAll,
+  // get,
+  add,
+  edit,
+  remove,
+  gymEndpoint,
+  sessionEndpoint,
+  climbEndpoint,
+  getQuery,
+} from "../../api/endpoints.js"
 
 export default function Sessions() {
   /*
@@ -22,80 +38,70 @@ export default function Sessions() {
    */
 
   const [sessionData, setSessionData] = useState([])
+  const [gymData, setGymData] = useState([])
+  // TODO: does not update when a new climb is added
+  const [climbData, setClimbData] = useState([])
   const [viewingSession, setViewingSession] = useState(0)
   const [editingSession, setEditingSession] = useState(0)
   const [addingSession, setAddingSession] = useState(false)
 
+  // TODO: interim solution
+  const [reload, setReload] = useState(false)
+
   const newGymId = useRef(0)
+  const newUserId = useRef(0)
   const newSessionStartTime = useRef("")
   const newSessionEndTime = useRef("")
 
   useEffect(() => {
     getAllSessions()
-  }, [])
+    getAllGyms()
+    getAllClimbs()
+  }, [reload])
 
   /*
    * APIs
    */
 
+  function getAllGyms() {
+    getAll(gymEndpoint, setGymData)
+  }
+
+  function getAllClimbs() {
+    getAll(climbEndpoint, setClimbData)
+  }
+
   function getAllSessions() {
-    Axios.get("/session")
-      .then((res) => {
-        setSessionData(res.data.data)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    getQuery(
+      sessionEndpoint,
+      {where: "", orderby: [{id: "DESC"}]},
+      setSessionData
+    )
   }
 
   function addSession() {
-    const newSession = getNewSession()
-
-    console.log(newSession)
-
-    Axios.post("/session", newSession)
-      .then((res) => {
-        setSessionData([
-          ...sessionData,
-          {id: res.data.data[0].id, ...newSession},
-        ])
-        clearSessionRefs()
-        alert("Successfully added session " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    add(
+      sessionEndpoint,
+      getNewSession(),
+      sessionData,
+      setSessionData,
+      clearSessionRefs
+    )
   }
 
   function editSession(sessionId) {
-    const newSession = getNewSession()
-
-    Axios.put("/session/" + sessionId, newSession)
-      .then((res) => {
-        clearSessionRefs()
-        if (res.status === 202) {
-          alert(res.data.error)
-          return
-        }
-        getAllSessions()
-        // TODO: update the session from sessionData without GET API call
-        alert("Successfully edited session " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    edit(
+      sessionEndpoint,
+      sessionId,
+      getNewSession(),
+      sessionData,
+      setSessionData,
+      clearSessionRefs
+    )
   }
 
   function deleteSession(sessionId) {
-    Axios.delete("/session/" + sessionId)
-      .then((res) => {
-        getAllSessions()
-        // TODO: remove the session from sessionData without GET API call
-        alert("Successfully removed session " + res.data.data[0].id)
-      })
-      .catch((err) => {
-        alert(err.response.data.error)
-      })
+    remove(sessionEndpoint, sessionId, sessionData, setSessionData)
   }
 
   /*
@@ -104,6 +110,7 @@ export default function Sessions() {
 
   function clearSessionRefs() {
     newGymId.current.value = 0
+    newUserId.current.value = 0
     newSessionStartTime.current.value = ""
     newSessionEndTime.current.value = ""
     changeStates(0, 0, false)
@@ -112,8 +119,12 @@ export default function Sessions() {
   function getNewSession() {
     return {
       gymId: parseInt(newGymId.current.value),
+      userId: parseInt(newUserId.current.value),
       sessionStartTime: newSessionStartTime.current.value,
-      sessionEndTime: newSessionEndTime.current.value,
+      sessionEndTime:
+        newSessionEndTime.current.value === ""
+          ? "0000-00-00 00:00:00"
+          : newSessionEndTime.current.value,
     }
   }
 
@@ -130,12 +141,83 @@ export default function Sessions() {
     setAddingSession(newAddingSession)
   }
 
+  function climbText(session) {
+    const filteredClimbData = climbData.filter((climb) => {
+      return climb.sessionId === session.id
+    })
+
+    let climbs = 0
+    let attempts = 0
+    let sends = 0
+    filteredClimbData.forEach((climb) => {
+      climbs += 1
+      attempts += climb.attempts
+      sends += climb.sends
+    })
+
+    return (
+      <div className="rightColumn">
+        <div className="text">{climbs} Climbs</div>
+        <div className="text">{attempts} Attempts</div>
+        <div className="text">{sends} Sends</div>
+      </div>
+    )
+  }
+
   /*
    * Return value
    */
 
   return (
     <ul className="dataList outerList">
+      <div className="topButtons">
+        <button onClick={() => setReload(!reload)}>Refresh</button>
+        {!addingSession && (
+          <button onClick={() => changeStates(0, 0, true)}>
+            Add a Session
+          </button>
+        )}
+      </div>
+      {addingSession && (
+        <li className="item">
+          <form className="components">
+            <div className="fields">
+              <label>Gym ID:</label>
+              <select ref={newGymId}>
+                {gymData.map((gym) => {
+                  return getOptions(gym.city, gym.id)
+                })}
+              </select>
+              <label>User ID:</label>
+              <input type="number" ref={newUserId} defaultValue={1}></input>
+              <label>Start Time:</label>
+              <input
+                type="datetime-local"
+                ref={newSessionStartTime}
+                defaultValue={convertToEditDateTime(getCurrentDateTime())}
+              ></input>
+              <label>End Time:</label>
+              <input type="datetime-local" ref={newSessionEndTime}></input>
+            </div>
+            <div className="buttons">
+              <button
+                className="confirmButton"
+                type="button"
+                onClick={() => addSession()}
+              >
+                <img src={images.addIcon}></img>
+              </button>
+              <button
+                className="cancelButton"
+                type="button"
+                onClick={() => clearSessionRefs()}
+              >
+                <img src={images.cancelIcon}></img>
+              </button>
+            </div>
+          </form>
+        </li>
+      )}
       {sessionData.map((session) => {
         return (
           <div key={session.id}>
@@ -143,54 +225,70 @@ export default function Sessions() {
               <li className="item">
                 <div className="components">
                   <div
-                    className="data"
+                    className="leftColumn"
                     onClick={() => changeStates(session.id, 0, false)}
                   >
-                    <div className="icons">
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "aqua"}}
-                      >
-                        {session.id}
-                      </div>
-                      <div
-                        className="colourBar"
-                        style={{backgroundColor: "grey"}}
-                      >
-                        {session.gymId}
-                      </div>
+                    <div className="text">
+                      {new Date(session.sessionStartTime).toLocaleDateString()}
                     </div>
-                    <div className="date">
-                      {convertToViewDateTime(
+                    <div className="text">
+                      {
+                        gymData.find((gym) => {
+                          return gym.id === session.gymId
+                        })?.city
+                      }
+                    </div>
+                    <div className="text">
+                      {getTimeDifferenceString(
                         session.sessionStartTime,
                         session.sessionEndTime
                       )}
                     </div>
                   </div>
-                  <div className="buttons">
-                    <button onClick={() => changeStates(0, session.id, false)}>
-                      <img src={images.editIcon}></img>
-                    </button>
-                    <button onClick={() => deleteSession(session.id)}>
-                      <img src={images.deleteIcon}></img>
-                    </button>
-                  </div>
-                </div>{" "}
-                <Climbs
-                  sessionId={session.id}
-                  viewingSession={viewingSession}
-                ></Climbs>
+                  {climbText(session)}
+                  {viewingSession == session.id && (
+                    <div className="buttons">
+                      <button
+                        type="button"
+                        className="editButton"
+                        onClick={() => changeStates(0, session.id, false)}
+                      >
+                        <img src={images.editIcon}></img>
+                      </button>
+                      <button
+                        type="button"
+                        className="deleteButton"
+                        onClick={() => deleteSession(session.id)}
+                      >
+                        <img src={images.deleteIcon}></img>
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {viewingSession == session.id && (
+                  <Climbs
+                    sessionId={session.id}
+                    viewingSession={viewingSession}
+                    gymId={session.gymId}
+                  ></Climbs>
+                )}
               </li>
             )}
             {editingSession == session.id && (
               <li className="item">
                 <form className="components">
-                  <div className="data">
+                  <div className="fields">
                     <label>Gym ID:</label>
+                    <select ref={newGymId} defaultValue={session.gymId}>
+                      {gymData.map((gym) => {
+                        return getOptions(gym.city, gym.id)
+                      })}
+                    </select>
+                    <label>User ID:</label>
                     <input
                       type="number"
-                      ref={newGymId}
-                      defaultValue={session.gymId}
+                      ref={newUserId}
+                      defaultValue={session.userId}
                     ></input>
                     <label>Start Time:</label>
                     <input
@@ -212,12 +310,14 @@ export default function Sessions() {
                   <div className="buttons">
                     <button
                       type="button"
+                      className="confirmButton"
                       onClick={() => editSession(session.id)}
                     >
                       <img src={images.confirmIcon}></img>
                     </button>
                     <button
                       type="button"
+                      className="cancelButton"
                       onClick={() => changeStates(0, 0, false)}
                     >
                       <img src={images.cancelIcon}></img>
@@ -229,29 +329,6 @@ export default function Sessions() {
           </div>
         )
       })}
-      {addingSession && (
-        <li className="item">
-          <form className="components">
-            <div className="data">
-              <label>Gym ID:</label>
-              <input type="number" ref={newGymId}></input>
-              <label>Start Time:</label>
-              <input type="datetime-local" ref={newSessionStartTime}></input>
-              <label>End Time:</label>
-              <input type="datetime-local" ref={newSessionEndTime}></input>
-            </div>
-            <div className="buttons">
-              <button type="button" onClick={() => addSession()}>
-                <img src={images.addIcon}></img>
-              </button>
-              <button type="button" onClick={() => clearSessionRefs()}>
-                <img src={images.cancelIcon}></img>
-              </button>
-            </div>
-          </form>
-        </li>
-      )}
-      <button onClick={() => changeStates(0, 0, true)}>Add a Session</button>
     </ul>
   )
 }
