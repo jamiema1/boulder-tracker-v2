@@ -95,6 +95,7 @@ export default function Boulders(props) {
           "(locationId = " +
           viewingLocation +
           " AND setEndDate = '0000-00-00')",
+        orderby: [{id: "DESC"}],
       },
       setBoulderData
     )
@@ -141,7 +142,7 @@ export default function Boulders(props) {
 
   function getNewBoulder() {
     return {
-      locationId: locationId,
+      locationId: parseInt(locationId),
       rating: parseInt(newBoulderRating.current.value),
       colour: newBoulderColour.current.value,
       boulderType: newBoulderBoulderType.current.value,
@@ -342,7 +343,7 @@ export default function Boulders(props) {
                         ref={newBoulderRating}
                         defaultValue={boulder.rating}
                       >
-                        {Array.from(colours).map(([key, value]) => {
+                        {Array.from(ratings).map(([key, value]) => {
                           return getOptions(key, value)
                         })}
                       </select>

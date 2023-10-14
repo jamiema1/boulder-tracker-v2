@@ -149,7 +149,7 @@ export default function Climbs(props) {
   function getNewClimb() {
     return {
       boulderId: parseInt(newBoulderId.current.value),
-      sessionId: sessionId,
+      sessionId: parseInt(sessionId),
       attempts: parseInt(newAttempts.current.value),
       sends: parseInt(newSends.current.value),
       climbStartTime: newClimbStartTime.current.value,

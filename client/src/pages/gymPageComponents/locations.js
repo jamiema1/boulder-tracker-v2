@@ -95,7 +95,7 @@ export default function Locations(props) {
 
   function getNewLocation() {
     return {
-      gymId: gymId,
+      gymId: parseInt(gymId),
       name: newLocationName.current.value,
     }
   }

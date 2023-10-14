@@ -43,7 +43,7 @@ export function getQuery(endpoint, params, setData) {
 export function add(endpoint, newData, data, setData, clearRefs) {
   Axios.post(endpoint, newData)
     .then((res) => {
-      setData([...data, {id: res.data.data[0].id, ...newData}])
+      setData([{id: res.data.data[0].id, ...newData}, ...data])
       clearRefs()
     })
     .catch((error) => {
