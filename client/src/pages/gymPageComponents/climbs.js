@@ -13,6 +13,7 @@ export default function Climbs(props) {
       climbEndpoint,
       {
         where: "boulderId = " + viewingBoulder,
+        orderby: [{id: "DESC"}],
       },
       setClimbData
     )

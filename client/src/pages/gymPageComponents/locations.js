@@ -121,6 +121,26 @@ export default function Locations(props) {
   return (
     <ul className="dataList">
       {viewingGym === gymId && <div className="sectionTitle">Locations</div>}
+      {viewingGym === gymId && !addingLocation && (
+        <button onClick={() => changeStates(0, 0, true)}>Add a Location</button>
+      )}
+      {addingLocation && (
+        <li className="item">
+          <form className="components">
+            <div className="data">
+              {getInput("Name", "text", newLocationName, null)}
+            </div>
+            <div className="buttons">
+              <button type="button" onClick={() => addLocation()}>
+                <img src={images.addIcon}></img>
+              </button>
+              <button type="button" onClick={() => clearLocationRefs()}>
+                <img src={images.cancelIcon}></img>
+              </button>
+            </div>
+          </form>
+        </li>
+      )}
       {locationData.map((location) => {
         return (
           <div key={location.id}>
@@ -152,10 +172,12 @@ export default function Locations(props) {
                     </div>
                   )}
                 </div>
-                <Boulders
-                  locationId={location.id}
-                  viewingLocation={viewingLocation}
-                ></Boulders>
+                {viewingLocation == location.id && (
+                  <Boulders
+                    locationId={location.id}
+                    viewingLocation={viewingLocation}
+                  ></Boulders>
+                )}
               </li>
             )}
             {editingLocation == location.id && (
@@ -184,26 +206,6 @@ export default function Locations(props) {
           </div>
         )
       })}
-      {addingLocation && (
-        <li className="item">
-          <form className="components">
-            <div className="data">
-              {getInput("Name", "text", newLocationName, null)}
-            </div>
-            <div className="buttons">
-              <button type="button" onClick={() => addLocation()}>
-                <img src={images.addIcon}></img>
-              </button>
-              <button type="button" onClick={() => clearLocationRefs()}>
-                <img src={images.cancelIcon}></img>
-              </button>
-            </div>
-          </form>
-        </li>
-      )}
-      {viewingGym === gymId && !addingLocation && (
-        <button onClick={() => changeStates(0, 0, true)}>Add a Location</button>
-      )}
     </ul>
   )
 }

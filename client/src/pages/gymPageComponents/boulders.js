@@ -219,6 +219,57 @@ export default function Boulders(props) {
       {viewingLocation === locationId && (
         <div className="sectionTitle">Boulders</div>
       )}
+      {viewingLocation === locationId && !addingBoulder && (
+        <button onClick={() => changeStates(0, 0, true)}>Add a Boulder</button>
+      )}
+      {addingBoulder && (
+        <li className="item">
+          <form className="components">
+            <div className="data">
+              <div className="field">
+                <label>Rating:</label>
+                <select ref={newBoulderRating}>
+                  {Array.from(ratings).map(([key, value]) => {
+                    return getOptions(key, value)
+                  })}
+                </select>
+              </div>
+              <div className="field">
+                <label>Colour:</label>
+                <select ref={newBoulderColour}>
+                  {Array.from(colours).map(([key, value]) => {
+                    return getOptions(key, value)
+                  })}
+                </select>
+              </div>
+              <div className="field">
+                <label>Boulder Type:</label>
+                <select ref={newBoulderBoulderType}>
+                  {Array.from(boulderType).map(([key, value]) => {
+                    return getOptions(key, value)
+                  })}
+                </select>
+              </div>
+              {getInput("Description", "text", newBoulderDescription, null)}
+              {getInput(
+                "Set Start Date",
+                "date",
+                newBoulderSetStartDate,
+                getCurrentDate()
+              )}
+              {getInput("Set End Date", "date", newBoulderSetEndDate, null)}
+            </div>
+            <div className="buttons">
+              <button type="button" onClick={() => addBoulder()}>
+                <img src={images.addIcon}></img>
+              </button>
+              <button type="button" onClick={() => clearBoulderRefs()}>
+                <img src={images.cancelIcon}></img>
+              </button>
+            </div>
+          </form>
+        </li>
+      )}
       {boulderData.map((boulder) => {
         return (
           <div key={boulder.id}>
@@ -230,6 +281,12 @@ export default function Boulders(props) {
                     style={{backgroundColor: boulder.colour}}
                   >
                     {boulder.id}
+                  </div>
+                  <div className="hex">
+                    <img
+                      className="hexImage"
+                      src={getHexImage(boulder.rating)}
+                    ></img>
                   </div>
                   <div
                     className="data"
@@ -244,12 +301,6 @@ export default function Boulders(props) {
                         boulder.setEndDate
                       )}
                     </div>
-                  </div>
-                  <div className="hex">
-                    <img
-                      className="hexImage"
-                      src={getHexImage(boulder.rating)}
-                    ></img>
                   </div>
                   {viewingBoulder == boulder.id && (
                     <div className="buttons">
@@ -273,10 +324,12 @@ export default function Boulders(props) {
                     </div>
                   )}
                 </div>
-                <Climbs
-                  boulderId={boulder.id}
-                  viewingBoulder={viewingBoulder}
-                ></Climbs>
+                {viewingBoulder == boulder.id && (
+                  <Climbs
+                    boulderId={boulder.id}
+                    viewingBoulder={viewingBoulder}
+                  ></Climbs>
+                )}
               </li>
             )}
             {editingBoulder == boulder.id && (
@@ -355,57 +408,6 @@ export default function Boulders(props) {
           </div>
         )
       })}
-      {addingBoulder && (
-        <li className="item">
-          <form className="components">
-            <div className="data">
-              <div className="field">
-                <label>Rating:</label>
-                <select ref={newBoulderRating}>
-                  {Array.from(ratings).map(([key, value]) => {
-                    return getOptions(key, value)
-                  })}
-                </select>
-              </div>
-              <div className="field">
-                <label>Colour:</label>
-                <select ref={newBoulderColour}>
-                  {Array.from(colours).map(([key, value]) => {
-                    return getOptions(key, value)
-                  })}
-                </select>
-              </div>
-              <div className="field">
-                <label>Boulder Type:</label>
-                <select ref={newBoulderBoulderType}>
-                  {Array.from(boulderType).map(([key, value]) => {
-                    return getOptions(key, value)
-                  })}
-                </select>
-              </div>
-              {getInput("Description", "text", newBoulderDescription, null)}
-              {getInput(
-                "Set Start Date",
-                "date",
-                newBoulderSetStartDate,
-                getCurrentDate()
-              )}
-              {getInput("Set End Date", "date", newBoulderSetEndDate, null)}
-            </div>
-            <div className="buttons">
-              <button type="button" onClick={() => addBoulder()}>
-                <img src={images.addIcon}></img>
-              </button>
-              <button type="button" onClick={() => clearBoulderRefs()}>
-                <img src={images.cancelIcon}></img>
-              </button>
-            </div>
-          </form>
-        </li>
-      )}
-      {viewingLocation === locationId && !addingBoulder && (
-        <button onClick={() => changeStates(0, 0, true)}>Add a Boulder</button>
-      )}
     </ul>
   )
 }

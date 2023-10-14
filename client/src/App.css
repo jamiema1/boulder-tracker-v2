@@ -1,7 +1,7 @@
 html {
   font-family: Arial, Helvetica, sans-serif;
   /* font-family: "Courier New", Courier, monospace; */
-  font-size: small;
+  font-size: 16px;
   background-color: rgb(230, 230, 230);
   /* border: 2px solid black; */
 }
@@ -36,11 +36,11 @@ html {
   margin-left: var(--margin);
   margin-right: var(--margin);
 
-  font-size: x-large;
+  font-size: 36px;
 }
 
 @media (max-width: 600px) {
   .pages > * {
-    font-size: large;
+    font-size: 24px;
   }
 }

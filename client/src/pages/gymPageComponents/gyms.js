@@ -88,7 +88,30 @@ export default function Gyms() {
 
   return (
     <ul className="dataList outerList">
-      <div className="pageTitle">Gyms</div>
+      {!addingGym && (
+        <button className="topButtons" onClick={() => changeStates(0, 0, true)}>
+          Add a Gym
+        </button>
+      )}
+      {addingGym && (
+        <li className="item">
+          <form className="components">
+            <div className="data">
+              {getInput("Name", "text", newGymName, null)}
+              {getInput("Address", "text", newGymAddress, null)}
+              {getInput("City", "text", newGymCity, null)}
+            </div>
+            <div className="buttons">
+              <button type="button" onClick={() => addGym()}>
+                <img src={images.addIcon}></img>
+              </button>
+              <button type="button" onClick={() => clearGymRefs()}>
+                <img src={images.cancelIcon}></img>
+              </button>
+            </div>
+          </form>
+        </li>
+      )}
       {gymData.map((gym) => {
         return (
           <div key={gym.id}>
@@ -121,7 +144,9 @@ export default function Gyms() {
                     </div>
                   )}
                 </div>
-                <Locations gymId={gym.id} viewingGym={viewingGym}></Locations>
+                {viewingGym == gym.id && (
+                  <Locations gymId={gym.id} viewingGym={viewingGym}></Locations>
+                )}
               </li>
             )}
             {editingGym == gym.id && (
@@ -149,28 +174,6 @@ export default function Gyms() {
           </div>
         )
       })}
-      {addingGym && (
-        <li className="item">
-          <form className="components">
-            <div className="data">
-              {getInput("Name", "text", newGymName, null)}
-              {getInput("Address", "text", newGymAddress, null)}
-              {getInput("City", "text", newGymCity, null)}
-            </div>
-            <div className="buttons">
-              <button type="button" onClick={() => addGym()}>
-                <img src={images.addIcon}></img>
-              </button>
-              <button type="button" onClick={() => clearGymRefs()}>
-                <img src={images.cancelIcon}></img>
-              </button>
-            </div>
-          </form>
-        </li>
-      )}
-      {!addingGym && (
-        <button onClick={() => changeStates(0, 0, true)}>Add a Gym</button>
-      )}
     </ul>
   )
 }
