@@ -1,6 +1,6 @@
 # boulder-tracker-v2
 
-This is the 2nd version of my full stack web development application. The first version can be found [here](https://github.com/jamiema1/boulder-tracker-v1). While the project is still far from being complete, you can view the current production version [here](https://jamiema1.github.io/boulder-tracker-v2/). Please note that features involving manipulating the database (add, remove, update) have been temporarily disabled for the production version. If you would like to see a demonstration of those features, please notify me and I would be more than happy to show that to you!
+This is the 2nd version of my full stack web development application. The first version can be found [here](https://github.com/jamiema1/boulder-tracker-v1). While the project is still far from being complete, you can view the current production version [here](). Please note that features involving manipulating the database (add, remove, update) have been temporarily disabled for the production version. If you would like to see a demonstration of those features, please notify me and I would be more than happy to show that to you!
 
 ### To create the project, I used . . .
 - Express.js framework along with MySQL to manage the backend
