@@ -2,7 +2,6 @@ import React, {useEffect, useState, useRef} from "react"
 import Boulders from "./boulders"
 
 import images from "../../images/images.js"
-import {getInput} from "../helpers.js"
 import {
   getQuery,
   add,
@@ -10,6 +9,8 @@ import {
   remove,
   locationEndpoint,
 } from "../../api/endpoints.js"
+
+const locationCache = {}
 
 export default function Locations(props) {
   /*
@@ -33,17 +34,14 @@ export default function Locations(props) {
   const newLocationName = useRef("")
 
   const gymId = props.gymId
-  let viewingGym = props.viewingGym
 
   useEffect(() => {
-    setViewingLocation(0)
-    if (gymId !== viewingGym) {
-      setLocationData([])
-      changeStates(0, 0, false)
-      return
+    if (locationCache[gymId]) {
+      setLocationData(locationCache[gymId])
+    } else {
+      getAllLocations()
     }
-    getAllLocations()
-  }, [viewingGym])
+  }, [])
 
   /*
    * APIs
@@ -52,8 +50,10 @@ export default function Locations(props) {
   function getAllLocations() {
     getQuery(
       locationEndpoint,
+      locationCache,
+      gymId,
       {
-        where: "gymId = " + viewingGym,
+        where: "gymId = " + gymId,
       },
       setLocationData
     )
@@ -62,6 +62,8 @@ export default function Locations(props) {
   function addLocation() {
     add(
       locationEndpoint,
+      locationCache,
+      gymId,
       getNewLocation(),
       locationData,
       setLocationData,
@@ -72,6 +74,8 @@ export default function Locations(props) {
   function editLocation(locationId) {
     edit(
       locationEndpoint,
+      locationCache,
+      gymId,
       locationId,
       getNewLocation(),
       locationData,
@@ -81,7 +85,14 @@ export default function Locations(props) {
   }
 
   function deleteLocation(locationId) {
-    remove(locationEndpoint, locationId, locationData, setLocationData)
+    remove(
+      locationEndpoint,
+      locationCache,
+      gymId,
+      locationId,
+      locationData,
+      setLocationData
+    )
   }
 
   /*
@@ -120,15 +131,16 @@ export default function Locations(props) {
 
   return (
     <ul className="dataList">
-      {viewingGym === gymId && <div className="sectionTitle">Locations</div>}
-      {viewingGym === gymId && !addingLocation && (
+      {<div className="sectionTitle">Locations</div>}
+      {!addingLocation && (
         <button onClick={() => changeStates(0, 0, true)}>Add a Location</button>
       )}
       {addingLocation && (
         <li className="item">
           <form className="components">
-            <div className="data">
-              {getInput("Name", "text", newLocationName, null)}
+            <div className="fields">
+              <label>Name:</label>
+              <input type="text" ref={newLocationName}></input>
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addLocation()}>
@@ -183,8 +195,13 @@ export default function Locations(props) {
             {editingLocation == location.id && (
               <li className="item">
                 <form className="components">
-                  <div className="data">
-                    {getInput("Name", "text", newLocationName, location.name)}
+                  <div className="fields">
+                    <label>Name:</label>
+                    <input
+                      type="text"
+                      ref={newLocationName}
+                      defaultValue={location.name}
+                    ></input>
                   </div>
                   <div className="buttons">
                     <button

@@ -10,40 +10,52 @@ export const climbEndpoint = "/climb"
  * APIs
  */
 
-export function get(endpoint, id, setData) {
+export function get(endpoint, cache, cacheKey, id, setData) {
   Axios.get(endpoint + "/" + id)
     .then((res) => {
       setData(res.data.data)
+      cache[cacheKey] = res.data.data
     })
     .catch((error) => {
       handleError(error)
     })
 }
 
-export function getAll(endpoint, setData) {
+export function getAll(endpoint, cache, cacheKey, setData) {
   Axios.get(endpoint)
     .then((res) => {
       setData(res.data.data)
+      cache[cacheKey] = res.data.data
     })
     .catch((error) => {
       handleError(error)
     })
 }
 
-export function getQuery(endpoint, params, setData) {
+export function getQuery(endpoint, cache, cacheKey, params, setData) {
   Axios.get(endpoint + "/query/" + encodeURIComponent(JSON.stringify(params)))
     .then((res) => {
       setData(res.data.data)
+      cache[cacheKey] = res.data.data
     })
     .catch((err) => {
       alert(err.response.data.error)
     })
 }
 
-export function add(endpoint, newData, data, setData, clearRefs) {
+export function add(
+  endpoint,
+  cache,
+  cacheKey,
+  newData,
+  data,
+  setData,
+  clearRefs
+) {
   Axios.post(endpoint, newData)
     .then((res) => {
       setData([{id: res.data.data[0].id, ...newData}, ...data])
+      cache[cacheKey] = [{id: res.data.data[0].id, ...newData}, ...data]
       clearRefs()
     })
     .catch((error) => {
@@ -51,7 +63,16 @@ export function add(endpoint, newData, data, setData, clearRefs) {
     })
 }
 
-export function edit(endpoint, id, newData, data, setData, clearRefs) {
+export function edit(
+  endpoint,
+  cache,
+  cacheKey,
+  id,
+  newData,
+  data,
+  setData,
+  clearRefs
+) {
   Axios.put(endpoint + "/" + id, newData)
     .then((res) => {
       clearRefs()
@@ -65,13 +86,14 @@ export function edit(endpoint, id, newData, data, setData, clearRefs) {
         return item.id === id ? newData : item
       })
       setData(newArray)
+      cache[cacheKey] = newArray
     })
     .catch((error) => {
       handleError(error)
     })
 }
 
-export function remove(endpoint, id, data, setData) {
+export function remove(endpoint, cache, cacheKey, id, data, setData) {
   Axios.delete(endpoint + "/" + id)
     // eslint-disable-next-line no-unused-vars
     .then((res) => {
@@ -79,6 +101,7 @@ export function remove(endpoint, id, data, setData) {
         return item.id !== id
       })
       setData(newArray)
+      cache[cacheKey] = newArray
     })
     .catch((error) => {
       handleError(error)

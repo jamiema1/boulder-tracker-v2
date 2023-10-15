@@ -2,8 +2,9 @@ import React, {useEffect, useRef, useState} from "react"
 import Locations from "./locations"
 
 import images from "../../images/images.js"
-import {getInput} from "../helpers.js"
 import {getAll, add, edit, remove, gymEndpoint} from "../../api/endpoints.js"
+
+const gymCache = {}
 
 export default function Gyms() {
   /*
@@ -31,7 +32,11 @@ export default function Gyms() {
   const newGymCity = useRef("")
 
   useEffect(() => {
-    getAllGyms()
+    if (gymCache[0]) {
+      setGymData(gymCache[0])
+    } else {
+      getAllGyms()
+    }
   }, [])
 
   /*
@@ -39,19 +44,36 @@ export default function Gyms() {
    */
 
   function getAllGyms() {
-    getAll(gymEndpoint, setGymData)
+    getAll(gymEndpoint, gymCache, 0, setGymData)
   }
 
   function addGym() {
-    add(gymEndpoint, getNewGym(), gymData, setGymData, clearGymRefs)
+    add(
+      gymEndpoint,
+      gymCache,
+      0,
+      getNewGym(),
+      gymData,
+      setGymData,
+      clearGymRefs
+    )
   }
 
   function editGym(gymId) {
-    edit(gymEndpoint, gymId, getNewGym(), gymData, setGymData, clearGymRefs)
+    edit(
+      gymEndpoint,
+      gymCache,
+      0,
+      gymId,
+      getNewGym(),
+      gymData,
+      setGymData,
+      clearGymRefs
+    )
   }
 
   function deleteGym(gymId) {
-    remove(gymEndpoint, gymId, gymData, setGymData)
+    remove(gymEndpoint, gymCache, 0, gymId, gymData, setGymData)
   }
 
   /*
@@ -96,10 +118,13 @@ export default function Gyms() {
       {addingGym && (
         <li className="item">
           <form className="components">
-            <div className="data">
-              {getInput("Name", "text", newGymName, null)}
-              {getInput("Address", "text", newGymAddress, null)}
-              {getInput("City", "text", newGymCity, null)}
+            <div className="fields">
+              <label>Name:</label>
+              <input type="text" ref={newGymName}></input>
+              <label>Address:</label>
+              <input type="text" ref={newGymAddress}></input>
+              <label>City:</label>
+              <input type="text" ref={newGymCity}></input>
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addGym()}>
@@ -144,18 +169,31 @@ export default function Gyms() {
                     </div>
                   )}
                 </div>
-                {viewingGym == gym.id && (
-                  <Locations gymId={gym.id} viewingGym={viewingGym}></Locations>
-                )}
+                {viewingGym == gym.id && <Locations gymId={gym.id}></Locations>}
               </li>
             )}
             {editingGym == gym.id && (
               <li className="item">
                 <form className="components">
-                  <div className="data">
-                    {getInput("Name", "text", newGymName, gym.name)}
-                    {getInput("Address", "text", newGymAddress, gym.address)}
-                    {getInput("City", "text", newGymCity, gym.city)}
+                  <div className="fields">
+                    <label>Name:</label>
+                    <input
+                      type="text"
+                      ref={newGymName}
+                      defaultValue={gym.name}
+                    ></input>
+                    <label>Address:</label>
+                    <input
+                      type="text"
+                      ref={newGymAddress}
+                      defaultValue={gym.address}
+                    ></input>
+                    <label>City:</label>
+                    <input
+                      type="text"
+                      ref={newGymCity}
+                      defaultValue={gym.city}
+                    ></input>
                   </div>
                   <div className="buttons">
                     <button type="button" onClick={() => editGym(gym.id)}>

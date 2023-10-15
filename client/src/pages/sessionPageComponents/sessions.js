@@ -21,6 +21,10 @@ import {
   getQuery,
 } from "../../api/endpoints.js"
 
+const sessionCache = {}
+const gymCache = {}
+const climbCache = {}
+
 export default function Sessions() {
   /*
    * React Hooks:
@@ -45,35 +49,48 @@ export default function Sessions() {
   const [editingSession, setEditingSession] = useState(0)
   const [addingSession, setAddingSession] = useState(false)
 
-  // TODO: interim solution
-  const [reload, setReload] = useState(false)
-
   const newGymId = useRef(0)
   const newUserId = useRef(0)
   const newSessionStartTime = useRef("")
   const newSessionEndTime = useRef("")
 
   useEffect(() => {
-    getAllSessions()
-    getAllGyms()
-    getAllClimbs()
-  }, [reload])
+    if (sessionCache[0]) {
+      setSessionData(sessionCache[0])
+    } else {
+      getAllSessions()
+    }
+
+    if (gymCache[0]) {
+      setGymData(gymCache[0])
+    } else {
+      getAllGyms()
+    }
+
+    if (climbCache[0]) {
+      setClimbData(climbCache[0])
+    } else {
+      getAllClimbs()
+    }
+  }, [])
 
   /*
    * APIs
    */
 
   function getAllGyms() {
-    getAll(gymEndpoint, setGymData)
+    getAll(gymEndpoint, gymCache, 0, setGymData)
   }
 
   function getAllClimbs() {
-    getAll(climbEndpoint, setClimbData)
+    getAll(climbEndpoint, climbCache, 0, setClimbData)
   }
 
   function getAllSessions() {
     getQuery(
       sessionEndpoint,
+      sessionCache,
+      0,
       {where: "", orderby: [{id: "DESC"}]},
       setSessionData
     )
@@ -82,6 +99,8 @@ export default function Sessions() {
   function addSession() {
     add(
       sessionEndpoint,
+      sessionCache,
+      0,
       getNewSession(),
       sessionData,
       setSessionData,
@@ -92,6 +111,8 @@ export default function Sessions() {
   function editSession(sessionId) {
     edit(
       sessionEndpoint,
+      sessionCache,
+      0,
       sessionId,
       getNewSession(),
       sessionData,
@@ -101,7 +122,14 @@ export default function Sessions() {
   }
 
   function deleteSession(sessionId) {
-    remove(sessionEndpoint, sessionId, sessionData, setSessionData)
+    remove(
+      sessionEndpoint,
+      sessionCache,
+      0,
+      sessionId,
+      sessionData,
+      setSessionData
+    )
   }
 
   /*
@@ -170,14 +198,11 @@ export default function Sessions() {
 
   return (
     <ul className="dataList outerList">
-      <div className="topButtons">
-        <button onClick={() => setReload(!reload)}>Refresh</button>
-        {!addingSession && (
-          <button onClick={() => changeStates(0, 0, true)}>
-            Add a Session
-          </button>
-        )}
-      </div>
+      {!addingSession && (
+        <button className="topButtons" onClick={() => changeStates(0, 0, true)}>
+          Add a Session
+        </button>
+      )}
       {addingSession && (
         <li className="item">
           <form className="components">
@@ -268,8 +293,8 @@ export default function Sessions() {
                 {viewingSession == session.id && (
                   <Climbs
                     sessionId={session.id}
-                    viewingSession={viewingSession}
                     gymId={session.gymId}
+                    gymData={gymData}
                   ></Climbs>
                 )}
               </li>

@@ -17,6 +17,10 @@ import {
   locationEndpoint,
 } from "../../api/endpoints.js"
 
+const locationCache = {}
+const boulderCache = {}
+const climbCache = {}
+
 export default function Climbs(props) {
   /*
    * React Hooks:
@@ -49,23 +53,28 @@ export default function Climbs(props) {
   const newClimbEndTime = useRef("")
 
   const sessionId = props.sessionId
-  let viewingSession = props.viewingSession
   const gymId = props.gymId
 
   useEffect(() => {
-    setViewingClimb(0)
-    if (sessionId !== viewingSession) {
-      setClimbData([])
-      setSelectedBoulderData([])
-      setBoulderData([])
-      setLocationData([])
-      changeStates(0, 0, false)
-      return
+    console.log(props.gymData)
+    if (climbCache[sessionId]) {
+      setClimbData(climbCache[sessionId])
+    } else {
+      getAllClimbs()
     }
-    getAllClimbs()
-    getAllBoulders()
-    getLocations()
-  }, [viewingSession])
+
+    if (locationCache[gymId]) {
+      setLocationData(locationCache[gymId])
+    } else {
+      getLocations()
+    }
+
+    if (boulderCache[0]) {
+      setBoulderData(boulderCache[0])
+    } else {
+      getAllBoulders()
+    }
+  }, [])
 
   /*
    * APIs
@@ -74,6 +83,8 @@ export default function Climbs(props) {
   function getLocations() {
     getQuery(
       locationEndpoint,
+      locationCache,
+      gymId,
       {
         where: "gymId = " + gymId,
       },
@@ -85,6 +96,8 @@ export default function Climbs(props) {
     setSelectedBoulderData([])
     getQuery(
       boulderEndpoint,
+      boulderCache,
+      locationId,
       {
         where:
           "(locationId = " + locationId + " AND setEndDate = '0000-00-00')",
@@ -96,6 +109,8 @@ export default function Climbs(props) {
   function getAllBoulders() {
     getQuery(
       boulderEndpoint,
+      boulderCache,
+      0,
       {
         where: "setEndDate = '0000-00-00'",
       },
@@ -106,8 +121,10 @@ export default function Climbs(props) {
   function getAllClimbs() {
     getQuery(
       climbEndpoint,
+      climbCache,
+      sessionId,
       {
-        where: "sessionId = " + viewingSession,
+        where: "sessionId = " + sessionId,
         orderby: [{id: "DESC"}],
       },
       setClimbData
@@ -115,12 +132,22 @@ export default function Climbs(props) {
   }
 
   function addClimb() {
-    add(climbEndpoint, getNewClimb(), climbData, setClimbData, clearClimbRefs)
+    add(
+      climbEndpoint,
+      climbCache,
+      sessionId,
+      getNewClimb(),
+      climbData,
+      setClimbData,
+      clearClimbRefs
+    )
   }
 
   function editClimb(climbId) {
     edit(
       climbEndpoint,
+      climbCache,
+      sessionId,
       climbId,
       getNewClimb(),
       climbData,
@@ -130,7 +157,14 @@ export default function Climbs(props) {
   }
 
   function deleteClimb(climbId) {
-    remove(climbEndpoint, climbId, climbData, setClimbData)
+    remove(
+      climbEndpoint,
+      climbCache,
+      sessionId,
+      climbId,
+      climbData,
+      setClimbData
+    )
   }
 
   /*
@@ -240,7 +274,7 @@ export default function Climbs(props) {
 
   return (
     <ul className="dataList">
-      {viewingSession === sessionId && !addingClimb && (
+      {!addingClimb && (
         <button
           className="topButtons"
           onClick={() => {
