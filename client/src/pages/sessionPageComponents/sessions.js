@@ -2,26 +2,23 @@
 import React, {useEffect, useRef, useState} from "react"
 import Climbs from "./climbs"
 import {
-  // convertToViewDateTime,
   convertToEditDateTime,
-  getOptions,
   getCurrentDateTime,
+  getOptions,
   getTimeDifferenceString,
 } from "../helpers.js"
 import images from "../../images/images.js"
 import {
-  getAll,
-  // get,
+  get,
   add,
   edit,
   remove,
-  gymEndpoint,
   sessionEndpoint,
+  gymEndpoint,
   climbEndpoint,
-  getQuery,
 } from "../../api/endpoints.js"
 
-export default function Sessions() {
+export default function Sessions(props) {
   /*
    * React Hooks:
    *
@@ -39,14 +36,10 @@ export default function Sessions() {
 
   const [sessionData, setSessionData] = useState([])
   const [gymData, setGymData] = useState([])
-  // TODO: does not update when a new climb is added
   const [climbData, setClimbData] = useState([])
   const [viewingSession, setViewingSession] = useState(0)
   const [editingSession, setEditingSession] = useState(0)
   const [addingSession, setAddingSession] = useState(false)
-
-  // TODO: interim solution
-  const [reload, setReload] = useState(false)
 
   const newGymId = useRef(0)
   const newUserId = useRef(0)
@@ -54,27 +47,33 @@ export default function Sessions() {
   const newSessionEndTime = useRef("")
 
   useEffect(() => {
-    getAllSessions()
-    getAllGyms()
-    getAllClimbs()
-  }, [reload])
+    getSessions()
+    getGyms()
+    getClimbs()
+  }, [props.gymDataCentral, props.sessionDataCentral, props.climbDataCentral])
 
   /*
    * APIs
    */
 
-  function getAllGyms() {
-    getAll(gymEndpoint, setGymData)
+  function getGyms() {
+    get(gymEndpoint, props.gymDataCentral, props.setGymDataCentral, setGymData)
   }
 
-  function getAllClimbs() {
-    getAll(climbEndpoint, setClimbData)
+  function getClimbs() {
+    get(
+      climbEndpoint,
+      props.climbDataCentral,
+      props.setClimbDataCentral,
+      setClimbData
+    )
   }
 
-  function getAllSessions() {
-    getQuery(
+  function getSessions() {
+    get(
       sessionEndpoint,
-      {where: "", orderby: [{id: "DESC"}]},
+      props.sessionDataCentral,
+      props.setSessionDataCentral,
       setSessionData
     )
   }
@@ -82,8 +81,9 @@ export default function Sessions() {
   function addSession() {
     add(
       sessionEndpoint,
+      props.sessionDataCentral,
+      props.setSessionDataCentral,
       getNewSession(),
-      sessionData,
       setSessionData,
       clearSessionRefs
     )
@@ -93,15 +93,22 @@ export default function Sessions() {
     edit(
       sessionEndpoint,
       sessionId,
+      props.sessionDataCentral,
+      props.setSessionDataCentral,
       getNewSession(),
-      sessionData,
       setSessionData,
       clearSessionRefs
     )
   }
 
   function deleteSession(sessionId) {
-    remove(sessionEndpoint, sessionId, sessionData, setSessionData)
+    remove(
+      sessionEndpoint,
+      sessionId,
+      props.sessionDataCentral,
+      props.setSessionDataCentral,
+      setSessionData
+    )
   }
 
   /*
@@ -143,7 +150,7 @@ export default function Sessions() {
 
   function climbText(session) {
     const filteredClimbData = climbData.filter((climb) => {
-      return climb.sessionId === session.id
+      return parseInt(climb.sessionId) === parseInt(session.id)
     })
 
     let climbs = 0
@@ -170,14 +177,11 @@ export default function Sessions() {
 
   return (
     <ul className="dataList outerList">
-      <div className="topButtons">
-        <button onClick={() => setReload(!reload)}>Refresh</button>
-        {!addingSession && (
-          <button onClick={() => changeStates(0, 0, true)}>
-            Add a Session
-          </button>
-        )}
-      </div>
+      {!addingSession && (
+        <button className="topButtons" onClick={() => changeStates(0, 0, true)}>
+          Add a Session
+        </button>
+      )}
       {addingSession && (
         <li className="item">
           <form className="components">
@@ -218,7 +222,7 @@ export default function Sessions() {
           </form>
         </li>
       )}
-      {sessionData.map((session) => {
+      {[...sessionData].reverse().map((session) => {
         return (
           <div key={session.id}>
             {editingSession !== session.id && (
@@ -234,7 +238,7 @@ export default function Sessions() {
                     <div className="text">
                       {
                         gymData.find((gym) => {
-                          return gym.id === session.gymId
+                          return parseInt(gym.id) === parseInt(session.gymId)
                         })?.city
                       }
                     </div>
@@ -268,8 +272,15 @@ export default function Sessions() {
                 {viewingSession == session.id && (
                   <Climbs
                     sessionId={session.id}
-                    viewingSession={viewingSession}
                     gymId={session.gymId}
+                    gymDataCentral={props.gymDataCentral}
+                    setGymDataCentral={props.setGymDataCentral}
+                    locationDataCentral={props.locationDataCentral}
+                    setLocationDataCentral={props.setLocationDataCentral}
+                    boulderDataCentral={props.boulderDataCentral}
+                    setBoulderDataCentral={props.setBoulderDataCentral}
+                    climbDataCentral={props.climbDataCentral}
+                    setClimbDataCentral={props.setClimbDataCentral}
                   ></Climbs>
                 )}
               </li>

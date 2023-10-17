@@ -8,15 +8,8 @@ import {
   convertToViewDate,
   convertToEditDate,
   getOptions,
-  getInput,
 } from "../helpers.js"
-import {
-  getQuery,
-  add,
-  edit,
-  remove,
-  boulderEndpoint,
-} from "../../api/endpoints.js"
+import {get, add, edit, remove, boulderEndpoint} from "../../api/endpoints.js"
 
 export default function Boulders(props) {
   /*
@@ -33,6 +26,7 @@ export default function Boulders(props) {
    */
 
   const [boulderData, setBoulderData] = useState([])
+  const [allBoulderData, setAllBoulderData] = useState([])
   const [viewingBoulder, setViewingBoulder] = useState(0)
   const [editingBoulder, setEditingBoulder] = useState(0)
   const [addingBoulder, setAddingBoulder] = useState(false)
@@ -43,9 +37,6 @@ export default function Boulders(props) {
   const newBoulderDescription = useRef("")
   const newBoulderSetStartDate = useRef("")
   const newBoulderSetEndDate = useRef("")
-
-  const locationId = props.locationId
-  const viewingLocation = props.viewingLocation
 
   const ratings = new Map([
     ["Unrated", -1],
@@ -65,6 +56,7 @@ export default function Boulders(props) {
     ["Pink", "Pink"],
     ["Purple", "Purple"],
     ["Red", "Red"],
+    ["White", "White"],
     ["Yellow", "Yellow"],
   ])
 
@@ -74,39 +66,37 @@ export default function Boulders(props) {
   ])
 
   useEffect(() => {
-    setViewingBoulder(0)
-    if (locationId !== viewingLocation) {
-      setBoulderData([])
-      changeStates(0, 0, false)
-      return
-    }
     getAllBoulders()
-  }, [viewingLocation])
+  }, [props.boulderDataCentral])
+
+  useEffect(() => {
+    setBoulderData(
+      allBoulderData.filter(
+        (boulder) => parseInt(boulder.locationId) === parseInt(props.locationId)
+      )
+    )
+  }, [allBoulderData])
 
   /*
    * APIs
    */
 
   function getAllBoulders() {
-    getQuery(
+    get(
       boulderEndpoint,
-      {
-        where:
-          "(locationId = " +
-          viewingLocation +
-          " AND setEndDate = '0000-00-00')",
-        orderby: [{id: "DESC"}],
-      },
-      setBoulderData
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
+      setAllBoulderData
     )
   }
 
   function addBoulder() {
     add(
       boulderEndpoint,
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
       getNewBoulder(),
-      boulderData,
-      setBoulderData,
+      setAllBoulderData,
       clearBoulderRefs
     )
   }
@@ -115,15 +105,22 @@ export default function Boulders(props) {
     edit(
       boulderEndpoint,
       boulderId,
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
       getNewBoulder(),
-      boulderData,
-      setBoulderData,
+      setAllBoulderData,
       clearBoulderRefs
     )
   }
 
   function deleteBoulder(boulderId) {
-    remove(boulderEndpoint, boulderId, boulderData, setBoulderData)
+    remove(
+      boulderEndpoint,
+      boulderId,
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
+      setAllBoulderData
+    )
   }
 
   /*
@@ -142,7 +139,7 @@ export default function Boulders(props) {
 
   function getNewBoulder() {
     return {
-      locationId: parseInt(locationId),
+      locationId: parseInt(props.locationId),
       rating: parseInt(newBoulderRating.current.value),
       colour: newBoulderColour.current.value,
       boulderType: newBoulderBoulderType.current.value,
@@ -170,7 +167,7 @@ export default function Boulders(props) {
 
   function closeBoulder(boulder) {
     const newBoulder = {
-      locationId: locationId,
+      locationId: props.locationId,
       rating: boulder.rating,
       colour: boulder.colour,
       boulderType: boulder.boulderType,
@@ -193,7 +190,7 @@ export default function Boulders(props) {
   function getHexImage(rating) {
     switch (rating) {
     case -1:
-      return images.sixHex
+      return images.unrated
     case 0:
       return images.sixHex
     case 1:
@@ -211,54 +208,57 @@ export default function Boulders(props) {
     }
   }
 
+  function getBoulderTypeImage(boulderType) {
+    switch (boulderType) {
+    case "Slab":
+      return images.slab
+    case "Overhang":
+      return images.overhang
+    }
+  }
+
   /*
    * Return value
    */
 
   return (
     <ul className="dataList">
-      {viewingLocation === locationId && (
-        <div className="sectionTitle">Boulders</div>
-      )}
-      {viewingLocation === locationId && !addingBoulder && (
+      <div className="sectionTitle">Boulders</div>
+      {!addingBoulder && (
         <button onClick={() => changeStates(0, 0, true)}>Add a Boulder</button>
       )}
       {addingBoulder && (
         <li className="item">
           <form className="components">
-            <div className="data">
-              <div className="field">
-                <label>Rating:</label>
-                <select ref={newBoulderRating}>
-                  {Array.from(ratings).map(([key, value]) => {
-                    return getOptions(key, value)
-                  })}
-                </select>
-              </div>
-              <div className="field">
-                <label>Colour:</label>
-                <select ref={newBoulderColour}>
-                  {Array.from(colours).map(([key, value]) => {
-                    return getOptions(key, value)
-                  })}
-                </select>
-              </div>
-              <div className="field">
-                <label>Boulder Type:</label>
-                <select ref={newBoulderBoulderType}>
-                  {Array.from(boulderType).map(([key, value]) => {
-                    return getOptions(key, value)
-                  })}
-                </select>
-              </div>
-              {getInput("Description", "text", newBoulderDescription, null)}
-              {getInput(
-                "Set Start Date",
-                "date",
-                newBoulderSetStartDate,
-                getCurrentDate()
-              )}
-              {getInput("Set End Date", "date", newBoulderSetEndDate, null)}
+            <div className="fields">
+              <label>Rating:</label>
+              <select ref={newBoulderRating}>
+                {Array.from(ratings).map(([key, value]) => {
+                  return getOptions(key, value)
+                })}
+              </select>
+              <label>Colour:</label>
+              <select ref={newBoulderColour}>
+                {Array.from(colours).map(([key, value]) => {
+                  return getOptions(key, value)
+                })}
+              </select>
+              <label>Boulder Type:</label>
+              <select ref={newBoulderBoulderType}>
+                {Array.from(boulderType).map(([key, value]) => {
+                  return getOptions(key, value)
+                })}
+              </select>
+              <label>Description:</label>
+              <textarea ref={newBoulderDescription}></textarea>
+              <label>Set Start Date:</label>
+              <input
+                type="date"
+                ref={newBoulderSetStartDate}
+                defaultValue={getCurrentDate()}
+              ></input>
+              <label>Set End Date:</label>
+              <input type="date" ref={newBoulderSetEndDate}></input>
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addBoulder()}>
@@ -271,7 +271,7 @@ export default function Boulders(props) {
           </form>
         </li>
       )}
-      {boulderData.map((boulder) => {
+      {[...boulderData].reverse().map((boulder) => {
         return (
           <div key={boulder.id}>
             {editingBoulder !== boulder.id && (
@@ -281,7 +281,7 @@ export default function Boulders(props) {
                     className="colourBar"
                     style={{backgroundColor: boulder.colour}}
                   >
-                    {boulder.id}
+                    {/* {boulder.id} */}
                   </div>
                   <div className="hex">
                     <img
@@ -289,13 +289,19 @@ export default function Boulders(props) {
                       src={getHexImage(boulder.rating)}
                     ></img>
                   </div>
+                  <div className="hex">
+                    <img
+                      className="hexImage"
+                      src={getBoulderTypeImage(boulder.boulderType)}
+                    ></img>
+                  </div>
                   <div
-                    className="data"
+                    className="leftColumn"
                     onClick={() => changeStates(boulder.id, 0, false)}
                   >
-                    <div className="text">
-                      {boulder.boulderType} - {boulder.description}
-                    </div>
+                    <div className="text">{boulder.description}</div>
+                  </div>
+                  <div className="rightColumn boulderDate">
                     <div className="text">
                       {convertToViewDate(
                         boulder.setStartDate,
@@ -328,7 +334,8 @@ export default function Boulders(props) {
                 {viewingBoulder == boulder.id && (
                   <Climbs
                     boulderId={boulder.id}
-                    viewingBoulder={viewingBoulder}
+                    climbDataCentral={props.climbDataCentral}
+                    setClimbDataCentral={props.setClimbDataCentral}
                   ></Climbs>
                 )}
               </li>
@@ -336,58 +343,51 @@ export default function Boulders(props) {
             {editingBoulder == boulder.id && (
               <li className="item">
                 <form className="components">
-                  <div className="data">
-                    <div className="field">
-                      <label>Rating:</label>
-                      <select
-                        ref={newBoulderRating}
-                        defaultValue={boulder.rating}
-                      >
-                        {Array.from(ratings).map(([key, value]) => {
-                          return getOptions(key, value)
-                        })}
-                      </select>
-                    </div>
-                    <div className="field">
-                      <label>Colour:</label>
-                      <select
-                        ref={newBoulderColour}
-                        defaultValue={boulder.colour}
-                      >
-                        {Array.from(colours).map(([key, value]) => {
-                          return getOptions(key, value)
-                        })}
-                      </select>
-                    </div>
-                    <div className="field">
-                      <label>Boulder Type:</label>
-                      <select
-                        ref={newBoulderBoulderType}
-                        defaultValue={boulder.boulderType}
-                      >
-                        {Array.from(boulderType).map(([key, value]) => {
-                          return getOptions(key, value)
-                        })}
-                      </select>
-                    </div>
-                    {getInput(
-                      "Description",
-                      "text",
-                      newBoulderDescription,
-                      boulder.description
-                    )}
-                    {getInput(
-                      "Set Start Date",
-                      "date",
-                      newBoulderSetStartDate,
-                      convertToEditDate(boulder.setStartDate)
-                    )}
-                    {getInput(
-                      "Set End Date",
-                      "date",
-                      newBoulderSetEndDate,
-                      convertToEditDate(boulder.setEndDate)
-                    )}
+                  <div className="fields">
+                    <label>Rating:</label>
+                    <select
+                      ref={newBoulderRating}
+                      defaultValue={boulder.rating}
+                    >
+                      {Array.from(ratings).map(([key, value]) => {
+                        return getOptions(key, value)
+                      })}
+                    </select>
+                    <label>Colour:</label>
+                    <select
+                      ref={newBoulderColour}
+                      defaultValue={boulder.colour}
+                    >
+                      {Array.from(colours).map(([key, value]) => {
+                        return getOptions(key, value)
+                      })}
+                    </select>
+                    <label>Boulder Type:</label>
+                    <select
+                      ref={newBoulderBoulderType}
+                      defaultValue={boulder.boulderType}
+                    >
+                      {Array.from(boulderType).map(([key, value]) => {
+                        return getOptions(key, value)
+                      })}
+                    </select>
+                    <label>Description:</label>
+                    <textarea
+                      ref={newBoulderDescription}
+                      defaultValue={boulder.description}
+                    ></textarea>
+                    <label>Set Start Date:</label>
+                    <input
+                      type="date"
+                      ref={newBoulderSetStartDate}
+                      defaultValue={convertToEditDate(boulder.setStartDate)}
+                    ></input>
+                    <label>Set End Date:</label>
+                    <input
+                      type="date"
+                      ref={newBoulderSetEndDate}
+                      defaultValue={convertToEditDate(boulder.setEndDate)}
+                    ></input>
                   </div>
                   <div className="buttons">
                     <button

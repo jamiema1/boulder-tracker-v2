@@ -1,66 +1,66 @@
 import React, {useEffect, useState} from "react"
 import {convertToViewDateTime} from "../helpers.js"
-import {getQuery, climbEndpoint} from "../../api/endpoints.js"
+import {get, climbEndpoint} from "../../api/endpoints.js"
 
 export default function Climbs(props) {
   const [climbData, setClimbData] = useState([])
+  const [allClimbData, setAllClimbData] = useState([])
 
-  const boulderId = props.boulderId
-  const viewingBoulder = props.viewingBoulder
+  useEffect(() => {
+    getAllClimbs()
+  }, [])
+
+  useEffect(() => {
+    setClimbData(
+      allClimbData.filter(
+        (climb) => parseInt(climb.boulderId) === parseInt(props.boulderId)
+      )
+    )
+  }, [allClimbData])
 
   function getAllClimbs() {
-    getQuery(
+    get(
       climbEndpoint,
-      {
-        where: "boulderId = " + viewingBoulder,
-        orderby: [{id: "DESC"}],
-      },
-      setClimbData
+      props.climbDataCentral,
+      props.setClimbDataCentral,
+      setAllClimbData
     )
   }
 
-  useEffect(() => {
-    if (boulderId !== viewingBoulder) return
-    getAllClimbs()
-  }, [viewingBoulder])
-
   return (
     <ul className="dataList">
-      {viewingBoulder === boulderId && (
-        <div className="sectionTitle">Climbs</div>
-      )}
-      {climbData.map((climb) => {
+      <div className="sectionTitle">Climbs</div>
+      {[...climbData].reverse().map((climb) => {
         return (
           <div key={climb.id}>
-            {viewingBoulder === boulderId && (
-              <li className="item">
-                <div className="components">
-                  <div
-                    className="colourBar"
-                    style={{backgroundColor: "magenta"}}
-                  >
-                    {climb.id}
-                  </div>
-                  <div
-                    className="colourBar"
-                    style={{backgroundColor: "aqua"}}
-                  >
-                    {climb.sessionId}
-                  </div>
-                  <div className="data">
-                    <div className="text">
-                      Completion Rate: {climb.sends} / {climb.attempts}
-                    </div>
-                    <div className="text">
-                      {convertToViewDateTime(
-                        climb.climbStartTime,
-                        climb.climbEndTime
-                      )}
-                    </div>
+            <li className="item">
+              <div className="components">
+                <div
+                  className="colourBar"
+                  style={{backgroundColor: "magenta"}}
+                >
+                  {/* {climb.id} */}
+                </div>
+                {/* <div className="colourBar" style={{backgroundColor:"aqua"}}>
+                  {climb.sessionId}
+                </div> */}
+                <div className="leftColumn">
+                  <div className="text">
+                    {climb.sends} / {climb.attempts}
                   </div>
                 </div>
-              </li>
-            )}
+                <div className="rightColumn">
+                  <div className="text">
+                    {
+                      convertToViewDateTime(
+                        climb.climbStartTime,
+                        climb.climbEndTime
+                      ).split(",")[0]
+                    }
+                  </div>
+                </div>
+              </div>
+            </li>
           </div>
         )
       })}

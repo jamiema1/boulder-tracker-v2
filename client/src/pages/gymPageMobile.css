@@ -1,0 +1,98 @@
+@media (max-width: 600px) {
+  .page {
+    padding-left: 0px;
+  }
+
+  .pageTitle {
+  }
+
+  .sectionTitle {
+  }
+
+  .dataList {
+    --margin: 5px;
+    padding: 5px;
+  }
+
+  .outerList {
+  }
+
+  .item {
+  }
+
+  .components {
+  }
+
+  .components:hover {
+  }
+
+  .gymAddress {
+    display: none;
+  }
+
+  .boulderDate {
+    display: none;
+  }
+
+  .leftColumn {
+  }
+
+  .rightColumn {
+  }
+
+  .fields {
+  }
+
+  .data {
+    justify-content: space-between;
+    flex-direction: column;
+  }
+
+  .icons {
+  }
+
+  .colourBar {
+    width: 20px;
+  }
+
+  .hex {
+  }
+
+  .hexImage {
+  }
+
+  .text {
+  }
+
+  .date {
+  }
+
+  .buttons > * {
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+
+  .editButton {
+    margin-bottom: 3px;
+  }
+
+  .deleteButton {
+    margin-top: 3px;
+  }
+
+  .confirmButton {
+    margin-bottom: 3px;
+  }
+
+  .cancelButton {
+    margin-top: 3px;
+  }
+
+  img {
+  }
+
+  .topButtons {
+  }
+}

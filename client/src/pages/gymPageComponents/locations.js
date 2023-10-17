@@ -2,9 +2,8 @@ import React, {useEffect, useState, useRef} from "react"
 import Boulders from "./boulders"
 
 import images from "../../images/images.js"
-import {getInput} from "../helpers.js"
 import {
-  getQuery,
+  get,
   add,
   edit,
   remove,
@@ -26,45 +25,45 @@ export default function Locations(props) {
    */
 
   const [locationData, setLocationData] = useState([])
+  const [allLocationData, setAllLocationData] = useState([])
   const [viewingLocation, setViewingLocation] = useState(0)
   const [editingLocation, setEditingLocation] = useState(0)
   const [addingLocation, setAddingLocation] = useState(false)
 
   const newLocationName = useRef("")
 
-  const gymId = props.gymId
-  let viewingGym = props.viewingGym
+  useEffect(() => {
+    getAllLocations()
+  }, [props.locationDataCentral])
 
   useEffect(() => {
-    setViewingLocation(0)
-    if (gymId !== viewingGym) {
-      setLocationData([])
-      changeStates(0, 0, false)
-      return
-    }
-    getAllLocations()
-  }, [viewingGym])
+    setLocationData(
+      allLocationData.filter(
+        (location) => parseInt(location.gymId) === parseInt(props.gymId)
+      )
+    )
+  }, [allLocationData])
 
   /*
    * APIs
    */
 
   function getAllLocations() {
-    getQuery(
+    get(
       locationEndpoint,
-      {
-        where: "gymId = " + viewingGym,
-      },
-      setLocationData
+      props.locationDataCentral,
+      props.setLocationDataCentral,
+      setAllLocationData
     )
   }
 
   function addLocation() {
     add(
       locationEndpoint,
+      props.locationDataCentral,
+      props.setLocationDataCentral,
       getNewLocation(),
-      locationData,
-      setLocationData,
+      setAllLocationData,
       clearLocationRefs
     )
   }
@@ -73,15 +72,22 @@ export default function Locations(props) {
     edit(
       locationEndpoint,
       locationId,
+      props.locationDataCentral,
+      props.setLocationDataCentral,
       getNewLocation(),
-      locationData,
-      setLocationData,
+      setAllLocationData,
       clearLocationRefs
     )
   }
 
   function deleteLocation(locationId) {
-    remove(locationEndpoint, locationId, locationData, setLocationData)
+    remove(
+      locationEndpoint,
+      locationId,
+      props.locationDataCentral,
+      props.setLocationDataCentral,
+      setAllLocationData
+    )
   }
 
   /*
@@ -95,7 +101,7 @@ export default function Locations(props) {
 
   function getNewLocation() {
     return {
-      gymId: parseInt(gymId),
+      gymId: parseInt(props.gymId),
       name: newLocationName.current.value,
     }
   }
@@ -120,15 +126,16 @@ export default function Locations(props) {
 
   return (
     <ul className="dataList">
-      {viewingGym === gymId && <div className="sectionTitle">Locations</div>}
-      {viewingGym === gymId && !addingLocation && (
+      {<div className="sectionTitle">Locations</div>}
+      {!addingLocation && (
         <button onClick={() => changeStates(0, 0, true)}>Add a Location</button>
       )}
       {addingLocation && (
         <li className="item">
           <form className="components">
-            <div className="data">
-              {getInput("Name", "text", newLocationName, null)}
+            <div className="fields">
+              <label>Name:</label>
+              <input type="text" ref={newLocationName}></input>
             </div>
             <div className="buttons">
               <button type="button" onClick={() => addLocation()}>
@@ -151,14 +158,15 @@ export default function Locations(props) {
                     className="colourBar"
                     style={{backgroundColor: "teal"}}
                   >
-                    {location.id}
+                    {/* {location.id} */}
                   </div>
                   <div
-                    className="data"
+                    className="leftColumn"
                     onClick={() => changeStates(location.id, 0, false)}
                   >
                     <div className="text">{location.name}</div>
                   </div>
+                  <div className="rightColumn"></div>
                   {viewingLocation == location.id && (
                     <div className="buttons">
                       <button
@@ -175,7 +183,10 @@ export default function Locations(props) {
                 {viewingLocation == location.id && (
                   <Boulders
                     locationId={location.id}
-                    viewingLocation={viewingLocation}
+                    boulderDataCentral={props.boulderDataCentral}
+                    setBoulderDataCentral={props.setBoulderDataCentral}
+                    climbDataCentral={props.climbDataCentral}
+                    setClimbDataCentral={props.setClimbDataCentral}
                   ></Boulders>
                 )}
               </li>
@@ -183,8 +194,13 @@ export default function Locations(props) {
             {editingLocation == location.id && (
               <li className="item">
                 <form className="components">
-                  <div className="data">
-                    {getInput("Name", "text", newLocationName, location.name)}
+                  <div className="fields">
+                    <label>Name:</label>
+                    <input
+                      type="text"
+                      ref={newLocationName}
+                      defaultValue={location.name}
+                    ></input>
                   </div>
                   <div className="buttons">
                     <button

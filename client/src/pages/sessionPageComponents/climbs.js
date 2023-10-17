@@ -1,14 +1,13 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
 import {
-  // convertToViewDateTime,
   convertToEditDateTime,
   getCurrentDateTime,
   getOptions,
 } from "../helpers.js"
 import images from "../../images/images.js"
 import {
-  getQuery,
+  get,
   add,
   edit,
   remove,
@@ -33,10 +32,12 @@ export default function Climbs(props) {
    *  - newClimbEndTime: reference to new end time
    */
 
+  const [allClimbData, setAllClimbData] = useState([])
   const [climbData, setClimbData] = useState([])
   const [locationData, setLocationData] = useState([])
-  const [selectedBoulderData, setSelectedBoulderData] = useState([])
+  const [allLocationData, setAllLocationData] = useState([])
   const [boulderData, setBoulderData] = useState([])
+  const [allBoulderData, setAllBoulderData] = useState([])
   const [viewingClimb, setViewingClimb] = useState(0)
   const [editingClimb, setEditingClimb] = useState(0)
   const [addingClimb, setAddingClimb] = useState(false)
@@ -48,89 +49,102 @@ export default function Climbs(props) {
   const newClimbStartTime = useRef("")
   const newClimbEndTime = useRef("")
 
-  const sessionId = props.sessionId
-  let viewingSession = props.viewingSession
-  const gymId = props.gymId
+  useEffect(() => {
+    getAllClimbs()
+    getAllLocations()
+    getAllBoulders()
+  }, [
+    props.locationDataCentral,
+    props.boulderDataCentral,
+    props.climbDataCentral,
+  ])
 
   useEffect(() => {
-    setViewingClimb(0)
-    if (sessionId !== viewingSession) {
-      setClimbData([])
-      setSelectedBoulderData([])
-      setBoulderData([])
-      setLocationData([])
-      changeStates(0, 0, false)
-      return
-    }
-    getAllClimbs()
-    getAllBoulders()
-    getLocations()
-  }, [viewingSession])
+    setClimbData(
+      allClimbData.filter(
+        (climb) => parseInt(climb.sessionId) === parseInt(props.sessionId)
+      )
+    )
+  }, [allClimbData])
+
+  useEffect(() => {
+    setLocationData(
+      allLocationData.filter(
+        (location) => parseInt(location.gymId) === parseInt(props.gymId)
+      )
+    )
+  }, [allLocationData])
 
   /*
    * APIs
    */
 
-  function getLocations() {
-    getQuery(
+  function getAllLocations() {
+    get(
       locationEndpoint,
-      {
-        where: "gymId = " + gymId,
-      },
-      setLocationData
+      props.locationDataCentral,
+      props.setLocationDataCentral,
+      setAllLocationData
     )
   }
 
   function getBoulders(locationId) {
-    setSelectedBoulderData([])
-    getQuery(
-      boulderEndpoint,
-      {
-        where:
-          "(locationId = " + locationId + " AND setEndDate = '0000-00-00')",
-      },
-      setSelectedBoulderData
+    setBoulderData(
+      allBoulderData.filter(
+        (boulder) => parseInt(boulder.locationId) === parseInt(locationId)
+      )
     )
   }
 
   function getAllBoulders() {
-    getQuery(
+    get(
       boulderEndpoint,
-      {
-        where: "setEndDate = '0000-00-00'",
-      },
-      setBoulderData
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
+      setAllBoulderData
     )
   }
 
   function getAllClimbs() {
-    getQuery(
+    get(
       climbEndpoint,
-      {
-        where: "sessionId = " + viewingSession,
-        orderby: [{id: "DESC"}],
-      },
-      setClimbData
+      props.climbDataCentral,
+      props.setClimbDataCentral,
+      setAllClimbData
     )
   }
 
   function addClimb() {
-    add(climbEndpoint, getNewClimb(), climbData, setClimbData, clearClimbRefs)
+    add(
+      climbEndpoint,
+      props.climbDataCentral,
+      props.setClimbDataCentral,
+      getNewClimb(),
+      setAllClimbData,
+      clearClimbRefs
+    )
   }
 
   function editClimb(climbId) {
     edit(
       climbEndpoint,
       climbId,
+      props.climbDataCentral,
+      props.setClimbDataCentral,
       getNewClimb(),
-      climbData,
-      setClimbData,
+      setAllClimbData,
       clearClimbRefs
     )
   }
 
   function deleteClimb(climbId) {
-    remove(climbEndpoint, climbId, climbData, setClimbData)
+    remove(
+      climbEndpoint,
+      climbId,
+      props.climbDataCentral,
+      props.setClimbDataCentral,
+      setAllClimbData
+    )
   }
 
   /*
@@ -149,7 +163,7 @@ export default function Climbs(props) {
   function getNewClimb() {
     return {
       boulderId: parseInt(newBoulderId.current.value),
-      sessionId: parseInt(sessionId),
+      sessionId: parseInt(props.sessionId),
       attempts: parseInt(newAttempts.current.value),
       sends: parseInt(newSends.current.value),
       climbStartTime: newClimbStartTime.current.value,
@@ -175,23 +189,20 @@ export default function Climbs(props) {
   }
 
   function boulderText(climb) {
-    const boulder = boulderData.find((boulder) => {
-      return boulder.id === climb.boulderId
+    const boulder = allBoulderData.find((boulder) => {
+      return parseInt(boulder.id) === parseInt(climb.boulderId)
     })
 
     if (boulder === undefined) {
       return
     }
 
-    return ""
-      .concat(boulder.boulderType)
-      .concat(" - ")
-      .concat(boulder.description)
+    return boulder.description
   }
 
   function getBoulderColour(climb) {
-    const boulder = boulderData.find((boulder) => {
-      return boulder.id === climb.boulderId
+    const boulder = allBoulderData.find((boulder) => {
+      return parseInt(boulder.id) === parseInt(climb.boulderId)
     })
 
     if (boulder === undefined) {
@@ -202,8 +213,8 @@ export default function Climbs(props) {
   }
 
   function getBoulderRating(climb) {
-    const boulder = boulderData.find((boulder) => {
-      return boulder.id === climb.boulderId
+    const boulder = allBoulderData.find((boulder) => {
+      return parseInt(boulder.id) === parseInt(climb.boulderId)
     })
 
     if (boulder === undefined) {
@@ -216,7 +227,7 @@ export default function Climbs(props) {
   function getHexImage(rating) {
     switch (rating) {
     case -1:
-      return images.sixHex
+      return images.unrated
     case 0:
       return images.sixHex
     case 1:
@@ -234,13 +245,34 @@ export default function Climbs(props) {
     }
   }
 
+  function getBoulderType(climb) {
+    const boulder = allBoulderData.find((boulder) => {
+      return parseInt(boulder.id) === parseInt(climb.boulderId)
+    })
+
+    if (boulder === undefined) {
+      return
+    }
+
+    return boulder.boulderType
+  }
+
+  function getBoulderTypeImage(boulderType) {
+    switch (boulderType) {
+    case "Slab":
+      return images.slab
+    case "Overhang":
+      return images.overhang
+    }
+  }
+
   /*
    * Return value
    */
 
   return (
     <ul className="dataList">
-      {viewingSession === sessionId && !addingClimb && (
+      {!addingClimb && (
         <button
           className="topButtons"
           onClick={() => {
@@ -266,7 +298,7 @@ export default function Climbs(props) {
               </select>
               <label>Boulder:</label>
               <select ref={newBoulderId}>
-                {selectedBoulderData.map((boulder) => {
+                {boulderData.map((boulder) => {
                   return getOptions(
                     boulder.rating +
                       " | " +
@@ -280,9 +312,9 @@ export default function Climbs(props) {
                 })}
               </select>
               <label>Attempts:</label>
-              <input type="number" ref={newAttempts}></input>
+              <input type="number" ref={newAttempts} defaultValue={1}></input>
               <label>Sends:</label>
-              <input type="number" ref={newSends}></input>
+              <input type="number" ref={newSends} defaultValue={0}></input>
               <label>Start Time:</label>
               <input
                 type="datetime-local"
@@ -315,7 +347,7 @@ export default function Climbs(props) {
           </form>
         </li>
       )}
-      {climbData.map((climb) => {
+      {[...climbData].reverse().map((climb) => {
         return (
           <div key={climb.id}>
             {editingClimb !== climb.id && (
@@ -343,14 +375,20 @@ export default function Climbs(props) {
                       src={getHexImage(getBoulderRating(climb))}
                     ></img>
                   </div>
+                  <div className="hex">
+                    <img
+                      className="hexImage"
+                      src={getBoulderTypeImage(getBoulderType(climb))}
+                    ></img>
+                  </div>
                   <div
-                    className="data"
+                    className="data climbData"
                     onClick={() => changeStates(climb.id, 0, false)}
                   >
-                    <div className="text">{boulderText(climb)}</div>
                     <div className="text">
-                      Completion Rate: {climb.sends} / {climb.attempts}
+                      {climb.sends} / {climb.attempts}
                     </div>
+                    <div className="text">{boulderText(climb)}</div>
                     {/* <div className="text">
                       {convertToViewDateTime(
                         climb.climbStartTime,
@@ -397,7 +435,7 @@ export default function Climbs(props) {
                     </select>
                     <label>Boulder:</label>
                     <select ref={newBoulderId} defaultValue={climb.boulderId}>
-                      {selectedBoulderData.map((boulder) => {
+                      {boulderData.map((boulder) => {
                         return getOptions(
                           boulder.rating +
                             " | " +
