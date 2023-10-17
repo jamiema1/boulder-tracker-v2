@@ -2,11 +2,9 @@ import React, {useEffect, useRef, useState} from "react"
 import Locations from "./locations"
 
 import images from "../../images/images.js"
-import {getAll, add, edit, remove, gymEndpoint} from "../../api/endpoints.js"
+import {get, add, edit, remove, gymEndpoint} from "../../api/endpoints.js"
 
-const gymCache = {}
-
-export default function Gyms() {
+export default function Gyms(props) {
   /*
    * React Hooks:
    *
@@ -32,28 +30,23 @@ export default function Gyms() {
   const newGymCity = useRef("")
 
   useEffect(() => {
-    if (gymCache[0]) {
-      setGymData(gymCache[0])
-    } else {
-      getAllGyms()
-    }
-  }, [])
+    getGyms()
+  }, [props.gymDataCentral])
 
   /*
    * APIs
    */
 
-  function getAllGyms() {
-    getAll(gymEndpoint, gymCache, 0, setGymData)
+  function getGyms() {
+    get(gymEndpoint, props.gymDataCentral, props.setGymDataCentral, setGymData)
   }
 
   function addGym() {
     add(
       gymEndpoint,
-      gymCache,
-      0,
+      props.gymDataCentral,
+      props.setGymDataCentral,
       getNewGym(),
-      gymData,
       setGymData,
       clearGymRefs
     )
@@ -62,18 +55,23 @@ export default function Gyms() {
   function editGym(gymId) {
     edit(
       gymEndpoint,
-      gymCache,
-      0,
       gymId,
+      props.gymDataCentral,
+      props.setGymDataCentral,
       getNewGym(),
-      gymData,
       setGymData,
       clearGymRefs
     )
   }
 
   function deleteGym(gymId) {
-    remove(gymEndpoint, gymCache, 0, gymId, gymData, setGymData)
+    remove(
+      gymEndpoint,
+      gymId,
+      props.gymDataCentral,
+      props.setGymDataCentral,
+      setGymData
+    )
   }
 
   /*
@@ -118,14 +116,17 @@ export default function Gyms() {
       {addingGym && (
         <li className="item">
           <form className="components">
-            <div className="fields">
-              <label>Name:</label>
-              <input type="text" ref={newGymName}></input>
-              <label>Address:</label>
-              <input type="text" ref={newGymAddress}></input>
-              <label>City:</label>
-              <input type="text" ref={newGymCity}></input>
+            <div className="leftColumn">
+              <div className="fields">
+                <label>Name:</label>
+                <input type="text" ref={newGymName}></input>
+                <label>Address:</label>
+                <input type="text" ref={newGymAddress}></input>
+                <label>City:</label>
+                <input type="text" ref={newGymCity}></input>
+              </div>
             </div>
+            <div className="rightColumn "></div>
             <div className="buttons">
               <button type="button" onClick={() => addGym()}>
                 <img src={images.addIcon}></img>
@@ -147,15 +148,16 @@ export default function Gyms() {
                     className="colourBar"
                     style={{backgroundColor: "grey"}}
                   >
-                    {gym.id}
+                    {/* {gym.id} */}
                   </div>
                   <div
-                    className="data"
+                    className="leftColumn"
                     onClick={() => changeStates(gym.id, 0, false)}
                   >
-                    <div className="text">
-                      {gym.city} - {gym.name}
-                    </div>
+                    <div className="text">{gym.name}</div>
+                    <div className="text">{gym.city}</div>
+                  </div>
+                  <div className="rightColumn gymAddress">
                     <div className="text">{gym.address}</div>
                   </div>
                   {viewingGym == gym.id && (
@@ -169,32 +171,45 @@ export default function Gyms() {
                     </div>
                   )}
                 </div>
-                {viewingGym == gym.id && <Locations gymId={gym.id}></Locations>}
+                {viewingGym == gym.id && (
+                  <Locations
+                    gymId={gym.id}
+                    locationDataCentral={props.locationDataCentral}
+                    setLocationDataCentral={props.setLocationDataCentral}
+                    boulderDataCentral={props.boulderDataCentral}
+                    setBoulderDataCentral={props.setBoulderDataCentral}
+                    climbDataCentral={props.climbDataCentral}
+                    setClimbDataCentral={props.setClimbDataCentral}
+                  ></Locations>
+                )}
               </li>
             )}
             {editingGym == gym.id && (
               <li className="item">
                 <form className="components">
-                  <div className="fields">
-                    <label>Name:</label>
-                    <input
-                      type="text"
-                      ref={newGymName}
-                      defaultValue={gym.name}
-                    ></input>
-                    <label>Address:</label>
-                    <input
-                      type="text"
-                      ref={newGymAddress}
-                      defaultValue={gym.address}
-                    ></input>
-                    <label>City:</label>
-                    <input
-                      type="text"
-                      ref={newGymCity}
-                      defaultValue={gym.city}
-                    ></input>
+                  <div className="leftColumn">
+                    <div className="fields">
+                      <label>Name:</label>
+                      <input
+                        type="text"
+                        ref={newGymName}
+                        defaultValue={gym.name}
+                      ></input>
+                      <label>Address:</label>
+                      <input
+                        type="text"
+                        ref={newGymAddress}
+                        defaultValue={gym.address}
+                      ></input>
+                      <label>City:</label>
+                      <input
+                        type="text"
+                        ref={newGymCity}
+                        defaultValue={gym.city}
+                      ></input>
+                    </div>
                   </div>
+                  <div className="rightColumn"></div>
                   <div className="buttons">
                     <button type="button" onClick={() => editGym(gym.id)}>
                       <img src={images.confirmIcon}></img>

@@ -9,15 +9,7 @@ import {
   convertToEditDate,
   getOptions,
 } from "../helpers.js"
-import {
-  getQuery,
-  add,
-  edit,
-  remove,
-  boulderEndpoint,
-} from "../../api/endpoints.js"
-
-const boulderCache = {}
+import {get, add, edit, remove, boulderEndpoint} from "../../api/endpoints.js"
 
 export default function Boulders(props) {
   /*
@@ -34,6 +26,7 @@ export default function Boulders(props) {
    */
 
   const [boulderData, setBoulderData] = useState([])
+  const [allBoulderData, setAllBoulderData] = useState([])
   const [viewingBoulder, setViewingBoulder] = useState(0)
   const [editingBoulder, setEditingBoulder] = useState(0)
   const [addingBoulder, setAddingBoulder] = useState(false)
@@ -44,8 +37,6 @@ export default function Boulders(props) {
   const newBoulderDescription = useRef("")
   const newBoulderSetStartDate = useRef("")
   const newBoulderSetEndDate = useRef("")
-
-  const locationId = props.locationId
 
   const ratings = new Map([
     ["Unrated", -1],
@@ -75,38 +66,37 @@ export default function Boulders(props) {
   ])
 
   useEffect(() => {
-    if (boulderCache[locationId]) {
-      setBoulderData(boulderCache[locationId])
-    } else {
-      getAllBoulders()
-    }
-  }, [])
+    getAllBoulders()
+  }, [props.boulderDataCentral])
+
+  useEffect(() => {
+    setBoulderData(
+      allBoulderData.filter(
+        (boulder) => parseInt(boulder.locationId) === parseInt(props.locationId)
+      )
+    )
+  }, [allBoulderData])
 
   /*
    * APIs
    */
 
   function getAllBoulders() {
-    getQuery(
+    get(
       boulderEndpoint,
-      boulderCache,
-      locationId,
-      {
-        where:
-          "(locationId = " + locationId + " AND setEndDate = '0000-00-00')",
-      },
-      setBoulderData
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
+      setAllBoulderData
     )
   }
 
   function addBoulder() {
     add(
       boulderEndpoint,
-      boulderCache,
-      locationId,
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
       getNewBoulder(),
-      boulderData,
-      setBoulderData,
+      setAllBoulderData,
       clearBoulderRefs
     )
   }
@@ -114,12 +104,11 @@ export default function Boulders(props) {
   function editBoulder(boulderId) {
     edit(
       boulderEndpoint,
-      boulderCache,
-      locationId,
       boulderId,
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
       getNewBoulder(),
-      boulderData,
-      setBoulderData,
+      setAllBoulderData,
       clearBoulderRefs
     )
   }
@@ -127,11 +116,10 @@ export default function Boulders(props) {
   function deleteBoulder(boulderId) {
     remove(
       boulderEndpoint,
-      boulderCache,
-      locationId,
       boulderId,
-      boulderData,
-      setBoulderData
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
+      setAllBoulderData
     )
   }
 
@@ -151,7 +139,7 @@ export default function Boulders(props) {
 
   function getNewBoulder() {
     return {
-      locationId: parseInt(locationId),
+      locationId: parseInt(props.locationId),
       rating: parseInt(newBoulderRating.current.value),
       colour: newBoulderColour.current.value,
       boulderType: newBoulderBoulderType.current.value,
@@ -179,7 +167,7 @@ export default function Boulders(props) {
 
   function closeBoulder(boulder) {
     const newBoulder = {
-      locationId: locationId,
+      locationId: props.locationId,
       rating: boulder.rating,
       colour: boulder.colour,
       boulderType: boulder.boulderType,
@@ -202,7 +190,7 @@ export default function Boulders(props) {
   function getHexImage(rating) {
     switch (rating) {
     case -1:
-      return images.sixHex
+      return images.unrated
     case 0:
       return images.sixHex
     case 1:
@@ -217,6 +205,15 @@ export default function Boulders(props) {
       return images.fiveHex
     case 6:
       return images.sixHex
+    }
+  }
+
+  function getBoulderTypeImage(boulderType) {
+    switch (boulderType) {
+    case "Slab":
+      return images.slab
+    case "Overhang":
+      return images.overhang
     }
   }
 
@@ -274,7 +271,7 @@ export default function Boulders(props) {
           </form>
         </li>
       )}
-      {boulderData.map((boulder) => {
+      {[...boulderData].reverse().map((boulder) => {
         return (
           <div key={boulder.id}>
             {editingBoulder !== boulder.id && (
@@ -284,7 +281,7 @@ export default function Boulders(props) {
                     className="colourBar"
                     style={{backgroundColor: boulder.colour}}
                   >
-                    {boulder.id}
+                    {/* {boulder.id} */}
                   </div>
                   <div className="hex">
                     <img
@@ -292,13 +289,19 @@ export default function Boulders(props) {
                       src={getHexImage(boulder.rating)}
                     ></img>
                   </div>
+                  <div className="hex">
+                    <img
+                      className="hexImage"
+                      src={getBoulderTypeImage(boulder.boulderType)}
+                    ></img>
+                  </div>
                   <div
-                    className="data"
+                    className="leftColumn"
                     onClick={() => changeStates(boulder.id, 0, false)}
                   >
-                    <div className="text">
-                      {boulder.boulderType} - {boulder.description}
-                    </div>
+                    <div className="text">{boulder.description}</div>
+                  </div>
+                  <div className="rightColumn boulderDate">
                     <div className="text">
                       {convertToViewDate(
                         boulder.setStartDate,
@@ -329,7 +332,11 @@ export default function Boulders(props) {
                   )}
                 </div>
                 {viewingBoulder == boulder.id && (
-                  <Climbs boulderId={boulder.id}></Climbs>
+                  <Climbs
+                    boulderId={boulder.id}
+                    climbDataCentral={props.climbDataCentral}
+                    setClimbDataCentral={props.setClimbDataCentral}
+                  ></Climbs>
                 )}
               </li>
             )}

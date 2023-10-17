@@ -28,7 +28,6 @@ export function getOne (res, tableName, id) {
 }
 
 export function getAll (res, tableName) {
-  console.log('GET: ' + tableName)
 
   const query = 'SELECT * FROM ' + tableName
 
@@ -41,7 +40,6 @@ export function getAll (res, tableName) {
 }
 
 export function getQuery (res, tableName, query) {
-  console.log('GET: ' + tableName + ' | ' + query)
   const sqlQuery = makeGetQueryString(JSON.parse(query))
 
   function makeGetQueryString (query) {

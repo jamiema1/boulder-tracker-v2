@@ -2,30 +2,23 @@
 import React, {useEffect, useRef, useState} from "react"
 import Climbs from "./climbs"
 import {
-  // convertToViewDateTime,
   convertToEditDateTime,
-  getOptions,
   getCurrentDateTime,
+  getOptions,
   getTimeDifferenceString,
 } from "../helpers.js"
 import images from "../../images/images.js"
 import {
-  getAll,
-  // get,
+  get,
   add,
   edit,
   remove,
-  gymEndpoint,
   sessionEndpoint,
+  gymEndpoint,
   climbEndpoint,
-  getQuery,
 } from "../../api/endpoints.js"
 
-const sessionCache = {}
-const gymCache = {}
-const climbCache = {}
-
-export default function Sessions() {
+export default function Sessions(props) {
   /*
    * React Hooks:
    *
@@ -43,7 +36,6 @@ export default function Sessions() {
 
   const [sessionData, setSessionData] = useState([])
   const [gymData, setGymData] = useState([])
-  // TODO: does not update when a new climb is added
   const [climbData, setClimbData] = useState([])
   const [viewingSession, setViewingSession] = useState(0)
   const [editingSession, setEditingSession] = useState(0)
@@ -55,43 +47,33 @@ export default function Sessions() {
   const newSessionEndTime = useRef("")
 
   useEffect(() => {
-    if (sessionCache[0]) {
-      setSessionData(sessionCache[0])
-    } else {
-      getAllSessions()
-    }
-
-    if (gymCache[0]) {
-      setGymData(gymCache[0])
-    } else {
-      getAllGyms()
-    }
-
-    if (climbCache[0]) {
-      setClimbData(climbCache[0])
-    } else {
-      getAllClimbs()
-    }
-  }, [])
+    getSessions()
+    getGyms()
+    getClimbs()
+  }, [props.gymDataCentral, props.sessionDataCentral, props.climbDataCentral])
 
   /*
    * APIs
    */
 
-  function getAllGyms() {
-    getAll(gymEndpoint, gymCache, 0, setGymData)
+  function getGyms() {
+    get(gymEndpoint, props.gymDataCentral, props.setGymDataCentral, setGymData)
   }
 
-  function getAllClimbs() {
-    getAll(climbEndpoint, climbCache, 0, setClimbData)
+  function getClimbs() {
+    get(
+      climbEndpoint,
+      props.climbDataCentral,
+      props.setClimbDataCentral,
+      setClimbData
+    )
   }
 
-  function getAllSessions() {
-    getQuery(
+  function getSessions() {
+    get(
       sessionEndpoint,
-      sessionCache,
-      0,
-      {where: "", orderby: [{id: "DESC"}]},
+      props.sessionDataCentral,
+      props.setSessionDataCentral,
       setSessionData
     )
   }
@@ -99,10 +81,9 @@ export default function Sessions() {
   function addSession() {
     add(
       sessionEndpoint,
-      sessionCache,
-      0,
+      props.sessionDataCentral,
+      props.setSessionDataCentral,
       getNewSession(),
-      sessionData,
       setSessionData,
       clearSessionRefs
     )
@@ -111,11 +92,10 @@ export default function Sessions() {
   function editSession(sessionId) {
     edit(
       sessionEndpoint,
-      sessionCache,
-      0,
       sessionId,
+      props.sessionDataCentral,
+      props.setSessionDataCentral,
       getNewSession(),
-      sessionData,
       setSessionData,
       clearSessionRefs
     )
@@ -124,10 +104,9 @@ export default function Sessions() {
   function deleteSession(sessionId) {
     remove(
       sessionEndpoint,
-      sessionCache,
-      0,
       sessionId,
-      sessionData,
+      props.sessionDataCentral,
+      props.setSessionDataCentral,
       setSessionData
     )
   }
@@ -171,7 +150,7 @@ export default function Sessions() {
 
   function climbText(session) {
     const filteredClimbData = climbData.filter((climb) => {
-      return climb.sessionId === session.id
+      return parseInt(climb.sessionId) === parseInt(session.id)
     })
 
     let climbs = 0
@@ -243,7 +222,7 @@ export default function Sessions() {
           </form>
         </li>
       )}
-      {sessionData.map((session) => {
+      {[...sessionData].reverse().map((session) => {
         return (
           <div key={session.id}>
             {editingSession !== session.id && (
@@ -259,7 +238,7 @@ export default function Sessions() {
                     <div className="text">
                       {
                         gymData.find((gym) => {
-                          return gym.id === session.gymId
+                          return parseInt(gym.id) === parseInt(session.gymId)
                         })?.city
                       }
                     </div>
@@ -294,7 +273,14 @@ export default function Sessions() {
                   <Climbs
                     sessionId={session.id}
                     gymId={session.gymId}
-                    gymData={gymData}
+                    gymDataCentral={props.gymDataCentral}
+                    setGymDataCentral={props.setGymDataCentral}
+                    locationDataCentral={props.locationDataCentral}
+                    setLocationDataCentral={props.setLocationDataCentral}
+                    boulderDataCentral={props.boulderDataCentral}
+                    setBoulderDataCentral={props.setBoulderDataCentral}
+                    climbDataCentral={props.climbDataCentral}
+                    setClimbDataCentral={props.setClimbDataCentral}
                   ></Climbs>
                 )}
               </li>

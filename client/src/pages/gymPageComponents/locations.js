@@ -3,14 +3,12 @@ import Boulders from "./boulders"
 
 import images from "../../images/images.js"
 import {
-  getQuery,
+  get,
   add,
   edit,
   remove,
   locationEndpoint,
 } from "../../api/endpoints.js"
-
-const locationCache = {}
 
 export default function Locations(props) {
   /*
@@ -27,46 +25,45 @@ export default function Locations(props) {
    */
 
   const [locationData, setLocationData] = useState([])
+  const [allLocationData, setAllLocationData] = useState([])
   const [viewingLocation, setViewingLocation] = useState(0)
   const [editingLocation, setEditingLocation] = useState(0)
   const [addingLocation, setAddingLocation] = useState(false)
 
   const newLocationName = useRef("")
 
-  const gymId = props.gymId
+  useEffect(() => {
+    getAllLocations()
+  }, [props.locationDataCentral])
 
   useEffect(() => {
-    if (locationCache[gymId]) {
-      setLocationData(locationCache[gymId])
-    } else {
-      getAllLocations()
-    }
-  }, [])
+    setLocationData(
+      allLocationData.filter(
+        (location) => parseInt(location.gymId) === parseInt(props.gymId)
+      )
+    )
+  }, [allLocationData])
 
   /*
    * APIs
    */
 
   function getAllLocations() {
-    getQuery(
+    get(
       locationEndpoint,
-      locationCache,
-      gymId,
-      {
-        where: "gymId = " + gymId,
-      },
-      setLocationData
+      props.locationDataCentral,
+      props.setLocationDataCentral,
+      setAllLocationData
     )
   }
 
   function addLocation() {
     add(
       locationEndpoint,
-      locationCache,
-      gymId,
+      props.locationDataCentral,
+      props.setLocationDataCentral,
       getNewLocation(),
-      locationData,
-      setLocationData,
+      setAllLocationData,
       clearLocationRefs
     )
   }
@@ -74,12 +71,11 @@ export default function Locations(props) {
   function editLocation(locationId) {
     edit(
       locationEndpoint,
-      locationCache,
-      gymId,
       locationId,
+      props.locationDataCentral,
+      props.setLocationDataCentral,
       getNewLocation(),
-      locationData,
-      setLocationData,
+      setAllLocationData,
       clearLocationRefs
     )
   }
@@ -87,11 +83,10 @@ export default function Locations(props) {
   function deleteLocation(locationId) {
     remove(
       locationEndpoint,
-      locationCache,
-      gymId,
       locationId,
-      locationData,
-      setLocationData
+      props.locationDataCentral,
+      props.setLocationDataCentral,
+      setAllLocationData
     )
   }
 
@@ -106,7 +101,7 @@ export default function Locations(props) {
 
   function getNewLocation() {
     return {
-      gymId: parseInt(gymId),
+      gymId: parseInt(props.gymId),
       name: newLocationName.current.value,
     }
   }
@@ -163,14 +158,15 @@ export default function Locations(props) {
                     className="colourBar"
                     style={{backgroundColor: "teal"}}
                   >
-                    {location.id}
+                    {/* {location.id} */}
                   </div>
                   <div
-                    className="data"
+                    className="leftColumn"
                     onClick={() => changeStates(location.id, 0, false)}
                   >
                     <div className="text">{location.name}</div>
                   </div>
+                  <div className="rightColumn"></div>
                   {viewingLocation == location.id && (
                     <div className="buttons">
                       <button
@@ -187,7 +183,10 @@ export default function Locations(props) {
                 {viewingLocation == location.id && (
                   <Boulders
                     locationId={location.id}
-                    viewingLocation={viewingLocation}
+                    boulderDataCentral={props.boulderDataCentral}
+                    setBoulderDataCentral={props.setBoulderDataCentral}
+                    climbDataCentral={props.climbDataCentral}
+                    setClimbDataCentral={props.setClimbDataCentral}
                   ></Boulders>
                 )}
               </li>
