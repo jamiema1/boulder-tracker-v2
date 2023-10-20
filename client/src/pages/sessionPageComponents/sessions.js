@@ -16,6 +16,7 @@ import {
   sessionEndpoint,
   gymEndpoint,
   climbEndpoint,
+  boulderEndpoint,
 } from "../../api/endpoints.js"
 
 export default function Sessions(props) {
@@ -36,7 +37,9 @@ export default function Sessions(props) {
 
   const [sessionData, setSessionData] = useState([])
   const [gymData, setGymData] = useState([])
+  const [boulderData, setBoulderData] = useState([])
   const [climbData, setClimbData] = useState([])
+
   const [viewingSession, setViewingSession] = useState(0)
   const [editingSession, setEditingSession] = useState(0)
   const [addingSession, setAddingSession] = useState(false)
@@ -49,8 +52,14 @@ export default function Sessions(props) {
   useEffect(() => {
     getSessions()
     getGyms()
+    getBoulders()
     getClimbs()
-  }, [props.gymDataCentral, props.sessionDataCentral, props.climbDataCentral])
+  }, [
+    props.gymDataCentral,
+    props.boulderDataCentral,
+    props.sessionDataCentral,
+    props.climbDataCentral,
+  ])
 
   /*
    * APIs
@@ -58,6 +67,15 @@ export default function Sessions(props) {
 
   function getGyms() {
     get(gymEndpoint, props.gymDataCentral, props.setGymDataCentral, setGymData)
+  }
+
+  function getBoulders() {
+    get(
+      boulderEndpoint,
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
+      setBoulderData
+    )
   }
 
   function getClimbs() {
@@ -156,18 +174,50 @@ export default function Sessions(props) {
     let climbs = 0
     let attempts = 0
     let sends = 0
+    let weightedRating = 0
+    let weightedAttempts = 0
     filteredClimbData.forEach((climb) => {
+      const boulder = boulderData.find((boulder) => {
+        return parseInt(boulder.id) === parseInt(climb.boulderId)
+      })
+
+      // TODO: Change for unrated boulders
+      if (boulder.rating != -1) {
+        weightedRating += boulder.rating * climb.attempts
+        weightedAttempts += climb.attempts
+      }
       climbs += 1
       attempts += climb.attempts
       sends += climb.sends
     })
+
+    weightedRating = Math.round((weightedRating / weightedAttempts) * 10) / 10
 
     return (
       <div className="rightColumn">
         <div className="text">{climbs} Climbs</div>
         <div className="text">{attempts} Attempts</div>
         <div className="text">{sends} Sends</div>
+        <div className="text">{weightedRating} Weighted Rating</div>
       </div>
+    )
+  }
+
+  function closeSession(session) {
+    // TODO: use existing EDIT function instead of creating new one
+    edit(
+      sessionEndpoint,
+      session.id,
+      props.sessionDataCentral,
+      props.setSessionDataCentral,
+      {
+        gymId: parseInt(session.gymId),
+        userId: parseInt(session.userId),
+        sessionStartTime: session.sessionStartTime,
+        sessionEndTime: getCurrentDateTime(),
+      },
+      setSessionData,
+      () => {}
     )
   }
 
@@ -252,6 +302,15 @@ export default function Sessions(props) {
                   {climbText(session)}
                   {viewingSession == session.id && (
                     <div className="buttons">
+                      {session.sessionEndTime === "0000-00-00 00:00:00" && (
+                        <button
+                          onClick={() => {
+                            closeSession(session)
+                          }}
+                        >
+                          Close
+                        </button>
+                      )}
                       <button
                         type="button"
                         className="editButton"

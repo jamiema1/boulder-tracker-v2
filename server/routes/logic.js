@@ -28,7 +28,6 @@ export function getOne (res, tableName, id) {
 }
 
 export function getAll (res, tableName) {
-
   const query = 'SELECT * FROM ' + tableName
 
   db.query(query, (err, data) => {

@@ -71,9 +71,12 @@ export default function Boulders(props) {
 
   useEffect(() => {
     setBoulderData(
-      allBoulderData.filter(
-        (boulder) => parseInt(boulder.locationId) === parseInt(props.locationId)
-      )
+      allBoulderData.filter((boulder) => {
+        return (
+          parseInt(boulder.locationId) === parseInt(props.locationId) &&
+          boulder.setEndDate === "0000-00-00"
+        )
+      })
     )
   }, [allBoulderData])
 
@@ -90,24 +93,24 @@ export default function Boulders(props) {
     )
   }
 
-  function addBoulder() {
+  function addBoulder(newBoulder) {
     add(
       boulderEndpoint,
       props.boulderDataCentral,
       props.setBoulderDataCentral,
-      getNewBoulder(),
+      newBoulder,
       setAllBoulderData,
       clearBoulderRefs
     )
   }
 
-  function editBoulder(boulderId) {
+  function editBoulder(boulderId, newBoulder) {
     edit(
       boulderEndpoint,
       boulderId,
       props.boulderDataCentral,
       props.setBoulderDataCentral,
-      getNewBoulder(),
+      newBoulder,
       setAllBoulderData,
       clearBoulderRefs
     )
@@ -128,6 +131,7 @@ export default function Boulders(props) {
    */
 
   function clearBoulderRefs() {
+    console.log(newBoulderRating)
     newBoulderRating.current.value = 0
     newBoulderColour.current.value = ""
     newBoulderBoulderType.current.value = ""
@@ -166,24 +170,23 @@ export default function Boulders(props) {
   }
 
   function closeBoulder(boulder) {
-    const newBoulder = {
-      locationId: props.locationId,
-      rating: boulder.rating,
-      colour: boulder.colour,
-      boulderType: boulder.boulderType,
-      description: boulder.description,
-      setStartDate: boulder.setStartDate,
-      setEndDate: getCurrentDateTime(),
-    }
-
     // TODO: use existing EDIT function instead of creating new one
     edit(
       boulderEndpoint,
       boulder.id,
-      newBoulder,
-      boulderData,
-      setBoulderData,
-      clearBoulderRefs
+      props.boulderDataCentral,
+      props.setBoulderDataCentral,
+      {
+        locationId: parseInt(props.locationId),
+        rating: parseInt(boulder.rating),
+        colour: boulder.colour,
+        boulderType: boulder.boulderType,
+        description: boulder.description,
+        setStartDate: boulder.setStartDate,
+        setEndDate: getCurrentDateTime(),
+      },
+      setAllBoulderData,
+      () => {}
     )
   }
 
@@ -261,7 +264,7 @@ export default function Boulders(props) {
               <input type="date" ref={newBoulderSetEndDate}></input>
             </div>
             <div className="buttons">
-              <button type="button" onClick={() => addBoulder()}>
+              <button type="button" onClick={() => addBoulder(getNewBoulder())}>
                 <img src={images.addIcon}></img>
               </button>
               <button type="button" onClick={() => clearBoulderRefs()}>
@@ -311,13 +314,15 @@ export default function Boulders(props) {
                   </div>
                   {viewingBoulder == boulder.id && (
                     <div className="buttons">
-                      <button
-                        onClick={() => {
-                          closeBoulder(boulder)
-                        }}
-                      >
-                        Close
-                      </button>
+                      {boulder.setEndDate === "0000-00-00" && (
+                        <button
+                          onClick={() => {
+                            closeBoulder(boulder)
+                          }}
+                        >
+                          Close
+                        </button>
+                      )}
                       <button
                         onClick={() => {
                           changeStates(0, boulder.id, false)
@@ -392,7 +397,7 @@ export default function Boulders(props) {
                   <div className="buttons">
                     <button
                       type="button"
-                      onClick={() => editBoulder(boulder.id)}
+                      onClick={() => editBoulder(boulder.id, getNewBoulder())}
                     >
                       <img src={images.confirmIcon}></img>
                     </button>
