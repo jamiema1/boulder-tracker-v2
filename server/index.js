@@ -2,6 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as dotenv from 'dotenv'
+
 import gymRoutes from './routes/gyms.js'
 import locationRoutes from './routes/locations.js'
 import boulderRoutes from './routes/boulders.js'
@@ -15,6 +16,7 @@ import userOldRoutes from './routes/user_old.js'
 dotenv.config()
 
 const app = express()
+
 app.use(cors())
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))

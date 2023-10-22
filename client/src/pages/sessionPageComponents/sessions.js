@@ -181,6 +181,8 @@ export default function Sessions(props) {
         return parseInt(boulder.id) === parseInt(climb.boulderId)
       })
 
+      if (boulder === undefined) return
+
       // TODO: Change for unrated boulders
       if (boulder.rating != -1) {
         weightedRating += boulder.rating * climb.attempts
@@ -203,7 +205,7 @@ export default function Sessions(props) {
     )
   }
 
-  function closeSession(session) {
+  function endSession(session) {
     // TODO: use existing EDIT function instead of creating new one
     edit(
       sessionEndpoint,
@@ -305,10 +307,10 @@ export default function Sessions(props) {
                       {session.sessionEndTime === "0000-00-00 00:00:00" && (
                         <button
                           onClick={() => {
-                            closeSession(session)
+                            endSession(session)
                           }}
                         >
-                          Close
+                          End
                         </button>
                       )}
                       <button

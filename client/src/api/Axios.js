@@ -1,6 +1,5 @@
 import Axios from "axios"
 
-// TODO: need to make the serverhost name start with https
 const serverhost = "https://jamiema.ca"
 const localhost = "http://localhost"
 
