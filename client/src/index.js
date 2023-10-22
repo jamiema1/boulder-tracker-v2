@@ -1,6 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 import {Auth0Provider} from "@auth0/auth0-react"
+import {ROOT_NAME} from "./environment.js"
 import App from "./App"
 import "./App.css"
 
@@ -11,7 +12,7 @@ root.render(
     domain="jamiema.us.auth0.com"
     clientId="QdycHaHMkS7kIDUxzSlmDS9nKafLKoTc"
     authorizationParams={{
-      redirect_uri: "http://localhost:3000/boulder-tracker-v2/",
+      redirect_uri: ROOT_NAME,
     }}
   >
     <App />
