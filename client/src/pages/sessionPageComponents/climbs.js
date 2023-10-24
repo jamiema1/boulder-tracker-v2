@@ -15,6 +15,11 @@ import {
   climbEndpoint,
   locationEndpoint,
 } from "../../api/endpoints.js"
+import ListGroup from "react-bootstrap/ListGroup"
+import Button from "react-bootstrap//Button"
+import Container from "react-bootstrap/esm/Container.js"
+import Row from "react-bootstrap/Row"
+import Col from "react-bootstrap/Col"
 
 export default function Climbs(props) {
   /*
@@ -271,20 +276,25 @@ export default function Climbs(props) {
    */
 
   return (
-    <ul className="dataList">
+    <ListGroup>
       {!addingClimb && (
-        <button
-          className="topButtons"
-          onClick={() => {
-            changeStates(0, 0, true)
-            loadInitialBoulders()
-          }}
-        >
-          Add a Climb
-        </button>
+        <Container>
+          <Row>
+            <Col>
+              <Button
+                onClick={() => {
+                  changeStates(0, 0, true)
+                  loadInitialBoulders()
+                }}
+              >
+                Add a Climb
+              </Button>
+            </Col>
+          </Row>
+        </Container>
       )}
       {addingClimb && (
-        <li className="item">
+        <ListGroup.Item>
           <form className="components">
             <div className="fields">
               <label>Location:</label>
@@ -345,13 +355,13 @@ export default function Climbs(props) {
               </button>
             </div>
           </form>
-        </li>
+        </ListGroup.Item>
       )}
       {[...climbData].reverse().map((climb) => {
         return (
           <div key={climb.id}>
             {editingClimb !== climb.id && (
-              <li className="item">
+              <ListGroup.Item>
                 <div className="components">
                   {/* <div
                     className="colourBar"
@@ -418,10 +428,10 @@ export default function Climbs(props) {
                     </div>
                   )}
                 </div>{" "}
-              </li>
+              </ListGroup.Item>
             )}
             {editingClimb == climb.id && (
-              <li className="item">
+              <ListGroup.Item>
                 <form className="components">
                   <div className="fields">
                     <label>Location:</label>
@@ -485,11 +495,11 @@ export default function Climbs(props) {
                     </button>
                   </div>
                 </form>
-              </li>
+              </ListGroup.Item>
             )}
           </div>
         )
       })}
-    </ul>
+    </ListGroup>
   )
 }

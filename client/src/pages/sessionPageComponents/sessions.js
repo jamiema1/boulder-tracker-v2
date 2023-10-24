@@ -4,7 +4,6 @@ import Climbs from "./climbs"
 import {
   convertToEditDateTime,
   getCurrentDateTime,
-  getOptions,
   getTimeDifferenceString,
 } from "../helpers.js"
 import images from "../../images/images.js"
@@ -18,6 +17,14 @@ import {
   climbEndpoint,
   boulderEndpoint,
 } from "../../api/endpoints.js"
+import Accordion from "react-bootstrap/Accordion"
+import Button from "react-bootstrap/Button"
+import Container from "react-bootstrap/Container"
+import Stack from "react-bootstrap/Stack"
+import Row from "react-bootstrap/Row"
+import Col from "react-bootstrap/Col"
+import Form from "react-bootstrap/Form"
+import FloatingLabel from "react-bootstrap/FloatingLabel"
 
 export default function Sessions(props) {
   /*
@@ -129,6 +136,24 @@ export default function Sessions(props) {
     )
   }
 
+  function endSession(session) {
+    // TODO: use existing EDIT function instead of creating new one
+    edit(
+      sessionEndpoint,
+      session.id,
+      props.sessionDataCentral,
+      props.setSessionDataCentral,
+      {
+        gymId: parseInt(session.gymId),
+        userId: parseInt(session.userId),
+        sessionStartTime: session.sessionStartTime,
+        sessionEndTime: getCurrentDateTime(),
+      },
+      setSessionData,
+      () => {}
+    )
+  }
+
   /*
    * Helper functions
    */
@@ -196,30 +221,12 @@ export default function Sessions(props) {
     weightedRating = Math.round((weightedRating / weightedAttempts) * 10) / 10
 
     return (
-      <div className="rightColumn">
-        <div className="text">{climbs} Climbs</div>
-        <div className="text">{attempts} Attempts</div>
-        <div className="text">{sends} Sends</div>
-        <div className="text">{weightedRating} Weighted Rating</div>
-      </div>
-    )
-  }
-
-  function endSession(session) {
-    // TODO: use existing EDIT function instead of creating new one
-    edit(
-      sessionEndpoint,
-      session.id,
-      props.sessionDataCentral,
-      props.setSessionDataCentral,
-      {
-        gymId: parseInt(session.gymId),
-        userId: parseInt(session.userId),
-        sessionStartTime: session.sessionStartTime,
-        sessionEndTime: getCurrentDateTime(),
-      },
-      setSessionData,
-      () => {}
+      <Stack gap={3}>
+        <div className="text-end">{climbs} Climbs</div>
+        <div className="text-end">{attempts} Attempts</div>
+        <div className="text-end">{sends} Sends</div>
+        <div className="text-end">{weightedRating} Rating</div>
+      </Stack>
     )
   }
 
@@ -228,179 +235,282 @@ export default function Sessions(props) {
    */
 
   return (
-    <ul className="dataList outerList">
-      {!addingSession && (
-        <button className="topButtons" onClick={() => changeStates(0, 0, true)}>
-          Add a Session
-        </button>
-      )}
-      {addingSession && (
-        <li className="item">
-          <form className="components">
-            <div className="fields">
-              <label>Gym ID:</label>
-              <select ref={newGymId}>
-                {gymData.map((gym) => {
-                  return getOptions(gym.city, gym.id)
-                })}
-              </select>
-              <label>User ID:</label>
-              <input type="number" ref={newUserId} defaultValue={1}></input>
-              <label>Start Time:</label>
-              <input
-                type="datetime-local"
-                ref={newSessionStartTime}
-                defaultValue={convertToEditDateTime(getCurrentDateTime())}
-              ></input>
-              <label>End Time:</label>
-              <input type="datetime-local" ref={newSessionEndTime}></input>
-            </div>
-            <div className="buttons">
-              <button
-                className="confirmButton"
-                type="button"
-                onClick={() => addSession()}
-              >
-                <img src={images.addIcon}></img>
-              </button>
-              <button
-                className="cancelButton"
-                type="button"
-                onClick={() => clearSessionRefs()}
-              >
-                <img src={images.cancelIcon}></img>
-              </button>
-            </div>
-          </form>
-        </li>
-      )}
-      {[...sessionData].reverse().map((session) => {
-        return (
-          <div key={session.id}>
-            {editingSession !== session.id && (
-              <li className="item">
-                <div className="components">
-                  <div
-                    className="leftColumn"
-                    onClick={() => changeStates(session.id, 0, false)}
-                  >
-                    <div className="text">
-                      {new Date(session.sessionStartTime).toLocaleDateString()}
-                    </div>
-                    <div className="text">
-                      {
-                        gymData.find((gym) => {
-                          return parseInt(gym.id) === parseInt(session.gymId)
-                        })?.city
-                      }
-                    </div>
-                    <div className="text">
-                      {getTimeDifferenceString(
-                        session.sessionStartTime,
-                        session.sessionEndTime
-                      )}
-                    </div>
-                  </div>
-                  {climbText(session)}
-                  {viewingSession == session.id && (
-                    <div className="buttons">
-                      {session.sessionEndTime === "0000-00-00 00:00:00" && (
-                        <button
-                          onClick={() => {
-                            endSession(session)
-                          }}
+    <Container>
+      <Row className="mb-3 ">
+        <Col className="text-end">
+          {!addingSession && (
+            <Button onClick={() => changeStates(0, 0, true)}>
+              Add a Session
+            </Button>
+          )}
+        </Col>
+      </Row>
+      <Row>
+        <Accordion defaultActiveKey="0">
+          {addingSession && (
+            <Accordion.Item eventKey="0" className="mb-3">
+              <Accordion.Header>
+                <Form>
+                  <Row>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="GymIDInput"
+                        label="Gym ID"
+                        className="mb-3"
+                      >
+                        <Form.Select ref={newGymId}>
+                          {gymData.map((gym) => (
+                            <option key={gym.id} value={gym.id}>
+                              {gym.city}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="UserIDInput"
+                        label="User ID"
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="number"
+                          placeholder={1}
+                          ref={newUserId}
+                          defaultValue={1}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="StartTimeInput"
+                        label="Start Time"
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="datetime-local"
+                          placeholder={getCurrentDateTime()}
+                          defaultValue={convertToEditDateTime(
+                            getCurrentDateTime()
+                          )}
+                          ref={newSessionStartTime}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="EndTimeInput"
+                        label="End Time"
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="datetime-local"
+                          placeholder={getCurrentDateTime()}
+                          ref={newSessionEndTime}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <Stack direction="horizontal" gap="3">
+                        <Button variant="success" onClick={() => addSession()}>
+                          <img src={images.addIcon}></img>
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => clearSessionRefs()}
                         >
-                          End
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        className="editButton"
-                        onClick={() => changeStates(0, session.id, false)}
-                      >
-                        <img src={images.editIcon}></img>
-                      </button>
-                      <button
-                        type="button"
-                        className="deleteButton"
-                        onClick={() => deleteSession(session.id)}
-                      >
-                        <img src={images.deleteIcon}></img>
-                      </button>
-                    </div>
+                          <img src={images.cancelIcon}></img>
+                        </Button>
+                      </Stack>
+                    </Col>
+                  </Row>
+                </Form>
+              </Accordion.Header>
+            </Accordion.Item>
+          )}
+          {[...sessionData].reverse().map((session) => {
+            return (
+              <div key={session.id}>
+                <Accordion.Item eventKey={session.id} className="mb-3">
+                  {editingSession !== session.id && (
+                    <Accordion.Header
+                      onClick={() => changeStates(session.id, 0, false)}
+                    >
+                      <Container>
+                        <Row>
+                          <Col className="p-0">
+                            <Stack gap={3}>
+                              <div>
+                                {new Date(
+                                  session.sessionStartTime
+                                ).toLocaleDateString()}
+                              </div>
+                              <div>
+                                {
+                                  gymData.find((gym) => {
+                                    return (
+                                      parseInt(gym.id) ===
+                                      parseInt(session.gymId)
+                                    )
+                                  })?.city
+                                }
+                              </div>
+                              <div>
+                                {getTimeDifferenceString(
+                                  session.sessionStartTime,
+                                  session.sessionEndTime
+                                )}
+                              </div>
+                            </Stack>
+                          </Col>
+                          <Col>{climbText(session)}</Col>
+                        </Row>
+                      </Container>
+                    </Accordion.Header>
                   )}
-                </div>
-                {viewingSession == session.id && (
-                  <Climbs
-                    sessionId={session.id}
-                    gymId={session.gymId}
-                    gymDataCentral={props.gymDataCentral}
-                    setGymDataCentral={props.setGymDataCentral}
-                    locationDataCentral={props.locationDataCentral}
-                    setLocationDataCentral={props.setLocationDataCentral}
-                    boulderDataCentral={props.boulderDataCentral}
-                    setBoulderDataCentral={props.setBoulderDataCentral}
-                    climbDataCentral={props.climbDataCentral}
-                    setClimbDataCentral={props.setClimbDataCentral}
-                  ></Climbs>
-                )}
-              </li>
-            )}
-            {editingSession == session.id && (
-              <li className="item">
-                <form className="components">
-                  <div className="fields">
-                    <label>Gym ID:</label>
-                    <select ref={newGymId} defaultValue={session.gymId}>
-                      {gymData.map((gym) => {
-                        return getOptions(gym.city, gym.id)
-                      })}
-                    </select>
-                    <label>User ID:</label>
-                    <input
-                      type="number"
-                      ref={newUserId}
-                      defaultValue={session.userId}
-                    ></input>
-                    <label>Start Time:</label>
-                    <input
-                      type="datetime-local"
-                      ref={newSessionStartTime}
-                      defaultValue={convertToEditDateTime(
-                        session.sessionStartTime
-                      )}
-                    ></input>
-                    <label>End Time:</label>
-                    <input
-                      type="datetime-local"
-                      ref={newSessionEndTime}
-                      defaultValue={convertToEditDateTime(
-                        session.sessionEndTime
-                      )}
-                    ></input>
-                  </div>
-                  <div className="buttons">
-                    <button
-                      type="button"
-                      className="confirmButton"
-                      onClick={() => editSession(session.id)}
-                    >
-                      <img src={images.confirmIcon}></img>
-                    </button>
-                    <button
-                      type="button"
-                      className="cancelButton"
-                      onClick={() => changeStates(0, 0, false)}
-                    >
-                      <img src={images.cancelIcon}></img>
-                    </button>
-                  </div>
-                </form>
-              </li>
-            )}
-          </div>
-        )
-      })}
-    </ul>
+                  {editingSession == session.id && (
+                    <Accordion.Header>
+                      <Form>
+                        <Row>
+                          <Col xl>
+                            <FloatingLabel
+                              controlId="GymIDInput"
+                              label="Gym ID"
+                              className="mb-3"
+                            >
+                              <Form.Select
+                                ref={newGymId}
+                                defaultValue={session.gymId}
+                              >
+                                {gymData.map((gym) => (
+                                  <option key={gym.id} value={gym.id}>
+                                    {gym.city}
+                                  </option>
+                                ))}
+                              </Form.Select>
+                            </FloatingLabel>
+                          </Col>
+                          <Col xl>
+                            <FloatingLabel
+                              controlId="UserIDInput"
+                              label="User ID"
+                              className="mb-3"
+                            >
+                              <Form.Control
+                                type="number"
+                                placeholder={session.userId}
+                                ref={newUserId}
+                                defaultValue={session.userId}
+                              />
+                            </FloatingLabel>
+                          </Col>
+                          <Col xl>
+                            <FloatingLabel
+                              controlId="StartTimeInput"
+                              label="Start Time"
+                              className="mb-3"
+                            >
+                              <Form.Control
+                                type="datetime-local"
+                                placeholder={convertToEditDateTime(
+                                  session.sessionEndTime
+                                )}
+                                ref={newSessionStartTime}
+                                defaultValue={convertToEditDateTime(
+                                  session.sessionEndTime
+                                )}
+                              />
+                            </FloatingLabel>
+                          </Col>
+                          <Col xl>
+                            <FloatingLabel
+                              controlId="EndTimeInput"
+                              label="End Time"
+                              className="mb-3"
+                            >
+                              <Form.Control
+                                type="datetime-local"
+                                placeholder={convertToEditDateTime(
+                                  session.sessionEndTime
+                                )}
+                                ref={newSessionEndTime}
+                                defaultValue={convertToEditDateTime(
+                                  session.sessionEndTime
+                                )}
+                              />
+                            </FloatingLabel>
+                          </Col>
+                          <Col xl>
+                            <Stack direction="horizontal" gap={3}>
+                              <Button
+                                variant="success"
+                                onClick={() => editSession(session.id)}
+                              >
+                                <img src={images.confirmIcon}></img>
+                              </Button>
+                              <Button
+                                variant="danger"
+                                onClick={() => changeStates(0, 0, false)}
+                              >
+                                <img src={images.cancelIcon}></img>
+                              </Button>
+                            </Stack>
+                          </Col>
+                        </Row>
+                      </Form>
+                    </Accordion.Header>
+                  )}
+                  <Accordion.Body>
+                    <Container className="mb-3">
+                      <Row>
+                        <Col>
+                          <Stack direction="horizontal" gap={3}>
+                            {session.sessionEndTime ===
+                              "0000-00-00 00:00:00" && (
+                              <Button
+                                variant="secondary"
+                                onClick={() => {
+                                  endSession(session)
+                                }}
+                              >
+                                End
+                              </Button>
+                            )}
+                            <Button
+                              variant="warning"
+                              onClick={() => changeStates(0, session.id, false)}
+                            >
+                              <img src={images.editIcon}></img>
+                            </Button>
+                            <Button
+                              variant="danger"
+                              onClick={() => deleteSession(session.id)}
+                            >
+                              <img src={images.deleteIcon}></img>
+                            </Button>
+                          </Stack>
+                        </Col>
+                      </Row>
+                    </Container>
+                    <Climbs
+                      sessionId={session.id}
+                      gymId={session.gymId}
+                      gymDataCentral={props.gymDataCentral}
+                      setGymDataCentral={props.setGymDataCentral}
+                      locationDataCentral={props.locationDataCentral}
+                      setLocationDataCentral={props.setLocationDataCentral}
+                      boulderDataCentral={props.boulderDataCentral}
+                      setBoulderDataCentral={props.setBoulderDataCentral}
+                      climbDataCentral={props.climbDataCentral}
+                      setClimbDataCentral={props.setClimbDataCentral}
+                    ></Climbs>
+                  </Accordion.Body>
+                </Accordion.Item>
+              </div>
+            )
+          })}
+        </Accordion>
+      </Row>
+    </Container>
   )
 }
