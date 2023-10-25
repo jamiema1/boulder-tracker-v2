@@ -26,6 +26,10 @@ import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 
+// import AddButton from "../AddButton"
+// import AddingButtonStack from "../AddingButtonStack"
+// import EditingButtonStack from "../EditingButtonStack"
+
 export default function Sessions(props) {
   /*
    * React Hooks:
@@ -183,7 +187,7 @@ export default function Sessions(props) {
     newEditingSession,
     newAddingSession
   ) {
-    if (viewingSession === newViewingSession) {
+    if (viewingSession == newViewingSession) {
       newViewingSession = 0
     }
     setViewingSession(newViewingSession)
@@ -236,20 +240,24 @@ export default function Sessions(props) {
 
   return (
     <Container>
-      <Row className="mb-3 ">
-        <Col className="text-end">
-          {!addingSession && (
-            <Button onClick={() => changeStates(0, 0, true)}>
+      {!addingSession && (
+        <Row className="mb-3">
+          <Col className="text-end">
+            <Button
+              onClick={() => {
+                changeStates(0, 0, true)
+              }}
+            >
               Add a Session
             </Button>
-          )}
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      )}
       <Row>
-        <Accordion defaultActiveKey="0">
+        <Accordion defaultActiveKey={0}>
           {addingSession && (
-            <Accordion.Item eventKey="0" className="mb-3">
-              <Accordion.Header>
+            <Accordion.Item eventKey={0} className="mb-3">
+              <Accordion.Button>
                 <Form>
                   <Row>
                     <Col xl>
@@ -325,144 +333,151 @@ export default function Sessions(props) {
                     </Col>
                   </Row>
                 </Form>
-              </Accordion.Header>
+              </Accordion.Button>
             </Accordion.Item>
           )}
           {[...sessionData].reverse().map((session) => {
             return (
-              <div key={session.id}>
-                <Accordion.Item eventKey={session.id} className="mb-3">
-                  {editingSession !== session.id && (
-                    <Accordion.Header
-                      onClick={() => changeStates(session.id, 0, false)}
-                    >
-                      <Container>
-                        <Row>
-                          <Col className="p-0">
-                            <Stack gap={3}>
-                              <div>
-                                {new Date(
-                                  session.sessionStartTime
-                                ).toLocaleDateString()}
-                              </div>
-                              <div>
-                                {
-                                  gymData.find((gym) => {
-                                    return (
-                                      parseInt(gym.id) ===
-                                      parseInt(session.gymId)
-                                    )
-                                  })?.city
-                                }
-                              </div>
-                              <div>
-                                {getTimeDifferenceString(
-                                  session.sessionStartTime,
-                                  session.sessionEndTime
-                                )}
-                              </div>
-                            </Stack>
-                          </Col>
-                          <Col>{climbText(session)}</Col>
-                        </Row>
-                      </Container>
-                    </Accordion.Header>
-                  )}
-                  {editingSession == session.id && (
-                    <Accordion.Header>
-                      <Form>
-                        <Row>
-                          <Col xl>
-                            <FloatingLabel
-                              controlId="GymIDInput"
-                              label="Gym ID"
-                              className="mb-3"
-                            >
-                              <Form.Select
-                                ref={newGymId}
-                                defaultValue={session.gymId}
-                              >
-                                {gymData.map((gym) => (
-                                  <option key={gym.id} value={gym.id}>
-                                    {gym.city}
-                                  </option>
-                                ))}
-                              </Form.Select>
-                            </FloatingLabel>
-                          </Col>
-                          <Col xl>
-                            <FloatingLabel
-                              controlId="UserIDInput"
-                              label="User ID"
-                              className="mb-3"
-                            >
-                              <Form.Control
-                                type="number"
-                                placeholder={session.userId}
-                                ref={newUserId}
-                                defaultValue={session.userId}
-                              />
-                            </FloatingLabel>
-                          </Col>
-                          <Col xl>
-                            <FloatingLabel
-                              controlId="StartTimeInput"
-                              label="Start Time"
-                              className="mb-3"
-                            >
-                              <Form.Control
-                                type="datetime-local"
-                                placeholder={convertToEditDateTime(
-                                  session.sessionEndTime
-                                )}
-                                ref={newSessionStartTime}
-                                defaultValue={convertToEditDateTime(
-                                  session.sessionEndTime
-                                )}
-                              />
-                            </FloatingLabel>
-                          </Col>
-                          <Col xl>
-                            <FloatingLabel
-                              controlId="EndTimeInput"
-                              label="End Time"
-                              className="mb-3"
-                            >
-                              <Form.Control
-                                type="datetime-local"
-                                placeholder={convertToEditDateTime(
-                                  session.sessionEndTime
-                                )}
-                                ref={newSessionEndTime}
-                                defaultValue={convertToEditDateTime(
-                                  session.sessionEndTime
-                                )}
-                              />
-                            </FloatingLabel>
-                          </Col>
-                          <Col xl>
-                            <Stack direction="horizontal" gap={3}>
-                              <Button
-                                variant="success"
-                                onClick={() => editSession(session.id)}
-                              >
-                                <img src={images.confirmIcon}></img>
-                              </Button>
-                              <Button
-                                variant="danger"
-                                onClick={() => changeStates(0, 0, false)}
-                              >
-                                <img src={images.cancelIcon}></img>
-                              </Button>
-                            </Stack>
-                          </Col>
-                        </Row>
-                      </Form>
-                    </Accordion.Header>
-                  )}
-                  <Accordion.Body>
-                    <Container className="mb-3">
+              <Accordion.Item
+                eventKey={session.id}
+                key={session.id}
+                className="mb-3"
+              >
+                {editingSession !== session.id && (
+                  <Accordion.Button
+                    disabled={addingSession || editingSession}
+                    onClick={() => {
+                      changeStates(session.id, 0, false)
+                    }}
+                  >
+                    <Container>
                       <Row>
+                        <Col className="p-0">
+                          <Stack gap={3}>
+                            <div>
+                              {new Date(
+                                session.sessionStartTime
+                              ).toLocaleDateString()}
+                            </div>
+                            <div>
+                              {
+                                gymData.find((gym) => {
+                                  return (
+                                    parseInt(gym.id) === parseInt(session.gymId)
+                                  )
+                                })?.city
+                              }
+                            </div>
+                            <div>
+                              {getTimeDifferenceString(
+                                session.sessionStartTime,
+                                session.sessionEndTime
+                              )}
+                            </div>
+                          </Stack>
+                        </Col>
+                        <Col>{climbText(session)}</Col>
+                      </Row>
+                    </Container>
+                  </Accordion.Button>
+                )}
+                {editingSession == session.id && (
+                  <Accordion.Header>
+                    <Form>
+                      <Row>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="GymIDInput"
+                            label="Gym ID"
+                            className="mb-3"
+                          >
+                            <Form.Select
+                              ref={newGymId}
+                              defaultValue={session.gymId}
+                            >
+                              {gymData.map((gym) => (
+                                <option key={gym.id} value={gym.id}>
+                                  {gym.city}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="UserIDInput"
+                            label="User ID"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="number"
+                              placeholder={session.userId}
+                              ref={newUserId}
+                              defaultValue={session.userId}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="StartTimeInput"
+                            label="Start Time"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="datetime-local"
+                              placeholder={convertToEditDateTime(
+                                session.sessionEndTime
+                              )}
+                              ref={newSessionStartTime}
+                              defaultValue={convertToEditDateTime(
+                                session.sessionEndTime
+                              )}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="EndTimeInput"
+                            label="End Time"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="datetime-local"
+                              placeholder={convertToEditDateTime(
+                                session.sessionEndTime
+                              )}
+                              ref={newSessionEndTime}
+                              defaultValue={convertToEditDateTime(
+                                session.sessionEndTime
+                              )}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <Stack direction="horizontal" gap={3}>
+                            <Button
+                              variant="success"
+                              onClick={() => editSession(session.id)}
+                            >
+                              <img src={images.confirmIcon}></img>
+                            </Button>
+                            <Button
+                              variant="danger"
+                              onClick={() => changeStates(0, 0, false)}
+                            >
+                              <img src={images.cancelIcon}></img>
+                            </Button>
+                          </Stack>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Accordion.Header>
+                )}
+                {editingSession !== session.id && !addingSession && (
+                  <Accordion.Body>
+                    <Container>
+                      <Row>
+                        {/* {viewingSession === session.id && ( */}
                         <Col>
                           <Stack direction="horizontal" gap={3}>
                             {session.sessionEndTime ===
@@ -490,6 +505,7 @@ export default function Sessions(props) {
                             </Button>
                           </Stack>
                         </Col>
+                        {/* )} */}
                       </Row>
                     </Container>
                     <Climbs
@@ -505,8 +521,8 @@ export default function Sessions(props) {
                       setClimbDataCentral={props.setClimbDataCentral}
                     ></Climbs>
                   </Accordion.Body>
-                </Accordion.Item>
-              </div>
+                )}
+              </Accordion.Item>
             )
           })}
         </Accordion>

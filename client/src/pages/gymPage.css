@@ -100,9 +100,8 @@
   flex-shrink: 0;
 }
 
-.hexImage {
-  width: 35px;
-  height: 35px;
+.climbIcons {
+  width: 100%;
 }
 
 .text {

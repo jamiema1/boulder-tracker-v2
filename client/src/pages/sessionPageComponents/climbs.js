@@ -4,6 +4,7 @@ import {
   convertToEditDateTime,
   getCurrentDateTime,
   getOptions,
+  // convertToViewDateTime,
 } from "../helpers.js"
 import images from "../../images/images.js"
 import {
@@ -20,6 +21,9 @@ import Button from "react-bootstrap//Button"
 import Container from "react-bootstrap/esm/Container.js"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
+// import Stack from "react-bootstrap/Stack"
+// import Form from "react-bootstrap/Form"
+// import FloatingLabel from "react-bootstrap/FloatingLabel"
 
 export default function Climbs(props) {
   /*
@@ -277,10 +281,10 @@ export default function Climbs(props) {
 
   return (
     <ListGroup>
-      {!addingClimb && (
-        <Container>
-          <Row>
-            <Col>
+      <Container>
+        {!addingClimb && (
+          <Row className="mb-3">
+            <Col className="text-end">
               <Button
                 onClick={() => {
                   changeStates(0, 0, true)
@@ -291,215 +295,207 @@ export default function Climbs(props) {
               </Button>
             </Col>
           </Row>
-        </Container>
-      )}
-      {addingClimb && (
-        <ListGroup.Item>
-          <form className="components">
-            <div className="fields">
-              <label>Location:</label>
-              <select
-                ref={newLocationId}
-                onChange={(e) => getBoulders(e.target.value)}
-              >
-                {locationData.map((location) => {
-                  return getOptions(location.name, location.id)
-                })}
-              </select>
-              <label>Boulder:</label>
-              <select ref={newBoulderId}>
-                {boulderData.map((boulder) => {
-                  return getOptions(
-                    boulder.rating +
-                      " | " +
-                      boulder.colour +
-                      " | " +
-                      boulder.boulderType +
-                      " | " +
-                      boulder.description.substring(0, 25),
-                    boulder.id
-                  )
-                })}
-              </select>
-              <label>Attempts:</label>
-              <input type="number" ref={newAttempts} defaultValue={1}></input>
-              <label>Sends:</label>
-              <input type="number" ref={newSends} defaultValue={0}></input>
-              <label>Start Time:</label>
-              <input
-                type="datetime-local"
-                ref={newClimbStartTime}
-                defaultValue={getCurrentDateTime()}
-              ></input>
-              <label>End Time:</label>
-              <input
-                type="datetime-local"
-                ref={newClimbEndTime}
-                defaultValue={getCurrentDateTime()}
-              ></input>
-            </div>
-            <div className="buttons">
-              <button
-                type="button"
-                className="addButton"
-                onClick={() => addClimb()}
-              >
-                <img src={images.addIcon}></img>
-              </button>
-              <button
-                type="button"
-                className="cancelButton"
-                onClick={() => clearClimbRefs()}
-              >
-                <img src={images.cancelIcon}></img>
-              </button>
-            </div>
-          </form>
-        </ListGroup.Item>
-      )}
-      {[...climbData].reverse().map((climb) => {
-        return (
-          <div key={climb.id}>
-            {editingClimb !== climb.id && (
-              <ListGroup.Item>
-                <div className="components">
-                  {/* <div
-                    className="colourBar"
-                    style={{backgroundColor: "magenta"}}
+        )}
+        <Row>
+          {addingClimb && (
+            <ListGroup.Item className="mb-2">
+              <form className="components">
+                <div className="fields">
+                  <label>Location:</label>
+                  <select
+                    ref={newLocationId}
+                    onChange={(e) => getBoulders(e.target.value)}
                   >
-                    {climb.id}
-                  </div>
-                  <div
-                    className="colourBar"
-                    style={{backgroundColor: "teal"}}
+                    {locationData.map((location) => {
+                      return getOptions(location.name, location.id)
+                    })}
+                  </select>
+                  <label>Boulder:</label>
+                  <select ref={newBoulderId}>
+                    {boulderData.map((boulder) => {
+                      return getOptions(
+                        boulder.rating +
+                          " | " +
+                          boulder.colour +
+                          " | " +
+                          boulder.boulderType +
+                          " | " +
+                          boulder.description.substring(0, 25),
+                        boulder.id
+                      )
+                    })}
+                  </select>
+                  <label>Attempts:</label>
+                  <input
+                    type="number"
+                    ref={newAttempts}
+                    defaultValue={1}
+                  ></input>
+                  <label>Sends:</label>
+                  <input type="number" ref={newSends} defaultValue={0}></input>
+                  <label>Start Time:</label>
+                  <input
+                    type="datetime-local"
+                    ref={newClimbStartTime}
+                    defaultValue={getCurrentDateTime()}
+                  ></input>
+                  <label>End Time:</label>
+                  <input
+                    type="datetime-local"
+                    ref={newClimbEndTime}
+                    defaultValue={getCurrentDateTime()}
+                  ></input>
+                </div>
+                <div className="buttons">
+                  <button
+                    type="button"
+                    className="addButton"
+                    onClick={() => addClimb()}
                   >
-                    {climb.boulderId}
-                  </div> */}
-                  <div
-                    className="colourBar"
-                    style={{backgroundColor: getBoulderColour(climb)}}
-                  ></div>
-                  <div className="hex">
-                    <img
-                      className="hexImage"
-                      src={getHexImage(getBoulderRating(climb))}
-                    ></img>
-                  </div>
-                  <div className="hex">
-                    <img
-                      className="hexImage"
-                      src={getBoulderTypeImage(getBoulderType(climb))}
-                    ></img>
-                  </div>
-                  <div
-                    className="data climbData"
-                    onClick={() => changeStates(climb.id, 0, false)}
+                    <img src={images.addIcon}></img>
+                  </button>
+                  <button
+                    type="button"
+                    className="cancelButton"
+                    onClick={() => clearClimbRefs()}
                   >
-                    <div className="text">
-                      {climb.sends} / {climb.attempts}
-                    </div>
-                    <div className="text">{boulderText(climb)}</div>
-                    {/* <div className="text">
+                    <img src={images.cancelIcon}></img>
+                  </button>
+                </div>
+              </form>
+            </ListGroup.Item>
+          )}
+          {[...climbData].reverse().map((climb) => {
+            return (
+              <ListGroup.Item key={climb.id} className="mb-2 p-0">
+                {editingClimb !== climb.id && (
+                  <Container onClick={() => changeStates(climb.id, 0, false)}>
+                    <Row>
+                      <Col
+                        // xs={1}
+                        className="p-0"
+                        style={{backgroundColor: getBoulderColour(climb)}}
+                      ></Col>
+                      <Col className="p-1">
+                        <img
+                          className="climbIcons"
+                          src={getHexImage(getBoulderRating(climb))}
+                        ></img>
+                      </Col>
+                      <Col className="p-1">
+                        <img
+                          className="climbIcons"
+                          src={getBoulderTypeImage(getBoulderType(climb))}
+                        ></img>
+                      </Col>
+                      <Col xs={6} md={10}>
+                        <div className="text">
+                          {climb.sends} / {climb.attempts}
+                        </div>
+                        <div className="text">{boulderText(climb)}</div>
+                        {/* <div className="text">
                       {convertToViewDateTime(
                         climb.climbStartTime,
                         climb.climbEndTime
                       )}
                     </div> */}
-                  </div>
-                  {viewingClimb == climb.id && (
-                    <div className="buttons">
-                      <button
-                        type="button"
-                        className="editButton"
-                        onClick={() => {
-                          changeStates(0, climb.id, false)
-                          loadInitialBoulders()
-                        }}
+                      </Col>
+                    </Row>
+                    {viewingClimb == climb.id && (
+                      <div className="buttons">
+                        <button
+                          type="button"
+                          className="editButton"
+                          onClick={() => {
+                            changeStates(0, climb.id, false)
+                            loadInitialBoulders()
+                          }}
+                        >
+                          <img src={images.editIcon}></img>
+                        </button>
+                        <button
+                          type="button"
+                          className="deleteButton"
+                          onClick={() => deleteClimb(climb.id)}
+                        >
+                          <img src={images.deleteIcon}></img>
+                        </button>
+                      </div>
+                    )}
+                  </Container>
+                )}
+                {editingClimb == climb.id && (
+                  <form className="components">
+                    <div className="fields">
+                      <label>Location:</label>
+                      <select
+                        ref={newLocationId}
+                        onChange={(e) => getBoulders(e.target.value)}
                       >
-                        <img src={images.editIcon}></img>
+                        {locationData.map((location) => {
+                          return getOptions(location.name, location.id)
+                        })}
+                      </select>
+                      <label>Boulder:</label>
+                      <select ref={newBoulderId} defaultValue={climb.boulderId}>
+                        {boulderData.map((boulder) => {
+                          return getOptions(
+                            boulder.rating +
+                              " | " +
+                              boulder.colour +
+                              " | " +
+                              boulder.boulderType +
+                              " | " +
+                              boulder.description.substring(0, 50),
+                            boulder.id
+                          )
+                        })}
+                      </select>
+                      <label>Attempts:</label>
+                      <input
+                        type="number"
+                        ref={newAttempts}
+                        defaultValue={climb.attempts}
+                      ></input>
+                      <label>Sends:</label>
+                      <input
+                        type="number"
+                        ref={newSends}
+                        defaultValue={climb.sends}
+                      ></input>
+                      <label>Start Time:</label>
+                      <input
+                        type="datetime-local"
+                        ref={newClimbStartTime}
+                        defaultValue={convertToEditDateTime(
+                          climb.climbStartTime
+                        )}
+                      ></input>
+                      <label>End Time:</label>
+                      <input
+                        type="datetime-local"
+                        ref={newClimbEndTime}
+                        defaultValue={convertToEditDateTime(climb.climbEndTime)}
+                      ></input>
+                    </div>
+                    <div className="buttons">
+                      <button type="button" onClick={() => editClimb(climb.id)}>
+                        <img src={images.confirmIcon}></img>
                       </button>
                       <button
                         type="button"
-                        className="deleteButton"
-                        onClick={() => deleteClimb(climb.id)}
+                        onClick={() => changeStates(0, 0, false)}
                       >
-                        <img src={images.deleteIcon}></img>
+                        <img src={images.cancelIcon}></img>
                       </button>
                     </div>
-                  )}
-                </div>{" "}
+                  </form>
+                )}
               </ListGroup.Item>
-            )}
-            {editingClimb == climb.id && (
-              <ListGroup.Item>
-                <form className="components">
-                  <div className="fields">
-                    <label>Location:</label>
-                    <select
-                      ref={newLocationId}
-                      onChange={(e) => getBoulders(e.target.value)}
-                    >
-                      {locationData.map((location) => {
-                        return getOptions(location.name, location.id)
-                      })}
-                    </select>
-                    <label>Boulder:</label>
-                    <select ref={newBoulderId} defaultValue={climb.boulderId}>
-                      {boulderData.map((boulder) => {
-                        return getOptions(
-                          boulder.rating +
-                            " | " +
-                            boulder.colour +
-                            " | " +
-                            boulder.boulderType +
-                            " | " +
-                            boulder.description.substring(0, 50),
-                          boulder.id
-                        )
-                      })}
-                    </select>
-                    <label>Attempts:</label>
-                    <input
-                      type="number"
-                      ref={newAttempts}
-                      defaultValue={climb.attempts}
-                    ></input>
-                    <label>Sends:</label>
-                    <input
-                      type="number"
-                      ref={newSends}
-                      defaultValue={climb.sends}
-                    ></input>
-                    <label>Start Time:</label>
-                    <input
-                      type="datetime-local"
-                      ref={newClimbStartTime}
-                      defaultValue={convertToEditDateTime(climb.climbStartTime)}
-                    ></input>
-                    <label>End Time:</label>
-                    <input
-                      type="datetime-local"
-                      ref={newClimbEndTime}
-                      defaultValue={convertToEditDateTime(climb.climbEndTime)}
-                    ></input>
-                  </div>
-                  <div className="buttons">
-                    <button type="button" onClick={() => editClimb(climb.id)}>
-                      <img src={images.confirmIcon}></img>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => changeStates(0, 0, false)}
-                    >
-                      <img src={images.cancelIcon}></img>
-                    </button>
-                  </div>
-                </form>
-              </ListGroup.Item>
-            )}
-          </div>
-        )
-      })}
+            )
+          })}
+        </Row>
+      </Container>
     </ListGroup>
   )
 }
