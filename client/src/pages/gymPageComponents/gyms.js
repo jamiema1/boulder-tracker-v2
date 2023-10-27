@@ -1,8 +1,21 @@
+/* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
 import Locations from "./locations"
 
 import images from "../../images/images.js"
 import {get, add, edit, remove, gymEndpoint} from "../../api/endpoints.js"
+
+import Accordion from "react-bootstrap/Accordion"
+import Button from "react-bootstrap/Button"
+import Container from "react-bootstrap/Container"
+import Stack from "react-bootstrap/Stack"
+import Row from "react-bootstrap/Row"
+import Col from "react-bootstrap/Col"
+import Form from "react-bootstrap/Form"
+import FloatingLabel from "react-bootstrap/FloatingLabel"
+import AddingButtonStack from "../addingButtonStack"
+import AddButton from "../addButton"
+import EditingButtonStack from "../editingButtonStack"
 
 export default function Gyms(props) {
   /*
@@ -107,126 +120,192 @@ export default function Gyms(props) {
    */
 
   return (
-    <ul className="dataList outerList">
+    <Container>
       {!addingGym && (
-        <button className="topButtons" onClick={() => changeStates(0, 0, true)}>
-          Add a Gym
-        </button>
+        <AddButton
+          changeStates={changeStates}
+          message={"Add a Gym"}
+        ></AddButton>
       )}
-      {addingGym && (
-        <li className="item">
-          <form className="components">
-            <div className="leftColumn">
-              <div className="fields">
-                <label>Name:</label>
-                <input type="text" ref={newGymName}></input>
-                <label>Address:</label>
-                <input type="text" ref={newGymAddress}></input>
-                <label>City:</label>
-                <input type="text" ref={newGymCity}></input>
-              </div>
-            </div>
-            <div className="rightColumn "></div>
-            <div className="buttons">
-              <button type="button" onClick={() => addGym()}>
-                <img src={images.addIcon}></img>
-              </button>
-              <button type="button" onClick={() => clearGymRefs()}>
-                <img src={images.cancelIcon}></img>
-              </button>
-            </div>
-          </form>
-        </li>
-      )}
-      {gymData.map((gym) => {
-        return (
-          <div key={gym.id}>
-            {editingGym !== gym.id && (
-              <li className="item">
-                <div className="components">
-                  <div
-                    className="colourBar"
-                    style={{backgroundColor: "grey"}}
+      <Row>
+        <Accordion defaultActiveKey={0}>
+          {addingGym && (
+            <Accordion.Item eventKey={0} className="mb-3">
+              <Accordion.Button>
+                <Form>
+                  <Row>
+                    <Col xl={4}>
+                      <FloatingLabel
+                        controlId="NameInput"
+                        label="Name"
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="text"
+                          placeholder="Name"
+                          ref={newGymName}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl={5}>
+                      <FloatingLabel
+                        controlId="AddressInput"
+                        label="Address"
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="text"
+                          placeholder="Address"
+                          ref={newGymAddress}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl={2}>
+                      <FloatingLabel
+                        controlId="CityInput"
+                        label="City"
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="text"
+                          placeholder="City"
+                          ref={newGymCity}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl={1}>
+                      <AddingButtonStack
+                        add={addGym}
+                        clearRefs={clearGymRefs}
+                      ></AddingButtonStack>
+                    </Col>
+                  </Row>
+                </Form>
+              </Accordion.Button>
+            </Accordion.Item>
+          )}
+          {gymData.map((gym) => {
+            return (
+              <Accordion.Item eventKey={gym.id} key={gym.id} className="mb-3">
+                {editingGym !== gym.id && (
+                  <Accordion.Button
+                    disabled={addingGym || editingGym}
+                    onClick={() => {
+                      changeStates(gym.id, 0, false)
+                    }}
                   >
-                    {/* {gym.id} */}
-                  </div>
-                  <div
-                    className="leftColumn"
-                    onClick={() => changeStates(gym.id, 0, false)}
-                  >
-                    <div className="text">{gym.name}</div>
-                    <div className="text">{gym.city}</div>
-                  </div>
-                  <div className="rightColumn gymAddress">
-                    <div className="text">{gym.address}</div>
-                  </div>
-                  {viewingGym == gym.id && (
-                    <div className="buttons">
-                      <button onClick={() => changeStates(0, gym.id, false)}>
-                        <img src={images.editIcon}></img>
-                      </button>
-                      <button onClick={() => deleteGym(gym.id)}>
-                        <img src={images.deleteIcon}></img>
-                      </button>
-                    </div>
-                  )}
-                </div>
-                {viewingGym == gym.id && (
-                  <Locations
-                    gymId={gym.id}
-                    locationDataCentral={props.locationDataCentral}
-                    setLocationDataCentral={props.setLocationDataCentral}
-                    boulderDataCentral={props.boulderDataCentral}
-                    setBoulderDataCentral={props.setBoulderDataCentral}
-                    climbDataCentral={props.climbDataCentral}
-                    setClimbDataCentral={props.setClimbDataCentral}
-                  ></Locations>
+                    <Container>
+                      <Row>
+                        <Col className="px-0">
+                          <Stack gap={3}>
+                            <div>{gym.name}</div>
+                            <div>{gym.city}</div>
+                          </Stack>
+                        </Col>
+                        <Col className="text-end">
+                          <div>{gym.address}</div>
+                        </Col>
+                      </Row>
+                    </Container>
+                  </Accordion.Button>
                 )}
-              </li>
-            )}
-            {editingGym == gym.id && (
-              <li className="item">
-                <form className="components">
-                  <div className="leftColumn">
-                    <div className="fields">
-                      <label>Name:</label>
-                      <input
-                        type="text"
-                        ref={newGymName}
-                        defaultValue={gym.name}
-                      ></input>
-                      <label>Address:</label>
-                      <input
-                        type="text"
-                        ref={newGymAddress}
-                        defaultValue={gym.address}
-                      ></input>
-                      <label>City:</label>
-                      <input
-                        type="text"
-                        ref={newGymCity}
-                        defaultValue={gym.city}
-                      ></input>
-                    </div>
-                  </div>
-                  <div className="rightColumn"></div>
-                  <div className="buttons">
-                    <button type="button" onClick={() => editGym(gym.id)}>
-                      <img src={images.confirmIcon}></img>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => changeStates(0, 0, false)}
-                    >
-                      <img src={images.cancelIcon}></img>
-                    </button>
-                  </div>
-                </form>
-              </li>
-            )}
-          </div>
-        )
-      })}
-    </ul>
+                {editingGym == gym.id && (
+                  <Accordion.Header>
+                    <Form>
+                      <Row>
+                        <Col xl={4}>
+                          <FloatingLabel
+                            controlId="NameInput"
+                            label="Name"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="text"
+                              placeholder="Name"
+                              ref={newGymName}
+                              defaultValue={gym.name}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl={5}>
+                          <FloatingLabel
+                            controlId="AddressInput"
+                            label="Address"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="text"
+                              placeholder="Address"
+                              ref={newGymAddress}
+                              defaultValue={gym.address}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl={2}>
+                          <FloatingLabel
+                            controlId="CityInput"
+                            label="City"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="text"
+                              placeholder="City"
+                              ref={newGymCity}
+                              defaultValue={gym.city}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl={1}>
+                          <EditingButtonStack
+                            edit={editGym}
+                            id={gym.id}
+                            changeStates={changeStates}
+                          ></EditingButtonStack>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Accordion.Header>
+                )}
+                {editingGym !== gym.id && !addingGym && (
+                  <Accordion.Body className="px-0">
+                    <Container>
+                      <Row>
+                        <Col>
+                          <Stack direction="horizontal" gap={3}>
+                            <Button
+                              variant="warning"
+                              onClick={() => changeStates(0, gym.id, false)}
+                            >
+                              <img src={images.editIcon}></img>
+                            </Button>
+                            <Button
+                              variant="danger"
+                              onClick={() => deleteGym(gym.id)}
+                            >
+                              <img src={images.deleteIcon}></img>
+                            </Button>
+                          </Stack>
+                        </Col>
+                      </Row>
+                    </Container>
+                    <Locations
+                      gymId={gym.id}
+                      gymDataCentral={props.gymDataCentral}
+                      setGymDataCentral={props.setGymDataCentral}
+                      locationDataCentral={props.locationDataCentral}
+                      setLocationDataCentral={props.setLocationDataCentral}
+                      boulderDataCentral={props.boulderDataCentral}
+                      setBoulderDataCentral={props.setBoulderDataCentral}
+                      climbDataCentral={props.climbDataCentral}
+                      setClimbDataCentral={props.setClimbDataCentral}
+                    ></Locations>
+                  </Accordion.Body>
+                )}
+              </Accordion.Item>
+            )
+          })}
+        </Accordion>
+      </Row>
+    </Container>
   )
 }

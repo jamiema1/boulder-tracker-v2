@@ -3,7 +3,7 @@ import Sessions from "./sessionPageComponents/sessions"
 
 export default function SessionPage(props) {
   return (
-    <div className="page">
+    <div>
       <div className="pageTitle">Sessions</div>
       <Sessions
         sessionDataCentral={props.sessionDataCentral}

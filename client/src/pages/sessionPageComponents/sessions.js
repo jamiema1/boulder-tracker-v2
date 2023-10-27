@@ -1,11 +1,7 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
 import Climbs from "./climbs"
-import {
-  convertToEditDateTime,
-  getCurrentDateTime,
-  getTimeDifferenceString,
-} from "../helpers.js"
+import {getCurrentDateTime, getTimeDifferenceString} from "../helpers.js"
 import images from "../../images/images.js"
 import {
   get,
@@ -23,12 +19,9 @@ import Container from "react-bootstrap/Container"
 import Stack from "react-bootstrap/Stack"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
-import Form from "react-bootstrap/Form"
-import FloatingLabel from "react-bootstrap/FloatingLabel"
-
-// import AddButton from "../AddButton"
-// import AddingButtonStack from "../AddingButtonStack"
-// import EditingButtonStack from "../EditingButtonStack"
+import SessionAddForm from "./sessionAddForm"
+import SessionEditForm from "./sessionEditForm"
+import AddButton from "../addButton"
 
 export default function Sessions(props) {
   /*
@@ -241,98 +234,25 @@ export default function Sessions(props) {
   return (
     <Container>
       {!addingSession && (
-        <Row className="mb-3">
-          <Col className="text-end">
-            <Button
-              onClick={() => {
-                changeStates(0, 0, true)
-              }}
-            >
-              Add a Session
-            </Button>
-          </Col>
-        </Row>
+        <AddButton
+          changeStates={changeStates}
+          message={"Add a Session"}
+        ></AddButton>
       )}
       <Row>
         <Accordion defaultActiveKey={0}>
           {addingSession && (
             <Accordion.Item eventKey={0} className="mb-3">
               <Accordion.Button>
-                <Form>
-                  <Row>
-                    <Col xl>
-                      <FloatingLabel
-                        controlId="GymIDInput"
-                        label="Gym ID"
-                        className="mb-3"
-                      >
-                        <Form.Select ref={newGymId}>
-                          {gymData.map((gym) => (
-                            <option key={gym.id} value={gym.id}>
-                              {gym.city}
-                            </option>
-                          ))}
-                        </Form.Select>
-                      </FloatingLabel>
-                    </Col>
-                    <Col xl>
-                      <FloatingLabel
-                        controlId="UserIDInput"
-                        label="User ID"
-                        className="mb-3"
-                      >
-                        <Form.Control
-                          type="number"
-                          placeholder={1}
-                          ref={newUserId}
-                          defaultValue={1}
-                        />
-                      </FloatingLabel>
-                    </Col>
-                    <Col xl>
-                      <FloatingLabel
-                        controlId="StartTimeInput"
-                        label="Start Time"
-                        className="mb-3"
-                      >
-                        <Form.Control
-                          type="datetime-local"
-                          placeholder={getCurrentDateTime()}
-                          defaultValue={convertToEditDateTime(
-                            getCurrentDateTime()
-                          )}
-                          ref={newSessionStartTime}
-                        />
-                      </FloatingLabel>
-                    </Col>
-                    <Col xl>
-                      <FloatingLabel
-                        controlId="EndTimeInput"
-                        label="End Time"
-                        className="mb-3"
-                      >
-                        <Form.Control
-                          type="datetime-local"
-                          placeholder={getCurrentDateTime()}
-                          ref={newSessionEndTime}
-                        />
-                      </FloatingLabel>
-                    </Col>
-                    <Col xl>
-                      <Stack direction="horizontal" gap="3">
-                        <Button variant="success" onClick={() => addSession()}>
-                          <img src={images.addIcon}></img>
-                        </Button>
-                        <Button
-                          variant="danger"
-                          onClick={() => clearSessionRefs()}
-                        >
-                          <img src={images.cancelIcon}></img>
-                        </Button>
-                      </Stack>
-                    </Col>
-                  </Row>
-                </Form>
+                <SessionAddForm
+                  newGymId={newGymId}
+                  gymData={gymData}
+                  newUserId={newUserId}
+                  newSessionStartTime={newSessionStartTime}
+                  newSessionEndTime={newSessionEndTime}
+                  addSession={addSession}
+                  clearSessionRefs={clearSessionRefs}
+                ></SessionAddForm>
               </Accordion.Button>
             </Accordion.Item>
           )}
@@ -383,101 +303,22 @@ export default function Sessions(props) {
                 )}
                 {editingSession == session.id && (
                   <Accordion.Header>
-                    <Form>
-                      <Row>
-                        <Col xl>
-                          <FloatingLabel
-                            controlId="GymIDInput"
-                            label="Gym ID"
-                            className="mb-3"
-                          >
-                            <Form.Select
-                              ref={newGymId}
-                              defaultValue={session.gymId}
-                            >
-                              {gymData.map((gym) => (
-                                <option key={gym.id} value={gym.id}>
-                                  {gym.city}
-                                </option>
-                              ))}
-                            </Form.Select>
-                          </FloatingLabel>
-                        </Col>
-                        <Col xl>
-                          <FloatingLabel
-                            controlId="UserIDInput"
-                            label="User ID"
-                            className="mb-3"
-                          >
-                            <Form.Control
-                              type="number"
-                              placeholder={session.userId}
-                              ref={newUserId}
-                              defaultValue={session.userId}
-                            />
-                          </FloatingLabel>
-                        </Col>
-                        <Col xl>
-                          <FloatingLabel
-                            controlId="StartTimeInput"
-                            label="Start Time"
-                            className="mb-3"
-                          >
-                            <Form.Control
-                              type="datetime-local"
-                              placeholder={convertToEditDateTime(
-                                session.sessionEndTime
-                              )}
-                              ref={newSessionStartTime}
-                              defaultValue={convertToEditDateTime(
-                                session.sessionEndTime
-                              )}
-                            />
-                          </FloatingLabel>
-                        </Col>
-                        <Col xl>
-                          <FloatingLabel
-                            controlId="EndTimeInput"
-                            label="End Time"
-                            className="mb-3"
-                          >
-                            <Form.Control
-                              type="datetime-local"
-                              placeholder={convertToEditDateTime(
-                                session.sessionEndTime
-                              )}
-                              ref={newSessionEndTime}
-                              defaultValue={convertToEditDateTime(
-                                session.sessionEndTime
-                              )}
-                            />
-                          </FloatingLabel>
-                        </Col>
-                        <Col xl>
-                          <Stack direction="horizontal" gap={3}>
-                            <Button
-                              variant="success"
-                              onClick={() => editSession(session.id)}
-                            >
-                              <img src={images.confirmIcon}></img>
-                            </Button>
-                            <Button
-                              variant="danger"
-                              onClick={() => changeStates(0, 0, false)}
-                            >
-                              <img src={images.cancelIcon}></img>
-                            </Button>
-                          </Stack>
-                        </Col>
-                      </Row>
-                    </Form>
+                    <SessionEditForm
+                      newGymId={newGymId}
+                      session={session}
+                      gymData={gymData}
+                      newUserId={newUserId}
+                      newSessionStartTime={newSessionStartTime}
+                      newSessionEndTime={newSessionEndTime}
+                      editSession={editSession}
+                      changeStates={changeStates}
+                    ></SessionEditForm>
                   </Accordion.Header>
                 )}
                 {editingSession !== session.id && !addingSession && (
-                  <Accordion.Body>
+                  <Accordion.Body className="px-2">
                     <Container>
                       <Row>
-                        {/* {viewingSession === session.id && ( */}
                         <Col>
                           <Stack direction="horizontal" gap={3}>
                             {session.sessionEndTime ===
@@ -505,7 +346,6 @@ export default function Sessions(props) {
                             </Button>
                           </Stack>
                         </Col>
-                        {/* )} */}
                       </Row>
                     </Container>
                     <Climbs

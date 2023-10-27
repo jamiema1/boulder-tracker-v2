@@ -1,8 +1,8 @@
 import React, {useState} from "react"
 
 import "./pages/gymPage.css"
-import NavBar from "./NavBar"
-import PageRouter from "./PageRouter"
+import NavBar from "./navBar"
+import PageRouter from "./pageRouter"
 
 function App() {
   /*

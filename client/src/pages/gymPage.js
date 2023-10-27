@@ -3,7 +3,7 @@ import Gyms from "./gymPageComponents/gyms"
 
 export default function GymPage(props) {
   return (
-    <div className="page">
+    <div>
       <div className="pageTitle">Gyms</div>
       <Gyms
         sessionDataCentral={props.sessionDataCentral}

@@ -16,12 +16,13 @@ import {
   climbEndpoint,
   locationEndpoint,
 } from "../../api/endpoints.js"
+import Accordion from "react-bootstrap/Accordion"
 import ListGroup from "react-bootstrap/ListGroup"
 import Button from "react-bootstrap//Button"
 import Container from "react-bootstrap/esm/Container.js"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
-// import Stack from "react-bootstrap/Stack"
+import Stack from "react-bootstrap/Stack"
 // import Form from "react-bootstrap/Form"
 // import FloatingLabel from "react-bootstrap/FloatingLabel"
 
@@ -280,23 +281,23 @@ export default function Climbs(props) {
    */
 
   return (
-    <ListGroup>
-      <Container>
-        {!addingClimb && (
-          <Row className="mb-3">
-            <Col className="text-end">
-              <Button
-                onClick={() => {
-                  changeStates(0, 0, true)
-                  loadInitialBoulders()
-                }}
-              >
-                Add a Climb
-              </Button>
-            </Col>
-          </Row>
-        )}
-        <Row>
+    <Container>
+      {!addingClimb && (
+        <Row className="mb-3">
+          <Col className="text-end">
+            <Button
+              onClick={() => {
+                changeStates(0, 0, true)
+                loadInitialBoulders()
+              }}
+            >
+              Add a Climb
+            </Button>
+          </Col>
+        </Row>
+      )}
+      <Row>
+        <Accordion defaultActiveKey={0}>
           {addingClimb && (
             <ListGroup.Item className="mb-2">
               <form className="components">
@@ -389,10 +390,12 @@ export default function Climbs(props) {
                         ></img>
                       </Col>
                       <Col xs={6} md={10}>
-                        <div className="text">
-                          {climb.sends} / {climb.attempts}
-                        </div>
-                        <div className="text">{boulderText(climb)}</div>
+                        <Stack>
+                          <div className="text">
+                            {climb.sends} / {climb.attempts}
+                          </div>
+                          <div className="text">{boulderText(climb)}</div>
+                        </Stack>
                         {/* <div className="text">
                       {convertToViewDateTime(
                         climb.climbStartTime,
@@ -401,27 +404,6 @@ export default function Climbs(props) {
                     </div> */}
                       </Col>
                     </Row>
-                    {viewingClimb == climb.id && (
-                      <div className="buttons">
-                        <button
-                          type="button"
-                          className="editButton"
-                          onClick={() => {
-                            changeStates(0, climb.id, false)
-                            loadInitialBoulders()
-                          }}
-                        >
-                          <img src={images.editIcon}></img>
-                        </button>
-                        <button
-                          type="button"
-                          className="deleteButton"
-                          onClick={() => deleteClimb(climb.id)}
-                        >
-                          <img src={images.deleteIcon}></img>
-                        </button>
-                      </div>
-                    )}
                   </Container>
                 )}
                 {editingClimb == climb.id && (
@@ -491,11 +473,38 @@ export default function Climbs(props) {
                     </div>
                   </form>
                 )}
+                {editingClimb !== climb.id &&
+                  !addingClimb &&
+                  viewingClimb == climb.id && (
+                  <Container>
+                    <Row>
+                      <Col>
+                        <Stack direction="horizontal" gap={3}>
+                          <Button
+                            variant="warning"
+                            onClick={() => {
+                              changeStates(0, climb.id, false)
+                              loadInitialBoulders()
+                            }}
+                          >
+                            <img src={images.editIcon}></img>
+                          </Button>
+                          <Button
+                            variant="danger"
+                            onClick={() => deleteClimb(climb.id)}
+                          >
+                            <img src={images.deleteIcon}></img>
+                          </Button>
+                        </Stack>
+                      </Col>
+                    </Row>
+                  </Container>
+                )}
               </ListGroup.Item>
             )
           })}
-        </Row>
-      </Container>
-    </ListGroup>
+        </Accordion>
+      </Row>
+    </Container>
   )
 }

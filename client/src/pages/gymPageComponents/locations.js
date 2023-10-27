@@ -9,6 +9,17 @@ import {
   remove,
   locationEndpoint,
 } from "../../api/endpoints.js"
+import Accordion from "react-bootstrap/Accordion"
+import Button from "react-bootstrap/Button"
+import Container from "react-bootstrap/Container"
+import Stack from "react-bootstrap/Stack"
+import Row from "react-bootstrap/Row"
+import Col from "react-bootstrap/Col"
+import Form from "react-bootstrap/Form"
+import FloatingLabel from "react-bootstrap/FloatingLabel"
+import AddingButtonStack from "../addingButtonStack"
+import EditingButtonStack from "../editingButtonStack"
+import AddButton from "../addButton"
 
 export default function Locations(props) {
   /*
@@ -125,103 +136,138 @@ export default function Locations(props) {
    */
 
   return (
-    <ul className="dataList">
-      {<div className="sectionTitle">Locations</div>}
+    <Container>
       {!addingLocation && (
-        <button onClick={() => changeStates(0, 0, true)}>Add a Location</button>
+        <AddButton
+          changeStates={changeStates}
+          message={"Add a Location"}
+        ></AddButton>
       )}
-      {addingLocation && (
-        <li className="item">
-          <form className="components">
-            <div className="fields">
-              <label>Name:</label>
-              <input type="text" ref={newLocationName}></input>
-            </div>
-            <div className="buttons">
-              <button type="button" onClick={() => addLocation()}>
-                <img src={images.addIcon}></img>
-              </button>
-              <button type="button" onClick={() => clearLocationRefs()}>
-                <img src={images.cancelIcon}></img>
-              </button>
-            </div>
-          </form>
-        </li>
-      )}
-      {locationData.map((location) => {
-        return (
-          <div key={location.id}>
-            {editingLocation !== location.id && (
-              <li className="item">
-                <div className="components">
-                  <div
-                    className="colourBar"
-                    style={{backgroundColor: "teal"}}
-                  >
-                    {/* {location.id} */}
-                  </div>
-                  <div
-                    className="leftColumn"
-                    onClick={() => changeStates(location.id, 0, false)}
-                  >
-                    <div className="text">{location.name}</div>
-                  </div>
-                  <div className="rightColumn"></div>
-                  {viewingLocation == location.id && (
-                    <div className="buttons">
-                      <button
-                        onClick={() => changeStates(0, location.id, false)}
+      <Row>
+        <Accordion defaultActiveKey={0}>
+          {addingLocation && (
+            <Accordion.Item eventKey={0} className="mb-3">
+              <Accordion.Button>
+                <Form>
+                  <Row>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="NameInput"
+                        label="Name"
+                        className="mb-3"
                       >
-                        <img src={images.editIcon}></img>
-                      </button>
-                      <button onClick={() => deleteLocation(location.id)}>
-                        <img src={images.deleteIcon}></img>
-                      </button>
-                    </div>
-                  )}
-                </div>
-                {viewingLocation == location.id && (
-                  <Boulders
-                    locationId={location.id}
-                    boulderDataCentral={props.boulderDataCentral}
-                    setBoulderDataCentral={props.setBoulderDataCentral}
-                    climbDataCentral={props.climbDataCentral}
-                    setClimbDataCentral={props.setClimbDataCentral}
-                  ></Boulders>
+                        <Form.Control
+                          type="text"
+                          placeholder="Name"
+                          ref={newLocationName}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <AddingButtonStack
+                        add={addLocation}
+                        clearRefs={clearLocationRefs}
+                      ></AddingButtonStack>
+                    </Col>
+                  </Row>
+                </Form>
+              </Accordion.Button>
+            </Accordion.Item>
+          )}
+          {locationData.map((location) => {
+            return (
+              <Accordion.Item
+                eventKey={location.id}
+                key={location.id}
+                className="mb-3"
+              >
+                {editingLocation !== location.id && (
+                  <Accordion.Button
+                    disabled={addingLocation || editingLocation}
+                    onClick={() => {
+                      changeStates(location.id, 0, false)
+                    }}
+                  >
+                    <Container>
+                      <Row>
+                        <Col>
+                          <div>{location.name}</div>
+                        </Col>
+                      </Row>
+                    </Container>
+                  </Accordion.Button>
                 )}
-              </li>
-            )}
-            {editingLocation == location.id && (
-              <li className="item">
-                <form className="components">
-                  <div className="fields">
-                    <label>Name:</label>
-                    <input
-                      type="text"
-                      ref={newLocationName}
-                      defaultValue={location.name}
-                    ></input>
-                  </div>
-                  <div className="buttons">
-                    <button
-                      type="button"
-                      onClick={() => editLocation(location.id)}
-                    >
-                      <img src={images.confirmIcon}></img>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => changeStates(0, 0, false)}
-                    >
-                      <img src={images.cancelIcon}></img>
-                    </button>
-                  </div>
-                </form>
-              </li>
-            )}
-          </div>
-        )
-      })}
-    </ul>
+                {editingLocation == location.id && (
+                  <Accordion.Header>
+                    <Form>
+                      <Row>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="NameInput"
+                            label="Name"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="text"
+                              placeholder="Name"
+                              ref={newLocationName}
+                              defaultValue={location.name}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <EditingButtonStack
+                            edit={editLocation}
+                            id={location.id}
+                            changeStates={changeStates}
+                          ></EditingButtonStack>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Accordion.Header>
+                )}
+                {editingLocation !== location.id && !addingLocation && (
+                  <Accordion.Body className="px-0">
+                    <Container>
+                      <Row>
+                        <Col>
+                          <Stack direction="horizontal" gap={3}>
+                            <Button
+                              variant="warning"
+                              onClick={() =>
+                                changeStates(0, location.id, false)
+                              }
+                            >
+                              <img src={images.editIcon}></img>
+                            </Button>
+                            <Button
+                              variant="danger"
+                              onClick={() => deleteLocation(location.id)}
+                            >
+                              <img src={images.deleteIcon}></img>
+                            </Button>
+                          </Stack>
+                        </Col>
+                      </Row>
+                    </Container>
+                    <Boulders
+                      locationId={location.id}
+                      gymDataCentral={props.gymDataCentral}
+                      setGymDataCentral={props.setGymDataCentral}
+                      locationDataCentral={props.locationDataCentral}
+                      setLocationDataCentral={props.setLocationDataCentral}
+                      boulderDataCentral={props.boulderDataCentral}
+                      setBoulderDataCentral={props.setBoulderDataCentral}
+                      climbDataCentral={props.climbDataCentral}
+                      setClimbDataCentral={props.setClimbDataCentral}
+                    ></Boulders>
+                  </Accordion.Body>
+                )}
+              </Accordion.Item>
+            )
+          })}
+        </Accordion>
+      </Row>
+    </Container>
   )
 }
