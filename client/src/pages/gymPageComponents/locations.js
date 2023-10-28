@@ -228,7 +228,7 @@ export default function Locations(props) {
                 )}
                 {editingLocation !== location.id && !addingLocation && (
                   <Accordion.Body className="px-0">
-                    <Container>
+                    <Container className="mb-2">
                       <Row>
                         <Col>
                           <Stack direction="horizontal" gap={3}>

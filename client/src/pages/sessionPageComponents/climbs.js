@@ -1,11 +1,5 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
-import {
-  convertToEditDateTime,
-  getCurrentDateTime,
-  getOptions,
-  // convertToViewDateTime,
-} from "../helpers.js"
 import images from "../../images/images.js"
 import {
   get,
@@ -17,14 +11,14 @@ import {
   locationEndpoint,
 } from "../../api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
-import ListGroup from "react-bootstrap/ListGroup"
 import Button from "react-bootstrap//Button"
 import Container from "react-bootstrap/esm/Container.js"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Stack from "react-bootstrap/Stack"
-// import Form from "react-bootstrap/Form"
-// import FloatingLabel from "react-bootstrap/FloatingLabel"
+import ClimbAddForm from "./climbAddForm.js"
+import ClimbEditForm from "./climbEditForm.js"
+import AddButton from "../addButton.js"
 
 export default function Climbs(props) {
   /*
@@ -283,224 +277,130 @@ export default function Climbs(props) {
   return (
     <Container>
       {!addingClimb && (
-        <Row className="mb-3">
-          <Col className="text-end">
-            <Button
-              onClick={() => {
-                changeStates(0, 0, true)
-                loadInitialBoulders()
-              }}
-            >
-              Add a Climb
-            </Button>
-          </Col>
-        </Row>
+        <AddButton
+          changeStates={changeStates}
+          message={"Add a Climb"}
+        ></AddButton>
       )}
       <Row>
         <Accordion defaultActiveKey={0}>
           {addingClimb && (
-            <ListGroup.Item className="mb-2">
-              <form className="components">
-                <div className="fields">
-                  <label>Location:</label>
-                  <select
-                    ref={newLocationId}
-                    onChange={(e) => getBoulders(e.target.value)}
-                  >
-                    {locationData.map((location) => {
-                      return getOptions(location.name, location.id)
-                    })}
-                  </select>
-                  <label>Boulder:</label>
-                  <select ref={newBoulderId}>
-                    {boulderData.map((boulder) => {
-                      return getOptions(
-                        boulder.rating +
-                          " | " +
-                          boulder.colour +
-                          " | " +
-                          boulder.boulderType +
-                          " | " +
-                          boulder.description.substring(0, 25),
-                        boulder.id
-                      )
-                    })}
-                  </select>
-                  <label>Attempts:</label>
-                  <input
-                    type="number"
-                    ref={newAttempts}
-                    defaultValue={1}
-                  ></input>
-                  <label>Sends:</label>
-                  <input type="number" ref={newSends} defaultValue={0}></input>
-                  <label>Start Time:</label>
-                  <input
-                    type="datetime-local"
-                    ref={newClimbStartTime}
-                    defaultValue={getCurrentDateTime()}
-                  ></input>
-                  <label>End Time:</label>
-                  <input
-                    type="datetime-local"
-                    ref={newClimbEndTime}
-                    defaultValue={getCurrentDateTime()}
-                  ></input>
-                </div>
-                <div className="buttons">
-                  <button
-                    type="button"
-                    className="addButton"
-                    onClick={() => addClimb()}
-                  >
-                    <img src={images.addIcon}></img>
-                  </button>
-                  <button
-                    type="button"
-                    className="cancelButton"
-                    onClick={() => clearClimbRefs()}
-                  >
-                    <img src={images.cancelIcon}></img>
-                  </button>
-                </div>
-              </form>
-            </ListGroup.Item>
+            <Accordion.Item eventKey={0} className="mb-3">
+              <Accordion.Header>
+                <ClimbAddForm
+                  newLocationId={newLocationId}
+                  getBoulders={getBoulders}
+                  locationData={locationData}
+                  newBoulderId={newBoulderId}
+                  boulderData={boulderData}
+                  newAttempts={newAttempts}
+                  newSends={newSends}
+                  newClimbStartTime={newClimbStartTime}
+                  newClimbEndTime={newClimbEndTime}
+                  addClimb={addClimb}
+                  clearClimbRefs={clearClimbRefs}
+                ></ClimbAddForm>
+              </Accordion.Header>
+            </Accordion.Item>
           )}
           {[...climbData].reverse().map((climb) => {
             return (
-              <ListGroup.Item key={climb.id} className="mb-2 p-0">
+              <Accordion.Item
+                eventKey={climb.id}
+                key={climb.id}
+                className="mb-3"
+              >
                 {editingClimb !== climb.id && (
-                  <Container onClick={() => changeStates(climb.id, 0, false)}>
-                    <Row>
-                      <Col
-                        // xs={1}
-                        className="p-0"
-                        style={{backgroundColor: getBoulderColour(climb)}}
-                      ></Col>
-                      <Col className="p-1">
-                        <img
-                          className="climbIcons"
-                          src={getHexImage(getBoulderRating(climb))}
-                        ></img>
-                      </Col>
-                      <Col className="p-1">
-                        <img
-                          className="climbIcons"
-                          src={getBoulderTypeImage(getBoulderType(climb))}
-                        ></img>
-                      </Col>
-                      <Col xs={6} md={10}>
-                        <Stack>
-                          <div className="text">
-                            {climb.sends} / {climb.attempts}
-                          </div>
-                          <div className="text">{boulderText(climb)}</div>
-                        </Stack>
-                        {/* <div className="text">
+                  <Accordion.Header
+                    // disabled={addingClimb || editingClimb}
+                    onClick={() => {
+                      changeStates(climb.id, 0, false)
+                    }}
+                  >
+                    <Container onClick={() => changeStates(climb.id, 0, false)}>
+                      <Row>
+                        <Col
+                          // xs={1}
+                          className="p-0"
+                          style={{backgroundColor: getBoulderColour(climb)}}
+                        ></Col>
+                        <Col className="p-1">
+                          <img
+                            className="climbIcons"
+                            src={getHexImage(getBoulderRating(climb))}
+                          ></img>
+                        </Col>
+                        <Col className="p-1">
+                          <img
+                            className="climbIcons"
+                            src={getBoulderTypeImage(getBoulderType(climb))}
+                          ></img>
+                        </Col>
+                        <Col xs={6} md={10}>
+                          <Stack>
+                            <div className="text">
+                              {climb.sends} / {climb.attempts}
+                            </div>
+                            <div className="text">{boulderText(climb)}</div>
+                          </Stack>
+                          {/* <div className="text">
                       {convertToViewDateTime(
                         climb.climbStartTime,
                         climb.climbEndTime
                       )}
                     </div> */}
-                      </Col>
-                    </Row>
-                  </Container>
+                        </Col>
+                      </Row>
+                    </Container>
+                  </Accordion.Header>
                 )}
                 {editingClimb == climb.id && (
-                  <form className="components">
-                    <div className="fields">
-                      <label>Location:</label>
-                      <select
-                        ref={newLocationId}
-                        onChange={(e) => getBoulders(e.target.value)}
-                      >
-                        {locationData.map((location) => {
-                          return getOptions(location.name, location.id)
-                        })}
-                      </select>
-                      <label>Boulder:</label>
-                      <select ref={newBoulderId} defaultValue={climb.boulderId}>
-                        {boulderData.map((boulder) => {
-                          return getOptions(
-                            boulder.rating +
-                              " | " +
-                              boulder.colour +
-                              " | " +
-                              boulder.boulderType +
-                              " | " +
-                              boulder.description.substring(0, 50),
-                            boulder.id
-                          )
-                        })}
-                      </select>
-                      <label>Attempts:</label>
-                      <input
-                        type="number"
-                        ref={newAttempts}
-                        defaultValue={climb.attempts}
-                      ></input>
-                      <label>Sends:</label>
-                      <input
-                        type="number"
-                        ref={newSends}
-                        defaultValue={climb.sends}
-                      ></input>
-                      <label>Start Time:</label>
-                      <input
-                        type="datetime-local"
-                        ref={newClimbStartTime}
-                        defaultValue={convertToEditDateTime(
-                          climb.climbStartTime
-                        )}
-                      ></input>
-                      <label>End Time:</label>
-                      <input
-                        type="datetime-local"
-                        ref={newClimbEndTime}
-                        defaultValue={convertToEditDateTime(climb.climbEndTime)}
-                      ></input>
-                    </div>
-                    <div className="buttons">
-                      <button type="button" onClick={() => editClimb(climb.id)}>
-                        <img src={images.confirmIcon}></img>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => changeStates(0, 0, false)}
-                      >
-                        <img src={images.cancelIcon}></img>
-                      </button>
-                    </div>
-                  </form>
+                  <Accordion.Header>
+                    <ClimbEditForm
+                      climb={climb}
+                      newLocationId={newLocationId}
+                      getBoulders={getBoulders}
+                      newBoulderId={newBoulderId}
+                      locationData={locationData}
+                      allBoulderData={allBoulderData}
+                      boulderData={boulderData}
+                      newAttempts={newAttempts}
+                      newSends={newSends}
+                      newClimbStartTime={newClimbStartTime}
+                      newClimbEndTime={newClimbEndTime}
+                      editClimb={editClimb}
+                      changeStates={changeStates}
+                    ></ClimbEditForm>
+                  </Accordion.Header>
                 )}
-                {editingClimb !== climb.id &&
-                  !addingClimb &&
-                  viewingClimb == climb.id && (
-                  <Container>
-                    <Row>
-                      <Col>
-                        <Stack direction="horizontal" gap={3}>
-                          <Button
-                            variant="warning"
-                            onClick={() => {
-                              changeStates(0, climb.id, false)
-                              loadInitialBoulders()
-                            }}
-                          >
-                            <img src={images.editIcon}></img>
-                          </Button>
-                          <Button
-                            variant="danger"
-                            onClick={() => deleteClimb(climb.id)}
-                          >
-                            <img src={images.deleteIcon}></img>
-                          </Button>
-                        </Stack>
-                      </Col>
-                    </Row>
-                  </Container>
+                {editingClimb !== climb.id && !addingClimb && (
+                  <Accordion.Body className="px-2">
+                    <Container>
+                      <Row>
+                        <Col>
+                          <Stack direction="horizontal" gap={3}>
+                            <Button
+                              variant="warning"
+                              onClick={() => {
+                                changeStates(0, climb.id, false)
+                                loadInitialBoulders()
+                              }}
+                            >
+                              <img src={images.editIcon}></img>
+                            </Button>
+                            <Button
+                              variant="danger"
+                              onClick={() => deleteClimb(climb.id)}
+                            >
+                              <img src={images.deleteIcon}></img>
+                            </Button>
+                          </Stack>
+                        </Col>
+                      </Row>
+                    </Container>
+                  </Accordion.Body>
                 )}
-              </ListGroup.Item>
+              </Accordion.Item>
             )
           })}
         </Accordion>

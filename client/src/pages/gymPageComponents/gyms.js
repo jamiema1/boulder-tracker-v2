@@ -131,7 +131,7 @@ export default function Gyms(props) {
         <Accordion defaultActiveKey={0}>
           {addingGym && (
             <Accordion.Item eventKey={0} className="mb-3">
-              <Accordion.Button>
+              <Accordion.Header>
                 <Form>
                   <Row>
                     <Col xl={4}>
@@ -181,15 +181,15 @@ export default function Gyms(props) {
                     </Col>
                   </Row>
                 </Form>
-              </Accordion.Button>
+              </Accordion.Header>
             </Accordion.Item>
           )}
           {gymData.map((gym) => {
             return (
               <Accordion.Item eventKey={gym.id} key={gym.id} className="mb-3">
                 {editingGym !== gym.id && (
-                  <Accordion.Button
-                    disabled={addingGym || editingGym}
+                  <Accordion.Header
+                    // disabled={addingGym || editingGym}
                     onClick={() => {
                       changeStates(gym.id, 0, false)
                     }}
@@ -207,7 +207,7 @@ export default function Gyms(props) {
                         </Col>
                       </Row>
                     </Container>
-                  </Accordion.Button>
+                  </Accordion.Header>
                 )}
                 {editingGym == gym.id && (
                   <Accordion.Header>
@@ -268,7 +268,7 @@ export default function Gyms(props) {
                 )}
                 {editingGym !== gym.id && !addingGym && (
                   <Accordion.Body className="px-0">
-                    <Container>
+                    <Container className="mb-2">
                       <Row>
                         <Col>
                           <Stack direction="horizontal" gap={3}>

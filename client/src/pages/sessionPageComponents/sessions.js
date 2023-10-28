@@ -243,7 +243,7 @@ export default function Sessions(props) {
         <Accordion defaultActiveKey={0}>
           {addingSession && (
             <Accordion.Item eventKey={0} className="mb-3">
-              <Accordion.Button>
+              <Accordion.Header>
                 <SessionAddForm
                   newGymId={newGymId}
                   gymData={gymData}
@@ -253,7 +253,7 @@ export default function Sessions(props) {
                   addSession={addSession}
                   clearSessionRefs={clearSessionRefs}
                 ></SessionAddForm>
-              </Accordion.Button>
+              </Accordion.Header>
             </Accordion.Item>
           )}
           {[...sessionData].reverse().map((session) => {
@@ -264,7 +264,7 @@ export default function Sessions(props) {
                 className="mb-3"
               >
                 {editingSession !== session.id && (
-                  <Accordion.Button
+                  <Accordion.Header
                     disabled={addingSession || editingSession}
                     onClick={() => {
                       changeStates(session.id, 0, false)
@@ -299,7 +299,7 @@ export default function Sessions(props) {
                         <Col>{climbText(session)}</Col>
                       </Row>
                     </Container>
-                  </Accordion.Button>
+                  </Accordion.Header>
                 )}
                 {editingSession == session.id && (
                   <Accordion.Header>
@@ -317,7 +317,7 @@ export default function Sessions(props) {
                 )}
                 {editingSession !== session.id && !addingSession && (
                   <Accordion.Body className="px-2">
-                    <Container>
+                    <Container className="mb-2">
                       <Row>
                         <Col>
                           <Stack direction="horizontal" gap={3}>

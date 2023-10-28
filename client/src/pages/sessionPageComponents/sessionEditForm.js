@@ -21,7 +21,7 @@ export default function SessionEditForm({
       <Row>
         <Col xl>
           <FloatingLabel controlId="GymIDInput" label="Gym ID" className="mb-3">
-            <Form.Select ref={newGymId} defaultValue={session.gymId}>
+            <Form.Select ref={newGymId} defaultValue={session.gymId} disabled>
               {gymData.map((gym) => (
                 <option key={gym.id} value={gym.id}>
                   {gym.city}
@@ -41,6 +41,7 @@ export default function SessionEditForm({
               placeholder={session.userId}
               ref={newUserId}
               defaultValue={session.userId}
+              disabled
             />
           </FloatingLabel>
         </Col>
