@@ -511,9 +511,10 @@ export default function Boulders(props) {
                   </Accordion.Header>
                 )}
                 {editingBoulder !== boulder.id && !addingBoulder && (
-                  <Accordion.Body className="px-0">
+                  <Accordion.Body className="px-0 accordionBody">
                     <Container className="mb-2">
                       <Row>
+                        <Col xl={10} sm={8} xs={6}></Col>
                         <Col>
                           <Stack direction="horizontal" gap={3}>
                             {boulder.setEndDate === "0000-00-00" && (

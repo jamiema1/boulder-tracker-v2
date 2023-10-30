@@ -374,9 +374,10 @@ export default function Climbs(props) {
                   </Accordion.Header>
                 )}
                 {editingClimb !== climb.id && !addingClimb && (
-                  <Accordion.Body className="px-2">
+                  <Accordion.Body className="px-2 accordionBody">
                     <Container>
                       <Row>
+                        <Col xl={10} sm={8} xs={6}></Col>
                         <Col>
                           <Stack direction="horizontal" gap={3}>
                             <Button

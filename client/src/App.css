@@ -1,0 +1,16 @@
+.page {
+  background-color: rgb(238, 238, 238);
+}
+
+.accordionBody {
+  background-color: rgb(247, 247, 247);
+}
+
+.pageTitle {
+  font-size: xxx-large;
+  /* font-weight: 600; */
+}
+
+img {
+  width: 50%;
+}

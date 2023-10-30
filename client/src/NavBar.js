@@ -11,9 +11,17 @@ import {useAuth0} from "@auth0/auth0-react"
 
 function NavBar() {
   const [show, setShow] = useState(false)
+  const [pageName, setPageName] = useState("Home")
 
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const handleClose = (pageName) => {
+    setShow(false)
+    setPageName(pageName)
+  }
+  const handleShow = () => {
+    setShow(true)
+    setPageName(pageName)
+    console.log(window.location.href)
+  }
 
   const {user, isAuthenticated} = useAuth0()
 
@@ -24,20 +32,23 @@ function NavBar() {
           <Offcanvas.Title>Navigation</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <Nav defaultActiveKey="#" className="flex-column">
-            <Nav.Link href="#" onClick={handleClose}>
+          <Nav defaultActiveKey="#/" className="flex-column">
+            <Nav.Link href="#/" onClick={() => handleClose("Home")}>
               Home
             </Nav.Link>
-            <Nav.Link href="#/sessions" onClick={handleClose}>
+            <Nav.Link href="#/sessions" onClick={() => handleClose("Sessions")}>
               Sessions
             </Nav.Link>
-            <Nav.Link href="#/gyms" onClick={handleClose}>
+            <Nav.Link href="#/gyms" onClick={() => handleClose("Gyms")}>
               Gyms
             </Nav.Link>
-            <Nav.Link href="#/dashboard" onClick={handleClose}>
+            <Nav.Link
+              href="#/dashboard"
+              onClick={() => handleClose("Dashboard")}
+            >
               Dashboard
             </Nav.Link>
-            <Nav.Link href="#/people" onClick={handleClose}>
+            <Nav.Link href="#/people" onClick={() => handleClose("People")}>
               People
             </Nav.Link>
           </Nav>
@@ -45,10 +56,11 @@ function NavBar() {
       </Offcanvas>
       <Navbar className="bg-body-tertiary">
         <Container>
-          <Button onClick={handleShow}>Navigation</Button>
+          <Button onClick={handleShow}>Nav</Button>
+          <div>{pageName}</div>
         </Container>
         <Container>
-          {/* <Navbar.Brand href="#">Boulder Tracker</Navbar.Brand> */}
+          <Navbar.Brand href="#/">Boulder Tracker</Navbar.Brand>
           <Nav>
             {/* {isAuthenticated && (
               <Navbar.Text>

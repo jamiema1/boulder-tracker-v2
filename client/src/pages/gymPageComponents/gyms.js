@@ -267,9 +267,10 @@ export default function Gyms(props) {
                   </Accordion.Header>
                 )}
                 {editingGym !== gym.id && !addingGym && (
-                  <Accordion.Body className="px-0">
+                  <Accordion.Body className="px-0 accordionBody">
                     <Container className="mb-2">
                       <Row>
+                        <Col xl={10} sm={8} xs={6}></Col>
                         <Col>
                           <Stack direction="horizontal" gap={3}>
                             <Button

@@ -1,6 +1,5 @@
 import React, {useState} from "react"
 
-import "./pages/gymPage.css"
 import NavBar from "./navBar"
 import PageRouter from "./pageRouter"
 
