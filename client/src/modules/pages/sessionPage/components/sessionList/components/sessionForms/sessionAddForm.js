@@ -5,19 +5,19 @@ import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import Accordion from "react-bootstrap/Accordion"
 import {useMutation, useQuery, useQueryClient} from "react-query"
-import {sessionEndpoint} from "api/endpoints.js"
+import {handleError, sessionEndpoint} from "api/endpoints.js"
 import axios from "api/axios"
-import SessionGymIdInput from "modules/pages/sessionPage/components/sessionAddForm/components/sessionGymIdInput"
-import SessionUserIdInput from "modules/pages/sessionPage/components/sessionAddForm/components/sessionUserIdInput"
-import SessionStartTimeInput from "./components/sessionStartTimeInput"
-import SessionEndTimeInput from "./components/sessionEndTimeInput"
+import SessionGymIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionGymIdInput"
+import SessionUserIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionUserIdInput"
+import SessionStartTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionStartTimeInput"
+import SessionEndTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionEndTimeInput"
 import AddingButtonStack from "modules/common/components/addingButtonStack"
 import {
   convertToEditDateTime,
   getCurrentDateTime,
 } from "modules/common/helpers.js"
 
-export default function SessionAddForm({resetDefaultView}) {
+export default function SessionAddForm({resetSessionState}) {
   const gymIdRef = useRef(0)
   const userIdRef = useRef(0)
   const sessionStartTimeRef = useRef("")
@@ -27,7 +27,10 @@ export default function SessionAddForm({resetDefaultView}) {
 
   const {isLoading: isLoadingSession, data: allSessionData} = useQuery(
     sessionEndpoint,
-    () => axios.get(sessionEndpoint)
+    () => axios.get(sessionEndpoint),
+    {
+      onError: (error) => handleError(error),
+    }
   )
 
   const addSession = useMutation(
@@ -44,6 +47,8 @@ export default function SessionAddForm({resetDefaultView}) {
         })
         clearSessionRefs()
       },
+
+      onError: (error) => handleError(error),
     }
   )
 
@@ -56,7 +61,7 @@ export default function SessionAddForm({resetDefaultView}) {
     userIdRef.current.value = 0
     sessionStartTimeRef.current.value = ""
     sessionEndTimeRef.current.value = ""
-    resetDefaultView()
+    resetSessionState()
   }
 
   function getNewSession() {

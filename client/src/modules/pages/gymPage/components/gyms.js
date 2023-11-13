@@ -2,8 +2,14 @@
 import React, {useEffect, useRef, useState} from "react"
 import Locations from "./locations"
 
-import images from "../../images/images.js"
-import {get, add, edit, remove, gymEndpoint} from "../../api/endpoints.js"
+import images from "../../../../images/images.js"
+import {
+  get,
+  add,
+  edit,
+  remove,
+  gymEndpoint,
+} from "../../../../api/endpoints.js"
 
 import Accordion from "react-bootstrap/Accordion"
 import Button from "react-bootstrap/Button"

@@ -1,5 +1,5 @@
 import React from "react"
-import Gyms from "./gymPageComponents/gyms"
+import Gyms from "./components/gyms"
 
 export default function GymPage(props) {
   return (

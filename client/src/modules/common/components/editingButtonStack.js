@@ -5,13 +5,13 @@ import Button from "react-bootstrap/Button"
 
 import images from "../../../images/images.js"
 
-export default function EditingButtonStack({edit, id, changeStates}) {
+export default function EditingButtonStack({edit, resetState}) {
   return (
     <Stack direction="horizontal" gap={3}>
-      <Button variant="success" onClick={() => edit(id)}>
+      <Button variant="success" onClick={edit}>
         <img src={images.confirmIcon}></img>
       </Button>
-      <Button variant="danger" onClick={() => changeStates(0, 0, false)}>
+      <Button variant="danger" onClick={resetState}>
         <img src={images.cancelIcon}></img>
       </Button>
     </Stack>

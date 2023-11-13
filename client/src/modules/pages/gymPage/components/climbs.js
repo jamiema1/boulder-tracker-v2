@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react"
-import {get, climbEndpoint} from "../../api/endpoints.js"
+import {get, climbEndpoint} from "../../../../api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
 import Container from "react-bootstrap/esm/Container.js"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
-import {convertToViewDateTime} from "../../modules/common/helpers.js"
+import {convertToViewDateTime} from "../../../common/helpers.js"
 
 export default function Climbs(props) {
   const [climbData, setClimbData] = useState([])

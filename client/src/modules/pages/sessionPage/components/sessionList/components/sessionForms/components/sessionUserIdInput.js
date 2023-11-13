@@ -2,7 +2,7 @@ import React, {forwardRef} from "react"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 
-const sessionUserIdInput = forwardRef(function sessionUserIdInput(
+const SessionUserIdInput = forwardRef(function SessionUserIdInput(
   {defaultValue, disabled},
   ref
 ) {
@@ -19,4 +19,4 @@ const sessionUserIdInput = forwardRef(function sessionUserIdInput(
   )
 })
 
-export default sessionUserIdInput
+export default SessionUserIdInput

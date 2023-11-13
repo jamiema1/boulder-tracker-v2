@@ -10,6 +10,11 @@ export const climbEndpoint = "/climb"
  * APIs
  */
 
+export const handleError = (error) => {
+  console.log(error.message + ": " + error.response.data.error)
+  alert(error.message + ": " + error.response.data.error)
+}
+
 // export function get(endpoint, cache, cacheKey, id, setData) {
 //   Axios.get(endpoint + "/" + id)
 //     .then((res) => {
@@ -107,10 +112,6 @@ export const climbEndpoint = "/climb"
 //       handleError(error)
 //     })
 // }
-
-function handleError(error) {
-  alert(error.message + " : " + error.response.data.error)
-}
 
 export function get(endpoint, dataCentral, setDataCentral, setData) {
   if (dataCentral.length) {

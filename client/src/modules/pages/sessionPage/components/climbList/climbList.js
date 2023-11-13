@@ -3,8 +3,8 @@ import React, {useEffect, useRef, useState} from "react"
 import {
   getCurrentDateTime,
   convertToEditDateTime,
-} from "../../modules/common/helpers.js"
-import images from "../../images/images.js"
+} from "modules/common/helpers.js"
+import images from "images/images.js"
 import {
   get,
   add,
@@ -13,7 +13,7 @@ import {
   boulderEndpoint,
   climbEndpoint,
   locationEndpoint,
-} from "../../api/endpoints.js"
+} from "api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
 import Button from "react-bootstrap//Button"
 import Container from "react-bootstrap/esm/Container.js"
@@ -22,13 +22,13 @@ import Col from "react-bootstrap/Col"
 import Stack from "react-bootstrap/Stack"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
-import AddingButtonStack from "../../modules/common/components/addingButtonStack.js"
-import EditingButtonStack from "../../modules/common/components/editingButtonStack.js"
+import AddingButtonStack from "modules/common/components/addingButtonStack.js"
+import EditingButtonStack from "modules/common/components/editingButtonStack.js"
 // import ClimbAddForm from "./climbAddForm.js"
 // import ClimbEditForm from "./climbEditForm.js"
 // import AddButton from "../addButton.js"
 
-export default function Climbs(props) {
+export default function ClimbList(props) {
   /*
    * React Hooks:
    *

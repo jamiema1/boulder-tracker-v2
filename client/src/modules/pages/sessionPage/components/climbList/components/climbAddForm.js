@@ -1,10 +1,10 @@
 import React from "react"
-import {getCurrentDateTime} from "../../modules/common/helpers.js"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
-import AddingButtonStack from "../../modules/common/components/addingButtonStack.js"
+import AddingButtonStack from "modules/common/components/addingButtonStack.js"
+import {getCurrentDateTime} from "modules/common/helpers.js"
 
 export default function ClimbAddForm({
   newLocationId,

@@ -1,14 +1,14 @@
 import React, {useEffect, useState, useRef} from "react"
 import Boulders from "./boulders"
 
-import images from "../../images/images.js"
+import images from "../../../../images/images.js"
 import {
   get,
   add,
   edit,
   remove,
   locationEndpoint,
-} from "../../api/endpoints.js"
+} from "../../../../api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
@@ -19,7 +19,7 @@ import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import AddingButtonStack from "modules/common/components/addingButtonStack"
 import EditingButtonStack from "modules/common/components/editingButtonStack"
-import AddButton from "../../modules/common/components/addButton"
+import AddButton from "../../../common/components/addButton"
 
 export default function Locations(props) {
   /*

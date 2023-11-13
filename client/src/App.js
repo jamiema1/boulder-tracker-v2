@@ -1,36 +1,36 @@
-import React, {useState} from "react"
+import React from "react"
+import {Auth0Provider} from "@auth0/auth0-react"
+import {ROOT_NAME} from "api/environment.js"
+import "bootstrap/dist/css/bootstrap.min.css"
+import NavBar from "modules/navbar/navBar"
+import PageRouter from "modules/pageRouter/pageRouter"
+import "app.css"
+import {QueryClient, QueryClientProvider} from "react-query"
+import "app.css"
 
-import NavBar from "./modules/navbar/components/navBar"
-import PageRouter from "./pageRouter"
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+      retry: 1,
+      // cacheTime: 0,
+    },
+  },
+})
 
-function App() {
-  /*
-   * Centralized data
-   */
-
-  const [gymDataCentral, setGymDataCentral] = useState([])
-  const [locationDataCentral, setLocationDataCentral] = useState([])
-  const [boulderDataCentral, setBoulderDataCentral] = useState([])
-  const [climbDataCentral, setClimbDataCentral] = useState([])
-  const [sessionDataCentral, setSessionDataCentral] = useState([])
-
+export default function App() {
   return (
-    <>
-      <NavBar></NavBar>
-      <PageRouter
-        sessionDataCentral={sessionDataCentral}
-        setSessionDataCentral={setSessionDataCentral}
-        gymDataCentral={gymDataCentral}
-        setGymDataCentral={setGymDataCentral}
-        locationDataCentral={locationDataCentral}
-        setLocationDataCentral={setLocationDataCentral}
-        boulderDataCentral={boulderDataCentral}
-        setBoulderDataCentral={setBoulderDataCentral}
-        climbDataCentral={climbDataCentral}
-        setClimbDataCentral={setClimbDataCentral}
-      ></PageRouter>
-    </>
+    <Auth0Provider
+      domain="jamiema.us.auth0.com"
+      clientId="QdycHaHMkS7kIDUxzSlmDS9nKafLKoTc"
+      authorizationParams={{
+        redirect_uri: ROOT_NAME,
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <NavBar></NavBar>
+        <PageRouter></PageRouter>
+      </QueryClientProvider>
+    </Auth0Provider>
   )
 }
-
-export default App

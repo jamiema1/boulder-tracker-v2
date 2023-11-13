@@ -72,14 +72,6 @@ function getDateTimeString(date) {
  * React
  */
 
-// export function getOptions(key, value) {
-//   return (
-//     <option key={key} value={value}>
-//       {key}
-//     </option>
-//   )
-// }
-
 export function getInput(name, type, ref, defaultValue) {
   return (
     <div className="field">

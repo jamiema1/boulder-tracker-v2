@@ -1,14 +1,20 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useState, useRef} from "react"
 import Climbs from "./climbs"
-import images from "../../images/images.js"
+import images from "../../../../images/images.js"
 import {
   getCurrentDate,
   getCurrentDateTime,
   convertToViewDate,
   convertToEditDate,
-} from "../../modules/common/helpers.js"
-import {get, add, edit, remove, boulderEndpoint} from "../../api/endpoints.js"
+} from "../../../common/helpers.js"
+import {
+  get,
+  add,
+  edit,
+  remove,
+  boulderEndpoint,
+} from "../../../../api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
@@ -19,7 +25,7 @@ import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import AddingButtonStack from "modules/common/components/addingButtonStack"
 import EditingButtonStack from "modules/common/components/editingButtonStack"
-import AddButton from "../../modules/common/components/addButton"
+import AddButton from "../../../common/components/addButton"
 
 export default function Boulders(props) {
   /*

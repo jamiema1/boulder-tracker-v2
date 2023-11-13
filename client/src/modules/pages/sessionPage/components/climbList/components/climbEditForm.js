@@ -1,10 +1,10 @@
 import React, {useEffect} from "react"
-import {convertToEditDateTime} from "../../modules/common/helpers.js"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
-import EditingButtonStack from "../../modules/common/components/editingButtonStack.js"
+import EditingButtonStack from "modules/common/components/editingButtonStack.js"
+import {convertToEditDateTime} from "modules/common/helpers.js"
 
 export default function ClimbEditForm({
   climb,
