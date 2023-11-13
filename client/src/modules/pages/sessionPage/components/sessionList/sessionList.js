@@ -15,15 +15,6 @@ import SessionViewButtonStack from "modules/pages/sessionPage/components/session
 
 export default function SessionList() {
   console.log("Re-render")
-  /*
-   * React Hooks:
-   *
-   * Refs:
-   *  - newGymId: reference to new gym ID
-   *  - newUserId: reference to new user ID
-   *  - newSessionStartTime: reference to new start time
-   *  - newSessionEndTime: reference to new end time
-   */
 
   /*
    * React Query Hooks & APIs

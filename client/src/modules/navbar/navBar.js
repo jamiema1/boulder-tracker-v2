@@ -38,9 +38,9 @@ function NavBar() {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Brand href="#/">Boulder Tracker</Navbar.Brand>
           <NavDropdown title="Profile">
-            <NavDropdown.Item>
+            {/* <NavDropdown.Item>
               <img src={user.picture} alt={user.name} />
-            </NavDropdown.Item>
+            </NavDropdown.Item> */}
 
             {isAuthenticated && (
               <NavDropdown.Item>Welcome {user.name}</NavDropdown.Item>

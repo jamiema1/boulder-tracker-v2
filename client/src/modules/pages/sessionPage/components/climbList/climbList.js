@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import React, {useEffect, useRef, useState} from "react"
+import React from "react"
 import {
   getCurrentDateTime,
   convertToEditDateTime,
@@ -28,49 +28,7 @@ import EditingButtonStack from "modules/common/components/editingButtonStack.js"
 // import ClimbEditForm from "./climbEditForm.js"
 // import AddButton from "../addButton.js"
 
-export default function ClimbList(props) {
-  /*
-   * React Hooks:
-   *
-   * States:
-   *  - climbData: array of climbs
-   *  - viewingClimb: id of the climb being viewed, 0 if none
-   *  - edingClimb: id of the climb being edited, 0 if none
-   *  - addingClimb: true if a climb is being added, false if not
-   *
-   * Refs:
-   *  - newBoulderId: reference to new boulder ID
-   *  - newClimbStartTime: reference to new start time
-   *  - newClimbEndTime: reference to new end time
-   */
-
-  const [allClimbData, setAllClimbData] = useState([])
-  const [climbData, setClimbData] = useState([])
-  const [locationData, setLocationData] = useState([])
-  const [allLocationData, setAllLocationData] = useState([])
-  const [boulderData, setBoulderData] = useState([])
-  const [allBoulderData, setAllBoulderData] = useState([])
-  const [viewingClimb, setViewingClimb] = useState(0)
-  const [editingClimb, setEditingClimb] = useState(0)
-  const [addingClimb, setAddingClimb] = useState(false)
-
-  const newLocationId = useRef(0)
-  const newBoulderId = useRef(0)
-  const newAttempts = useRef(0)
-  const newSends = useRef(0)
-  const newClimbStartTime = useRef("")
-  const newClimbEndTime = useRef("")
-
-  useEffect(() => {
-    getAllClimbs()
-    getAllLocations()
-    getAllBoulders()
-  }, [
-    props.locationDataCentral,
-    props.boulderDataCentral,
-    props.climbDataCentral,
-  ])
-
+export default function ClimbList() {
   useEffect(() => {
     setClimbData(
       allClimbData.filter(
@@ -120,59 +78,6 @@ export default function ClimbList(props) {
     // })
 
     setBoulderData(b)
-    // console.log(b)
-    // console.log(c)
-  }
-
-  function getAllBoulders() {
-    get(
-      boulderEndpoint,
-      props.boulderDataCentral,
-      props.setBoulderDataCentral,
-      setAllBoulderData
-    )
-  }
-
-  function getAllClimbs() {
-    get(
-      climbEndpoint,
-      props.climbDataCentral,
-      props.setClimbDataCentral,
-      setAllClimbData
-    )
-  }
-
-  function addClimb() {
-    add(
-      climbEndpoint,
-      props.climbDataCentral,
-      props.setClimbDataCentral,
-      getNewClimb(),
-      setAllClimbData,
-      clearClimbRefs
-    )
-  }
-
-  function editClimb(climbId) {
-    edit(
-      climbEndpoint,
-      climbId,
-      props.climbDataCentral,
-      props.setClimbDataCentral,
-      getNewClimb(),
-      setAllClimbData,
-      clearClimbRefs
-    )
-  }
-
-  function deleteClimb(climbId) {
-    remove(
-      climbEndpoint,
-      climbId,
-      props.climbDataCentral,
-      props.setClimbDataCentral,
-      setAllClimbData
-    )
   }
 
   /*
@@ -185,36 +90,6 @@ export default function ClimbList(props) {
     )
 
     return boulder.locationId
-  }
-
-  function clearClimbRefs() {
-    newBoulderId.current.value = 0
-    newAttempts.current.value = 0
-    newSends.current.value = 0
-    newClimbStartTime.current.value = ""
-    newClimbEndTime.current.value = ""
-    changeStates(0, 0, false)
-  }
-
-  function getNewClimb() {
-    return {
-      boulderId: parseInt(newBoulderId.current.value),
-      sessionId: parseInt(props.sessionId),
-      attempts: parseInt(newAttempts.current.value),
-      sends: parseInt(newSends.current.value),
-      climbStartTime: newClimbStartTime.current.value,
-      climbEndTime: newClimbEndTime.current.value,
-    }
-  }
-
-  function changeStates(newViewingClimb, newEditingClimb, newAddingClimb) {
-    if (viewingClimb === newViewingClimb) {
-      newViewingClimb = 0
-    }
-
-    setViewingClimb(newViewingClimb)
-    setEditingClimb(newEditingClimb)
-    setAddingClimb(newAddingClimb)
   }
 
   function loadInitialBoulders(sessionStartTime, sessionEndTime) {

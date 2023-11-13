@@ -11,6 +11,16 @@ import axios from "modules/api/axios"
 import {useMutation, useQuery, useQueryClient} from "react-query"
 
 export default function SessionEditForm({session, handleClose}) {
+  /*
+   * React Hooks:
+   *
+   * Refs:
+   *  - newGymId: reference to new gym ID
+   *  - newUserId: reference to new user ID
+   *  - newSessionStartTime: reference to new start time
+   *  - newSessionEndTime: reference to new end time
+   */
+
   const gymIdRef = useRef(0)
   const userIdRef = useRef(0)
   const sessionStartTimeRef = useRef("")

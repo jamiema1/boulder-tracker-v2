@@ -21,6 +21,22 @@ export default function ClimbEditForm({
   editClimb,
   changeStates,
 }) {
+  /*
+   * React Hooks:
+   *
+   * Refs:
+   *  - newBoulderId: reference to new boulder ID
+   *  - newClimbStartTime: reference to new start time
+   *  - newClimbEndTime: reference to new end time
+   */
+
+  // const locationIdRef = useRef(0)
+  // const boulderIdRef = useRef(0)
+  // const attemptsRef = useRef(0)
+  // const sendsRef = useRef(0)
+  // const climbStartTimeRef = useRef("")
+  // const climbEndTimeRef = useRef("")
+
   // TODO: options for boulders do not always load correctly
 
   useEffect(() => {
