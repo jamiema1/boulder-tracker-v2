@@ -5,8 +5,19 @@ import {ROOT_NAME} from "./environment.js"
 import "bootstrap/dist/css/bootstrap.min.css"
 import App from "./app.js"
 import "./app.css"
+import {QueryClient, QueryClientProvider} from "react-query"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+      retry: 1,
+      // cacheTime: 0,
+    },
+  },
+})
 
 root.render(
   <Auth0Provider
@@ -16,6 +27,8 @@ root.render(
       redirect_uri: ROOT_NAME,
     }}
   >
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </Auth0Provider>
 )

@@ -57,12 +57,14 @@ export function convertToEditDateTime(dateTime) {
 }
 
 function getDateString(date) {
-  date.setHours(date.getHours() - 7)
+  const timezoneOffset = date.getTimezoneOffset() / 60
+  date.setHours(date.getHours() - timezoneOffset)
   return date.toISOString().substring(0, 10)
 }
 
 function getDateTimeString(date) {
-  date.setHours(date.getHours() - 7)
+  const timezoneOffset = date.getTimezoneOffset() / 60
+  date.setHours(date.getHours() - timezoneOffset)
   return date.toISOString().substring(0, 16)
 }
 
@@ -70,13 +72,13 @@ function getDateTimeString(date) {
  * React
  */
 
-export function getOptions(key, value) {
-  return (
-    <option key={key} value={value}>
-      {key}
-    </option>
-  )
-}
+// export function getOptions(key, value) {
+//   return (
+//     <option key={key} value={value}>
+//       {key}
+//     </option>
+//   )
+// }
 
 export function getInput(name, type, ref, defaultValue) {
   return (

@@ -2,8 +2,8 @@
 //       npm run deploy command is run
 const local = true
 
-const serverhost = "https://jamiema.ca"
 const localhost = "http://localhost"
+const serverhost = "https://jamiema.ca"
 export const HOST_NAME = local ? localhost : serverhost
 
 const localRoot = "http://localhost:3000/boulder-tracker-v2/"

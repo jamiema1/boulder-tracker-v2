@@ -1,10 +1,10 @@
 import React from "react"
-import {convertToEditDateTime} from "../helpers.js"
+import {convertToEditDateTime} from "common/helpers.js"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
-import EditingButtonStack from "../editingButtonStack.js"
+import EditingButtonStack from "common/components/editingButtonStack.js"
 
 export default function SessionEditForm({
   newGymId,
@@ -41,7 +41,7 @@ export default function SessionEditForm({
               placeholder={session.userId}
               ref={newUserId}
               defaultValue={session.userId}
-              disabled
+              // disabled={false}
             />
           </FloatingLabel>
         </Col>

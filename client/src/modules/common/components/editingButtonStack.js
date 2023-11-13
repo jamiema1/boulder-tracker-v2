@@ -3,7 +3,7 @@ import React from "react"
 import Stack from "react-bootstrap/Stack"
 import Button from "react-bootstrap/Button"
 
-import images from "../images/images.js"
+import images from "../../../images/images.js"
 
 export default function EditingButtonStack({edit, id, changeStates}) {
   return (

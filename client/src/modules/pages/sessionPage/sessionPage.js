@@ -1,5 +1,5 @@
 import React from "react"
-import Sessions from "./sessionPageComponents/sessions"
+import Sessions from "./components/sessionList"
 
 export default function SessionPage(props) {
   return (

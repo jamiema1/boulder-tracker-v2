@@ -1,4 +1,4 @@
-import Axios from "./axios.js"
+import axios from "api/axios"
 
 export const gymEndpoint = "/gym"
 export const locationEndpoint = "/location"
@@ -116,7 +116,7 @@ export function get(endpoint, dataCentral, setDataCentral, setData) {
   if (dataCentral.length) {
     setData([...dataCentral])
   } else {
-    Axios.get(endpoint).then((res) => {
+    axios.get(endpoint).then((res) => {
       setDataCentral([...res.data.data])
       setData([...res.data.data])
     })
@@ -131,7 +131,7 @@ export function add(
   setData,
   clearRefs
 ) {
-  Axios.post(endpoint, newData).then((res) => {
+  axios.post(endpoint, newData).then((res) => {
     const newArray = [
       ...dataCentral,
       {
@@ -147,7 +147,8 @@ export function add(
 }
 
 export function remove(endpoint, id, dataCentral, setDataCentral, setData) {
-  Axios.delete(endpoint + "/" + id)
+  axios
+    .delete(endpoint + "/" + id)
     // eslint-disable-next-line no-unused-vars
     .then((res) => {
       const newArray = [...dataCentral].filter((item) => {
@@ -170,7 +171,8 @@ export function edit(
   setData,
   clearRefs
 ) {
-  Axios.put(endpoint + "/" + id, newData)
+  axios
+    .put(endpoint + "/" + id, newData)
     .then((res) => {
       clearRefs()
       if (res.status === 202) {

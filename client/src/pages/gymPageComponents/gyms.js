@@ -13,9 +13,9 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
-import AddingButtonStack from "../addingButtonStack"
-import AddButton from "../addButton"
-import EditingButtonStack from "../editingButtonStack"
+import AddingButtonStack from "modules/common/components/addingButtonStack"
+import AddButton from "modules/common/components/addButton"
+import EditingButtonStack from "modules/common/components/editingButtonStack"
 
 export default function Gyms(props) {
   /*

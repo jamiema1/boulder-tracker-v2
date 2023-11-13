@@ -7,7 +7,7 @@ import {
   getCurrentDateTime,
   convertToViewDate,
   convertToEditDate,
-} from "../helpers.js"
+} from "../../modules/common/helpers.js"
 import {get, add, edit, remove, boulderEndpoint} from "../../api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
 import Button from "react-bootstrap/Button"
@@ -17,9 +17,9 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
-import AddingButtonStack from "../addingButtonStack"
-import EditingButtonStack from "../editingButtonStack"
-import AddButton from "../addButton"
+import AddingButtonStack from "modules/common/components/addingButtonStack"
+import EditingButtonStack from "modules/common/components/editingButtonStack"
+import AddButton from "../../modules/common/components/addButton"
 
 export default function Boulders(props) {
   /*
@@ -406,7 +406,7 @@ export default function Boulders(props) {
                               defaultValue={boulder.rating}
                             >
                               {Array.from(ratings).map(([key, value]) => (
-                                <option key={key} value={key}>
+                                <option key={key} value={value}>
                                   {value}
                                 </option>
                               ))}

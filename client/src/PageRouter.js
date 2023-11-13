@@ -2,7 +2,7 @@ import React from "react"
 import {HashRouter as Router, Routes, Route} from "react-router-dom"
 import Homepage from "./pages/homepage"
 import GymPage from "./pages/gymPage"
-import SessionPage from "./pages/sessionPage"
+import SessionPage from "./modules/pages/sessionPage/sessionPage"
 
 import Profile from "./auth0/profile"
 import {useAuth0} from "@auth0/auth0-react"

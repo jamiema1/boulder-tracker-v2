@@ -14,6 +14,8 @@ const db = mysql.createPool({
 })
 
 export function getOne (res, tableName, id) {
+  console.log(new Date().tolocaletimestring(), tableName + ': Get One - ' + id)
+
   const query = 'SELECT * FROM ' + tableName + ' WHERE id = ' + id
 
   db.query(query, (err, data) => {
@@ -28,6 +30,7 @@ export function getOne (res, tableName, id) {
 }
 
 export function getAll (res, tableName) {
+  console.log(new Date().toLocaleTimeString(), tableName + ': Get All')
   const query = 'SELECT * FROM ' + tableName
 
   db.query(query, (err, data) => {
@@ -39,6 +42,8 @@ export function getAll (res, tableName) {
 }
 
 export function getQuery (res, tableName, query) {
+  console.log(new Date().toLocaleTimeString(),
+    tableName + ': Get Query - ' + query)
   const sqlQuery = makeGetQueryString(JSON.parse(query))
 
   function makeGetQueryString (query) {
@@ -107,6 +112,8 @@ export function getQuery (res, tableName, query) {
 }
 
 export function addOne (res, tableName, values, stringValues) {
+  console.log(new Date().toLocaleTimeString(),
+    tableName + ': Add One - ' + values)
   if (validateValues(res, values, stringValues)) return
 
   const valueArray = []
@@ -134,6 +141,8 @@ export function addOne (res, tableName, values, stringValues) {
 }
 
 export function updateOne (res, tableName, id, values, stringValues) {
+  console.log(new Date().toLocaleTimeString(),
+    tableName + ': Update One - ' + id + ' | ' + values)
   if (validateValues(res, values, stringValues)) return
 
   let query = 'UPDATE ' + tableName + ' SET '
@@ -163,6 +172,8 @@ export function updateOne (res, tableName, id, values, stringValues) {
 }
 
 export function deleteOne (res, tableName, id) {
+  console.log(new Date().toLocaleTimeString(),
+    tableName + ': Delete One - ' + id)
   const query = 'DELETE FROM ' + tableName + ' WHERE id = ' + id + ';'
 
   db.query(query, (err, data) => {

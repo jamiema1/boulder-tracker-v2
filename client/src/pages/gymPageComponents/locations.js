@@ -17,9 +17,9 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
-import AddingButtonStack from "../addingButtonStack"
-import EditingButtonStack from "../editingButtonStack"
-import AddButton from "../addButton"
+import AddingButtonStack from "modules/common/components/addingButtonStack"
+import EditingButtonStack from "modules/common/components/editingButtonStack"
+import AddButton from "../../modules/common/components/addButton"
 
 export default function Locations(props) {
   /*

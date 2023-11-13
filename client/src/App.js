@@ -1,6 +1,6 @@
 import React, {useState} from "react"
 
-import NavBar from "./navBar"
+import NavBar from "./modules/navbar/components/navBar"
 import PageRouter from "./pageRouter"
 
 function App() {

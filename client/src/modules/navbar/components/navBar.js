@@ -5,8 +5,8 @@ import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
 import Navbar from "react-bootstrap/Navbar"
 
-import LoginButton from "./auth0/loginButton"
-import LogoutButton from "./auth0/logoutButton"
+import LoginButton from "../../../auth0/loginButton"
+import LogoutButton from "../../../auth0/logoutButton"
 import {useAuth0} from "@auth0/auth0-react"
 
 function NavBar() {
@@ -20,7 +20,7 @@ function NavBar() {
   const handleShow = () => {
     setShow(true)
     setPageName(pageName)
-    console.log(window.location.href)
+    // console.log(window.location.href)
   }
 
   const {user, isAuthenticated} = useAuth0()

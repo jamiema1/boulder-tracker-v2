@@ -1,5 +1,9 @@
 /* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
+import {
+  getCurrentDateTime,
+  convertToEditDateTime,
+} from "../../modules/common/helpers.js"
 import images from "../../images/images.js"
 import {
   get,
@@ -16,9 +20,13 @@ import Container from "react-bootstrap/esm/Container.js"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Stack from "react-bootstrap/Stack"
-import ClimbAddForm from "./climbAddForm.js"
-import ClimbEditForm from "./climbEditForm.js"
-import AddButton from "../addButton.js"
+import Form from "react-bootstrap/Form"
+import FloatingLabel from "react-bootstrap/FloatingLabel"
+import AddingButtonStack from "../../modules/common/components/addingButtonStack.js"
+import EditingButtonStack from "../../modules/common/components/editingButtonStack.js"
+// import ClimbAddForm from "./climbAddForm.js"
+// import ClimbEditForm from "./climbEditForm.js"
+// import AddButton from "../addButton.js"
 
 export default function Climbs(props) {
   /*
@@ -92,12 +100,28 @@ export default function Climbs(props) {
     )
   }
 
-  function getBoulders(locationId) {
-    setBoulderData(
-      allBoulderData.filter(
-        (boulder) => parseInt(boulder.locationId) === parseInt(locationId)
-      )
-    )
+  function getBouldersFromLocationInTimeRange(locationId, startTime, endTime) {
+    console.log(startTime, endTime)
+    const b = allBoulderData.filter((boulder) => {
+      return parseInt(boulder.locationId) === parseInt(locationId)
+    })
+
+    // const c = b.filter((boulder) => {
+    //   const rightLocation =
+    //     parseInt(boulder.locationId) === parseInt(locationId)
+    //   const afterStartTime =
+    //     new Date(boulder.setStartDate) < new Date(startTime)
+    //   console.log(boulder.setStartDate, startTime)
+    //   // const beforeEndTime =
+    //   //   new Date(boulder.setEndDate) > new Date(endTime) ||
+    //   //   boulder.setEndDate === "0000-00-00"
+    //   // console.log(new Date(boulder.setEndDate), new Date(endTime))
+    //   return rightLocation && afterStartTime
+    // })
+
+    setBoulderData(b)
+    // console.log(b)
+    // console.log(c)
   }
 
   function getAllBoulders() {
@@ -155,6 +179,14 @@ export default function Climbs(props) {
    * Helper functions
    */
 
+  function getLocationId(boulderId) {
+    const boulder = allBoulderData.find(
+      (boulder) => parseInt(boulder.id) === parseInt(boulderId)
+    )
+
+    return boulder.locationId
+  }
+
   function clearClimbRefs() {
     newBoulderId.current.value = 0
     newAttempts.current.value = 0
@@ -185,9 +217,13 @@ export default function Climbs(props) {
     setAddingClimb(newAddingClimb)
   }
 
-  function loadInitialBoulders() {
+  function loadInitialBoulders(sessionStartTime, sessionEndTime) {
     locationData.some((location) => {
-      getBoulders(location.id)
+      getBouldersFromLocationInTimeRange(
+        location.id,
+        sessionStartTime,
+        sessionEndTime
+      )
       return true
     })
   }
@@ -277,29 +313,142 @@ export default function Climbs(props) {
   return (
     <Container>
       {!addingClimb && (
-        <AddButton
-          changeStates={changeStates}
-          message={"Add a Climb"}
-        ></AddButton>
+        <Row className="mb-3 ">
+          <Col className="text-end">
+            <Button
+              onClick={() => {
+                changeStates(0, 0, true)
+                loadInitialBoulders(
+                  props.sessionStartTime,
+                  props.sessionEndTime
+                )
+              }}
+            >
+              {"Add a Climb"}
+            </Button>
+          </Col>
+        </Row>
+        // <AddButton
+        //   changeStates={changeStates}
+        //   message={"Add a Climb"}
+        // ></AddButton>
       )}
       <Row>
         <Accordion defaultActiveKey={0}>
           {addingClimb && (
             <Accordion.Item eventKey={0} className="mb-3">
               <Accordion.Header>
-                <ClimbAddForm
-                  newLocationId={newLocationId}
-                  getBoulders={getBoulders}
-                  locationData={locationData}
-                  newBoulderId={newBoulderId}
-                  boulderData={boulderData}
-                  newAttempts={newAttempts}
-                  newSends={newSends}
-                  newClimbStartTime={newClimbStartTime}
-                  newClimbEndTime={newClimbEndTime}
-                  addClimb={addClimb}
-                  clearClimbRefs={clearClimbRefs}
-                ></ClimbAddForm>
+                <Form>
+                  <Row>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="LocationIDInput"
+                        label="Location"
+                        className="mb-3"
+                      >
+                        <Form.Select
+                          ref={newLocationId}
+                          onChange={(e) =>
+                            getBouldersFromLocationInTimeRange(
+                              e.target.value,
+                              props.sessionStartTime,
+                              props.sessionEndTime
+                            )
+                          }
+                        >
+                          {locationData.map((location) => (
+                            <option key={location.id} value={location.id}>
+                              {location.name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="BoulderIDInput"
+                        label="Boulder"
+                        className="mb-3"
+                      >
+                        <Form.Select ref={newBoulderId}>
+                          {boulderData.map((boulder) => (
+                            <option key={boulder.id} value={boulder.id}>
+                              {boulder.rating +
+                                " | " +
+                                boulder.colour +
+                                " | " +
+                                boulder.boulderType +
+                                " | " +
+                                boulder.description.substring(0, 25)}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="AttemptInput"
+                        label="Attempts"
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="number"
+                          placeholder={1}
+                          ref={newAttempts}
+                          defaultValue={1}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="SendInput"
+                        label="Sends"
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="number"
+                          placeholder={1}
+                          ref={newSends}
+                          defaultValue={1}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="StartTimeInput"
+                        label="Start Time"
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="datetime-local"
+                          placeholder={getCurrentDateTime()}
+                          defaultValue={getCurrentDateTime()}
+                          ref={newClimbStartTime}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <FloatingLabel
+                        controlId="EndTimeInput"
+                        label="End Time"
+                        className="mb-3"
+                      >
+                        <Form.Control
+                          type="datetime-local"
+                          placeholder={getCurrentDateTime()}
+                          defaultValue={getCurrentDateTime()}
+                          ref={newClimbEndTime}
+                        />
+                      </FloatingLabel>
+                    </Col>
+                    <Col xl>
+                      <AddingButtonStack
+                        add={addClimb}
+                        clearRefs={clearClimbRefs}
+                      ></AddingButtonStack>
+                    </Col>
+                  </Row>
+                </Form>
               </Accordion.Header>
             </Accordion.Item>
           )}
@@ -356,7 +505,7 @@ export default function Climbs(props) {
                 )}
                 {editingClimb == climb.id && (
                   <Accordion.Header>
-                    <ClimbEditForm
+                    {/* <ClimbEditForm
                       climb={climb}
                       newLocationId={newLocationId}
                       getBoulders={getBoulders}
@@ -370,7 +519,133 @@ export default function Climbs(props) {
                       newClimbEndTime={newClimbEndTime}
                       editClimb={editClimb}
                       changeStates={changeStates}
-                    ></ClimbEditForm>
+                    ></ClimbEditForm> */}
+                    <Form>
+                      <Row>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="LocationIDInput"
+                            label="Location"
+                            className="mb-3"
+                          >
+                            <Form.Select
+                              ref={newLocationId}
+                              onChange={(e) =>
+                                getBouldersFromLocationInTimeRange(
+                                  e.target.value,
+                                  props.sessionStartTime,
+                                  props.sessionEndTime
+                                )
+                              }
+                              defaultValue={getLocationId(climb.boulderId)}
+                              disabled
+                            >
+                              {locationData.map((location) => (
+                                <option key={location.id} value={location.id}>
+                                  {location.name}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="BoulderIDInput"
+                            label="Boulder"
+                            className="mb-3"
+                          >
+                            <Form.Select
+                              ref={newBoulderId}
+                              defaultValue={climb.boulderId}
+                              disabled
+                            >
+                              {boulderData.map((boulder) => (
+                                <option key={boulder.id} value={boulder.id}>
+                                  {boulder.rating +
+                                    " | " +
+                                    boulder.colour +
+                                    " | " +
+                                    boulder.boulderType +
+                                    " | " +
+                                    boulder.description.substring(0, 25)}
+                                </option>
+                              ))}
+                            </Form.Select>
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="AttemptInput"
+                            label="Attempts"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="number"
+                              placeholder={1}
+                              ref={newAttempts}
+                              defaultValue={climb.attempts}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="SendInput"
+                            label="Sends"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="number"
+                              placeholder={1}
+                              ref={newSends}
+                              defaultValue={climb.sends}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="StartTimeInput"
+                            label="Start Time"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="datetime-local"
+                              placeholder={convertToEditDateTime(
+                                climb.climbStartTime
+                              )}
+                              defaultValue={convertToEditDateTime(
+                                climb.climbStartTime
+                              )}
+                              ref={newClimbStartTime}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <FloatingLabel
+                            controlId="EndTimeInput"
+                            label="End Time"
+                            className="mb-3"
+                          >
+                            <Form.Control
+                              type="datetime-local"
+                              placeholder={convertToEditDateTime(
+                                climb.climbEndTime
+                              )}
+                              defaultValue={convertToEditDateTime(
+                                climb.climbEndTime
+                              )}
+                              ref={newClimbEndTime}
+                            />
+                          </FloatingLabel>
+                        </Col>
+                        <Col xl>
+                          <EditingButtonStack
+                            edit={editClimb}
+                            id={climb.id}
+                            changeStates={changeStates}
+                          ></EditingButtonStack>
+                        </Col>
+                      </Row>
+                    </Form>
                   </Accordion.Header>
                 )}
                 {editingClimb !== climb.id && !addingClimb && (
@@ -384,7 +659,10 @@ export default function Climbs(props) {
                               variant="warning"
                               onClick={() => {
                                 changeStates(0, climb.id, false)
-                                loadInitialBoulders()
+                                loadInitialBoulders(
+                                  props.sessionStartTime,
+                                  props.sessionEndTime
+                                )
                               }}
                             >
                               <img src={images.editIcon}></img>
