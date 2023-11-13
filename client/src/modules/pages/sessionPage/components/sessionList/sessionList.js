@@ -1,19 +1,16 @@
-/* eslint-disable max-len */
-/* eslint-disable max-lines */
-import React, {useState} from "react"
-// import Climbs from "modules/pages/sessionPage/components/climbList/climbList.js"
+import React from "react"
+import Climbs from "modules/pages/sessionPage/components/climbList/climbList.js"
 import Accordion from "react-bootstrap/Accordion"
 import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
-import SessionAddForm from "modules/pages/sessionPage/components/sessionList/components/sessionForms/sessionAddForm.js"
+import Col from "react-bootstrap/Col"
 import {getCurrentDateTime} from "modules/common/helpers.js"
 
 import {useMutation, useQuery, useQueryClient} from "react-query"
-import SessionEditForm from "./components/sessionForms/sessionEditForm.js"
-import axios from "api/axios.js"
-import AddButton from "modules/common/components/addButton.js"
+import axios from "modules/api/axios.js"
+import SessionAddButtonModal from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionAddButtonModal.js"
 import SessionInfo from "modules/pages/sessionPage/components/sessionList/components/sessionInfo.js"
-import {handleError, sessionEndpoint} from "api/endpoints.js"
+import {handleError, sessionEndpoint} from "modules/api/endpoints.js"
 import SessionViewButtonStack from "modules/pages/sessionPage/components/sessionList/components/sessionViewButtonStack.js"
 
 export default function SessionList() {
@@ -21,22 +18,12 @@ export default function SessionList() {
   /*
    * React Hooks:
    *
-   * States:
-   *  - sessionState: state of the session list
-   *    - editingSession: id of the session being edited, 0 if none
-   *    - addingSession: true if a session is being added, false if not
-   *
    * Refs:
    *  - newGymId: reference to new gym ID
    *  - newUserId: reference to new user ID
    *  - newSessionStartTime: reference to new start time
    *  - newSessionEndTime: reference to new end time
    */
-
-  const [sessionState, setSessionState] = useState({
-    editingSession: 0,
-    addSession: false,
-  })
 
   /*
    * React Query Hooks & APIs
@@ -53,7 +40,7 @@ export default function SessionList() {
     onError: (error) => handleError(error),
   })
 
-  const closeSession = useMutation(
+  const editSession = useMutation(
     ({sessionId, newSession}) =>
       axios.put(sessionEndpoint + "/" + sessionId, newSession),
     {
@@ -93,7 +80,7 @@ export default function SessionList() {
    */
 
   function endSession(session) {
-    closeSession.mutate({
+    editSession.mutate({
       sessionId: session.id,
       newSession: {
         gymId: parseInt(session.gymId),
@@ -101,27 +88,6 @@ export default function SessionList() {
         sessionStartTime: session.sessionStartTime,
         sessionEndTime: getCurrentDateTime(),
       },
-    })
-  }
-
-  const addSessionState = () => {
-    setSessionState({
-      editingSession: 0,
-      addingSession: true,
-    })
-  }
-
-  const editSessionState = (session) => {
-    setSessionState({
-      editingSession: session.id,
-      addingSession: false,
-    })
-  }
-
-  const resetSessionState = () => {
-    setSessionState({
-      editingSession: 0,
-      addingSession: false,
     })
   }
 
@@ -143,19 +109,15 @@ export default function SessionList() {
 
   return (
     <Container>
-      {!sessionState.addingSession && (
-        <AddButton
-          addState={addSessionState}
-          message={"Add a Session"}
-        ></AddButton>
-      )}
+      <Row className="mb-3 ">
+        <Col className="text-end">
+          <SessionAddButtonModal
+            title={"Add a Session"}
+          ></SessionAddButtonModal>
+        </Col>
+      </Row>
       <Row>
         <Accordion defaultActiveKey={0}>
-          {sessionState.addingSession && (
-            <SessionAddForm
-              resetSessionState={resetSessionState}
-            ></SessionAddForm>
-          )}
           {[...allSessionData.data.data].reverse().map((session) => {
             return (
               <Accordion.Item
@@ -163,38 +125,25 @@ export default function SessionList() {
                 key={session.id}
                 className="mb-3"
               >
-                {sessionState.editingSession !== session.id && (
-                  <Accordion.Header onClick={resetSessionState}>
-                    <SessionInfo session={session}></SessionInfo>
-                  </Accordion.Header>
-                )}
-                {sessionState.editingSession === session.id && (
-                  <Accordion.Header>
-                    <SessionEditForm
-                      session={session}
-                      resetSessionState={resetSessionState}
-                    ></SessionEditForm>
-                  </Accordion.Header>
-                )}
-                {sessionState.editingSession !== session.id &&
-                  !sessionState.addingSession && (
-                  <Accordion.Body className="px-2 accordionBody">
-                    <SessionViewButtonStack
-                      active={
-                        session.sessionEndTime === "0000-00-00 00:00:00"
-                      }
-                      deactivate={() => endSession(session)}
-                      edit={() => editSessionState(session)}
-                      remove={() => deleteSession.mutate(session.id)}
-                    ></SessionViewButtonStack>
-                    {/* <Climbs
+                <Accordion.Header>
+                  <SessionInfo session={session}></SessionInfo>
+                </Accordion.Header>
+                <Accordion.Body className="px-2 accordionBody">
+                  <SessionViewButtonStack
+                    session={session}
+                    active={session.sessionEndTime === "0000-00-00 00:00:00"}
+                    deactivate={() => endSession(session)}
+                    remove={() => deleteSession.mutate(session.id)}
+                  ></SessionViewButtonStack>
+                  {false && (
+                    <Climbs
                       sessionId={session.id}
                       sessionStartTime={session.sessionStartTime}
                       sessionEndTime={session.sessionEndTime}
                       gymId={session.gymId}
-                    ></Climbs> */}
-                  </Accordion.Body>
-                )}
+                    ></Climbs>
+                  )}
+                </Accordion.Body>
               </Accordion.Item>
             )
           })}

@@ -2,8 +2,8 @@ import React, {forwardRef} from "react"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import {useQuery} from "react-query"
-import axios from "api/axios"
-import {gymEndpoint} from "api/endpoints"
+import axios from "modules/api/axios"
+import {gymEndpoint} from "modules/api/endpoints"
 
 const SessionGymIdInput = forwardRef(function SessionGymIdInput(
   {defaultValue = 0, disabled = false},

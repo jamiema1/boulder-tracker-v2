@@ -1,6 +1,6 @@
 import React from "react"
 import {Auth0Provider} from "@auth0/auth0-react"
-import {ROOT_NAME} from "api/environment.js"
+import {ROOT_NAME} from "modules/api/environment.js"
 import "bootstrap/dist/css/bootstrap.min.css"
 import NavBar from "modules/navbar/navBar"
 import PageRouter from "modules/pageRouter/pageRouter"

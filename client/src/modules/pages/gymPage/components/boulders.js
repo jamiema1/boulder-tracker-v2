@@ -1,7 +1,8 @@
+/* eslint-disable max-len */
 /* eslint-disable max-lines */
 import React, {useEffect, useState, useRef} from "react"
 import Climbs from "./climbs"
-import images from "../../../../images/images.js"
+import images from "../../../images/images.js"
 import {
   getCurrentDate,
   getCurrentDateTime,
@@ -14,7 +15,7 @@ import {
   edit,
   remove,
   boulderEndpoint,
-} from "../../../../api/endpoints.js"
+} from "../../../api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
@@ -25,7 +26,7 @@ import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import AddingButtonStack from "modules/common/components/addingButtonStack"
 import EditingButtonStack from "modules/common/components/editingButtonStack"
-import AddButton from "../../../common/components/addButton"
+import SessionAddButtonModal from "../../sessionPage/components/sessionList/components/sessionForms/components/sessionAddButtonModal"
 
 export default function Boulders(props) {
   /*
@@ -242,10 +243,10 @@ export default function Boulders(props) {
   return (
     <Container>
       {!addingBoulder && (
-        <AddButton
+        <SessionAddButtonModal
           changeStates={changeStates}
           message={"Add a Boulder"}
-        ></AddButton>
+        ></SessionAddButtonModal>
       )}
       <Row>
         <Accordion defaultActiveKey={0}>

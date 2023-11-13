@@ -3,17 +3,21 @@ import Container from "react-bootstrap/Container"
 import Stack from "react-bootstrap/Stack"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
-import {getTimeDifferenceString} from "modules/common/helpers.js"
 import {useQuery} from "react-query"
 import {
   boulderEndpoint,
   climbEndpoint,
   gymEndpoint,
   handleError,
-} from "api/endpoints"
-import axios from "api/axios"
+} from "modules/api/endpoints"
+import axios from "modules/api/axios"
+import {getTimeDifferenceString} from "modules/common/helpers.js"
 
 export default function SessionInfo({session}) {
+  /*
+   * React Query Hooks & APIs
+   */
+
   const {isLoading: isLoadingGym, data: allGymData} = useQuery(
     gymEndpoint,
     () => axios.get(gymEndpoint),
@@ -37,6 +41,11 @@ export default function SessionInfo({session}) {
       onError: (error) => handleError(error),
     }
   )
+
+  /*
+   * Helper Functions
+   */
+
   function climbText(session) {
     const filteredClimbData = [...allClimbData.data.data].filter((climb) => {
       return parseInt(climb.sessionId) === parseInt(session.id)
@@ -75,6 +84,10 @@ export default function SessionInfo({session}) {
       </Stack>
     )
   }
+
+  /*
+   * Return Value
+   */
 
   if (isLoadingGym || isLoadingBoulder || isLoadingClimb) {
     return <div>Loading...</div>

@@ -4,7 +4,7 @@ import Homepage from "modules/pages/homePage/homepage"
 import GymPage from "modules/pages/gymPage/gymPage"
 import SessionPage from "modules/pages/sessionPage/sessionPage"
 
-import Profile from "auth0/profile"
+import Profile from "modules/auth0/profile"
 import {useAuth0} from "@auth0/auth0-react"
 
 export default function PageRouter() {

@@ -1,15 +1,10 @@
+/* eslint-disable max-len */
 /* eslint-disable max-lines */
 import React, {useEffect, useRef, useState} from "react"
 import Locations from "./locations"
 
-import images from "../../../../images/images.js"
-import {
-  get,
-  add,
-  edit,
-  remove,
-  gymEndpoint,
-} from "../../../../api/endpoints.js"
+import images from "../../../images/images.js"
+import {get, add, edit, remove, gymEndpoint} from "../../../api/endpoints.js"
 
 import Accordion from "react-bootstrap/Accordion"
 import Button from "react-bootstrap/Button"
@@ -20,7 +15,7 @@ import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import AddingButtonStack from "modules/common/components/addingButtonStack"
-import AddButton from "modules/common/components/addButton"
+import SessionAddButtonModal from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionAddButtonModal"
 import EditingButtonStack from "modules/common/components/editingButtonStack"
 
 export default function Gyms(props) {
@@ -128,10 +123,10 @@ export default function Gyms(props) {
   return (
     <Container>
       {!addingGym && (
-        <AddButton
+        <SessionAddButtonModal
           changeStates={changeStates}
           message={"Add a Gym"}
-        ></AddButton>
+        ></SessionAddButtonModal>
       )}
       <Row>
         <Accordion defaultActiveKey={0}>

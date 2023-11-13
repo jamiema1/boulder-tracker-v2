@@ -1,4 +1,4 @@
-import axios from "api/axios"
+import axios from "modules/api/axios"
 
 export const gymEndpoint = "/gym"
 export const locationEndpoint = "/location"

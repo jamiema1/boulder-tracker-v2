@@ -1,12 +1,8 @@
-/* eslint-disable max-len */
 import React, {useRef} from "react"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
-import Accordion from "react-bootstrap/Accordion"
 import {useMutation, useQuery, useQueryClient} from "react-query"
-import {handleError, sessionEndpoint} from "api/endpoints.js"
-import axios from "api/axios"
+import {handleError, sessionEndpoint} from "modules/api/endpoints.js"
+import axios from "modules/api/axios"
 import SessionGymIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionGymIdInput"
 import SessionUserIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionUserIdInput"
 import SessionStartTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionStartTimeInput"
@@ -17,7 +13,7 @@ import {
   getCurrentDateTime,
 } from "modules/common/helpers.js"
 
-export default function SessionAddForm({resetSessionState}) {
+export default function SessionAddForm({handleClose}) {
   const gymIdRef = useRef(0)
   const userIdRef = useRef(0)
   const sessionStartTimeRef = useRef("")
@@ -45,7 +41,6 @@ export default function SessionAddForm({resetSessionState}) {
             ],
           },
         })
-        clearSessionRefs()
       },
 
       onError: (error) => handleError(error),
@@ -55,14 +50,6 @@ export default function SessionAddForm({resetSessionState}) {
   /*
    * Helper Functions
    */
-
-  function clearSessionRefs() {
-    gymIdRef.current.value = 0
-    userIdRef.current.value = 0
-    sessionStartTimeRef.current.value = ""
-    sessionEndTimeRef.current.value = ""
-    resetSessionState()
-  }
 
   function getNewSession() {
     return {
@@ -85,39 +72,23 @@ export default function SessionAddForm({resetSessionState}) {
   }
 
   return (
-    <Accordion.Item eventKey={0} className="mb-3">
-      <Accordion.Header>
-        <Form>
-          <Row>
-            <Col xl>
-              <SessionGymIdInput ref={gymIdRef}></SessionGymIdInput>
-            </Col>
-            <Col xl>
-              <SessionUserIdInput
-                defaultValue={1}
-                ref={userIdRef}
-              ></SessionUserIdInput>
-            </Col>
-            <Col xl>
-              <SessionStartTimeInput
-                defaultValue={convertToEditDateTime(getCurrentDateTime())}
-                ref={sessionStartTimeRef}
-              ></SessionStartTimeInput>
-            </Col>
-            <Col xl>
-              <SessionEndTimeInput
-                ref={sessionEndTimeRef}
-              ></SessionEndTimeInput>
-            </Col>
-            <Col xl>
-              <AddingButtonStack
-                add={() => addSession.mutate(getNewSession())}
-                clearRefs={() => clearSessionRefs()}
-              ></AddingButtonStack>
-            </Col>
-          </Row>
-        </Form>
-      </Accordion.Header>
-    </Accordion.Item>
+    <Form>
+      <SessionGymIdInput ref={gymIdRef}></SessionGymIdInput>
+      <SessionUserIdInput defaultValue={1} ref={userIdRef}></SessionUserIdInput>
+      <SessionStartTimeInput
+        defaultValue={convertToEditDateTime(getCurrentDateTime())}
+        ref={sessionStartTimeRef}
+      ></SessionStartTimeInput>
+      <SessionEndTimeInput ref={sessionEndTimeRef}></SessionEndTimeInput>
+      <AddingButtonStack
+        confirm={() => {
+          handleClose()
+          addSession.mutate(getNewSession())
+        }}
+        cancel={() => {
+          handleClose()
+        }}
+      ></AddingButtonStack>
+    </Form>
   )
 }

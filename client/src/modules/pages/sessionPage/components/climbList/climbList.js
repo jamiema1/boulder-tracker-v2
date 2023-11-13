@@ -4,7 +4,7 @@ import {
   getCurrentDateTime,
   convertToEditDateTime,
 } from "modules/common/helpers.js"
-import images from "images/images.js"
+import images from "modules/images/images.js"
 import {
   get,
   add,
@@ -13,7 +13,7 @@ import {
   boulderEndpoint,
   climbEndpoint,
   locationEndpoint,
-} from "api/endpoints.js"
+} from "modules/api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
 import Button from "react-bootstrap//Button"
 import Container from "react-bootstrap/esm/Container.js"

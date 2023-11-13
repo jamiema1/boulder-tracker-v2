@@ -1,15 +1,16 @@
 import React from "react"
-import images from "images/images.js"
-import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
 import Stack from "react-bootstrap/Stack"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
+import DeleteButton from "modules/common/components/deleteButton"
+import SessionEditButtonModal from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionEditButtonModal"
+import SessionEndButtonModal from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionEndButtonModal"
 
 export default function SessionViewButtonStack({
+  session,
   active,
   deactivate,
-  edit,
   remove,
 }) {
   return (
@@ -19,16 +20,19 @@ export default function SessionViewButtonStack({
         <Col>
           <Stack direction="horizontal" gap={3}>
             {active && (
-              <Button variant="secondary" onClick={deactivate}>
-                End
-              </Button>
+              <SessionEndButtonModal
+                deactivate={deactivate}
+                title={"End a Session"}
+              ></SessionEndButtonModal>
             )}
-            <Button variant="warning" onClick={edit}>
-              <img src={images.editIcon}></img>
-            </Button>
-            <Button variant="danger" onClick={remove}>
-              <img src={images.deleteIcon}></img>
-            </Button>
+            <SessionEditButtonModal
+              session={session}
+              title={"Edit Session"}
+            ></SessionEditButtonModal>
+            <DeleteButton
+              remove={remove}
+              title={"Delete Session"}
+            ></DeleteButton>
           </Stack>
         </Col>
       </Row>
