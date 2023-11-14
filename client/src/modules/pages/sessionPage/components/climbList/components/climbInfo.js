@@ -1,4 +1,4 @@
-import images from "modules/images/images"
+import {getBoulderTypeImage, getHexImage} from "modules/images/images"
 import React from "react"
 import Container from "react-bootstrap/esm/Container.js"
 import Row from "react-bootstrap/Row"
@@ -19,101 +19,25 @@ export default function ClimbInfo({climb}) {
     return <div>Loading...</div>
   }
 
-  function boulderText(climb) {
-    const boulder = allBoulderData.data.data.find((boulder) => {
-      return parseInt(boulder.id) === parseInt(climb.boulderId)
-    })
+  const boulder = allBoulderData.data.data.find((boulder) => {
+    return parseInt(boulder.id) === parseInt(climb.boulderId)
+  })
 
-    if (boulder === undefined) {
-      return
-    }
-
-    return boulder.description
-  }
-
-  function getBoulderColour(climb) {
-    const boulder = allBoulderData.data.data.find((boulder) => {
-      return parseInt(boulder.id) === parseInt(climb.boulderId)
-    })
-
-    if (boulder === undefined) {
-      return
-    }
-
-    return boulder.colour
-  }
-
-  function getBoulderRating(climb) {
-    const boulder = allBoulderData.data.data.find((boulder) => {
-      return parseInt(boulder.id) === parseInt(climb.boulderId)
-    })
-
-    if (boulder === undefined) {
-      return
-    }
-
-    return boulder.rating
-  }
-
-  function getHexImage(rating) {
-    switch (rating) {
-    case -1:
-      return images.unrated
-    case 0:
-      return images.sixHex
-    case 1:
-      return images.oneHex
-    case 2:
-      return images.twoHex
-    case 3:
-      return images.threeHex
-    case 4:
-      return images.fourHex
-    case 5:
-      return images.fiveHex
-    case 6:
-      return images.sixHex
-    }
-  }
-
-  function getBoulderType(climb) {
-    const boulder = allBoulderData.data.data.find((boulder) => {
-      return parseInt(boulder.id) === parseInt(climb.boulderId)
-    })
-
-    if (boulder === undefined) {
-      return
-    }
-
-    return boulder.boulderType
-  }
-
-  function getBoulderTypeImage(boulderType) {
-    switch (boulderType) {
-    case "Slab":
-      return images.slab
-    case "Overhang":
-      return images.overhang
-    }
-  }
   return (
     <Container>
       <Row>
         <Col
           // xs={1}
           className="p-0"
-          style={{backgroundColor: getBoulderColour(climb)}}
+          style={{backgroundColor: boulder.colour}}
         ></Col>
         <Col className="p-1">
-          <img
-            className="climbIcons"
-            src={getHexImage(getBoulderRating(climb))}
-          ></img>
+          <img className="climbIcons" src={getHexImage(boulder.rating)}></img>
         </Col>
         <Col className="p-1">
           <img
             className="climbIcons"
-            src={getBoulderTypeImage(getBoulderType(climb))}
+            src={getBoulderTypeImage(boulder.boulderType)}
           ></img>
         </Col>
         <Col xs={6} md={10}>
@@ -121,7 +45,7 @@ export default function ClimbInfo({climb}) {
             <div className="text">
               {climb.sends} / {climb.attempts}
             </div>
-            <div className="text">{boulderText(climb)}</div>
+            <div className="text">{boulder.description}</div>
           </Stack>
           {/* <div className="text">
     {convertToViewDateTime(

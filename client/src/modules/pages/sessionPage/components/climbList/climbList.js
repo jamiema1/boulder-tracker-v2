@@ -1,23 +1,22 @@
-/* eslint-disable max-lines */
 import React from "react"
-// import {convertToEditDateTime} from "modules/common/helpers.js"
-// import images from "modules/images/images.js"
 import {climbEndpoint, handleError} from "modules/api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
 import Container from "react-bootstrap/esm/Container.js"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
-// import FloatingLabel from "react-bootstrap/FloatingLabel"
 import ClimbAddButtonModal from "./components/climbForms/components/climbAddButtonModal"
 
-import {useQuery} from "react-query"
+import {useMutation, useQuery, useQueryClient} from "react-query"
 import ClimbInfo from "./components/climbInfo"
 import axios from "modules/api/axios"
+import ClimbViewButtonStack from "./components/climbViewButtonStack"
 
 export default function ClimbList({session}) {
   /*
    * React Query Hooks & APIs
    */
+
+  const queryClient = useQueryClient()
 
   const {
     isLoading: isLoadingClimb,
@@ -28,9 +27,38 @@ export default function ClimbList({session}) {
     onError: (error) => handleError(error),
   })
 
-  /*
-   * Helper functions
-   */
+  // const editClimb = useMutation(
+  //   ({climbId, newClimb}) =>
+  //     axios.put(climbEndpoint + "/" + climbId, newClimb),
+  //   {
+  //     onSuccess: (data, {climbId, newClimb}) => {
+  //       queryClient.setQueryData(climbEndpoint, {
+  //         data: {
+  //           data: [...allClimbData.data.data].map((climb) => {
+  //            return climb.id === climbId ? {id: climbId, ...newClimb} : climb
+  //           }),
+  //         },
+  //       })
+  //     },
+  //     onError: (error) => handleError(error),
+  //   }
+  // )
+
+  const deleteClimb = useMutation(
+    (climbId) => axios.delete(climbEndpoint + "/" + climbId),
+    {
+      onSuccess: (data, climbId) => {
+        queryClient.setQueryData(climbEndpoint, {
+          data: {
+            data: [...allClimbData.data.data].filter((climb) => {
+              return climb.id !== climbId
+            }),
+          },
+        })
+      },
+      onError: (error) => handleError(error),
+    }
+  )
 
   /*
    * Return value
@@ -74,37 +102,12 @@ export default function ClimbList({session}) {
                 <Accordion.Header>
                   <ClimbInfo climb={climb}></ClimbInfo>
                 </Accordion.Header>
-                {/* <Accordion.Header>
-                  <Form></Form>
-                </Accordion.Header>
-                <Accordion.Body className="px-2 accordionBody">
-                  <Container>
-                    <Row>
-                      <Col xl={10} sm={8} xs={6}></Col>
-                      <Col>
-                        <Stack direction="horizontal" gap={3}>
-                          <Button
-                            variant="warning"
-                            onClick={() => {
-                              loadInitialBoulders(
-                                props.sessionStartTime,
-                                props.sessionEndTime
-                              )
-                            }}
-                          >
-                            <img src={images.editIcon}></img>
-                          </Button>
-                          <Button
-                            variant="danger"
-                            onClick={() => deleteClimb(climb.id)}
-                          >
-                            <img src={images.deleteIcon}></img>
-                          </Button>
-                        </Stack>
-                      </Col>
-                    </Row>
-                  </Container>
-                </Accordion.Body> */}
+                <Accordion.Body>
+                  <ClimbViewButtonStack
+                    climb={climb}
+                    remove={() => deleteClimb.mutate(climb.id)}
+                  ></ClimbViewButtonStack>
+                </Accordion.Body>
               </Accordion.Item>
             )
           })}

@@ -21,13 +21,13 @@ const ClimbBoulderIdInput = forwardRef(function ClimbBoulderIdInput(
 
   const filteredBoulderData = [...allBoulderData.data.data].filter(
     (boulder) => {
-      const location = boulder.locationId == locationId
-      const setStart =
+      const sameLocation = boulder.locationId == locationId
+      const setStartBeforeSession =
         new Date(session.sessionStartTime) > new Date(boulder.setStartDate)
-      const setEnd =
+      const setEndedAfterSession =
         new Date(session.sessionStartTime) < new Date(boulder.setEndDate) ||
         boulder.setEndDate == "0000-00-00"
-      return location && setStart && setEnd
+      return sameLocation && setStartBeforeSession && setEndedAfterSession
     }
   )
 

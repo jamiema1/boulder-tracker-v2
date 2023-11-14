@@ -32,4 +32,34 @@ const images = {
   overhang,
 }
 
+export function getHexImage(rating) {
+  switch (rating) {
+  case -1:
+    return images.unrated
+  case 0:
+    return images.sixHex
+  case 1:
+    return images.oneHex
+  case 2:
+    return images.twoHex
+  case 3:
+    return images.threeHex
+  case 4:
+    return images.fourHex
+  case 5:
+    return images.fiveHex
+  case 6:
+    return images.sixHex
+  }
+}
+
+export function getBoulderTypeImage(boulderType) {
+  switch (boulderType) {
+  case "Slab":
+    return images.slab
+  case "Overhang":
+    return images.overhang
+  }
+}
+
 export default images
