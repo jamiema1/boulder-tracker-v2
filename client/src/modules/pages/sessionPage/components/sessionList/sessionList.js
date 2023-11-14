@@ -1,5 +1,4 @@
 import React from "react"
-import Climbs from "modules/pages/sessionPage/components/climbList/climbList.js"
 import Accordion from "react-bootstrap/Accordion"
 import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
@@ -12,10 +11,9 @@ import SessionAddButtonModal from "modules/pages/sessionPage/components/sessionL
 import SessionInfo from "modules/pages/sessionPage/components/sessionList/components/sessionInfo.js"
 import {handleError, sessionEndpoint} from "modules/api/endpoints.js"
 import SessionViewButtonStack from "modules/pages/sessionPage/components/sessionList/components/sessionViewButtonStack.js"
+import ClimbList from "modules/pages/sessionPage/components/climbList/climbList.js"
 
 export default function SessionList() {
-  console.log("Re-render")
-
   /*
    * React Query Hooks & APIs
    */
@@ -126,14 +124,7 @@ export default function SessionList() {
                     deactivate={() => endSession(session)}
                     remove={() => deleteSession.mutate(session.id)}
                   ></SessionViewButtonStack>
-                  {false && (
-                    <Climbs
-                      sessionId={session.id}
-                      sessionStartTime={session.sessionStartTime}
-                      sessionEndTime={session.sessionEndTime}
-                      gymId={session.gymId}
-                    ></Climbs>
-                  )}
+                  <ClimbList session={session}></ClimbList>
                 </Accordion.Body>
               </Accordion.Item>
             )

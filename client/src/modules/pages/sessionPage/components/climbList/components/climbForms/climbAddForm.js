@@ -1,14 +1,18 @@
-import React, {useRef} from "react"
+import React, {useRef, useState} from "react"
 import Form from "react-bootstrap/Form"
-import FloatingLabel from "react-bootstrap/FloatingLabel"
 import AddingButtonStack from "modules/common/components/addingButtonStack.js"
 import {getCurrentDateTime} from "modules/common/helpers.js"
 import ClimbLocationIdInput from "./components/climbLocationIdInput"
 import {climbEndpoint, handleError} from "modules/api/endpoints"
 import axios from "modules/api/axios"
 import {useMutation, useQuery, useQueryClient} from "react-query"
+import ClimbEndTimeInput from "./components/climbEndTimeInput"
+import ClimbStartTimeInput from "./components/climbStartTimeInput"
+import ClimbSendInput from "./components/climbSendInput"
+import ClimbAttemptInput from "./components/climbAttemptInput"
+import ClimbBoulderIdInput from "./components/climbBoulderIdInput"
 
-export default function ClimbAddForm({handleClose, sessionId}) {
+export default function ClimbAddForm({handleClose, session}) {
   /*
    * React Hooks:
    *
@@ -17,6 +21,8 @@ export default function ClimbAddForm({handleClose, sessionId}) {
    *  - newClimbStartTime: reference to new start time
    *  - newClimbEndTime: reference to new end time
    */
+
+  const [locationId, setlocationId] = useState(0)
 
   const locationIdRef = useRef(0)
   const boulderIdRef = useRef(0)
@@ -56,7 +62,7 @@ export default function ClimbAddForm({handleClose, sessionId}) {
   function getNewClimb() {
     return {
       boulderId: parseInt(boulderIdRef.current.value),
-      sessionId: parseInt(sessionId),
+      sessionId: parseInt(session.id),
       attempts: parseInt(attemptsRef.current.value),
       sends: parseInt(sendsRef.current.value),
       climbStartTime: climbStartTimeRef.current.value,
@@ -70,62 +76,28 @@ export default function ClimbAddForm({handleClose, sessionId}) {
 
   return (
     <Form>
-      <ClimbLocationIdInput ref={locationIdRef}></ClimbLocationIdInput>
-      <FloatingLabel
-        controlId="BoulderIDInput"
-        label="Boulder"
-        className="mb-3"
-      >
-        <Form.Select ref={boulderIdRef}>
-          {boulderData.map((boulder) => (
-            <option key={boulder.id} value={boulder.id}>
-              {boulder.rating +
-                " | " +
-                boulder.colour +
-                " | " +
-                boulder.boulderType +
-                " | " +
-                boulder.description.substring(0, 25)}
-            </option>
-          ))}
-        </Form.Select>
-      </FloatingLabel>
-      <FloatingLabel controlId="AttemptInput" label="Attempts" className="mb-3">
-        <Form.Control
-          type="number"
-          placeholder={1}
-          ref={attemptsRef}
-          defaultValue={1}
-        />
-      </FloatingLabel>
-      <FloatingLabel controlId="SendInput" label="Sends" className="mb-3">
-        <Form.Control
-          type="number"
-          placeholder={1}
-          ref={sendsRef}
-          defaultValue={0}
-        />
-      </FloatingLabel>
-      <FloatingLabel
-        controlId="StartTimeInput"
-        label="Start Time"
-        className="mb-3"
-      >
-        <Form.Control
-          type="datetime-local"
-          placeholder={getCurrentDateTime()}
-          defaultValue={getCurrentDateTime()}
-          ref={climbStartTimeRef}
-        />
-      </FloatingLabel>
-      <FloatingLabel controlId="EndTimeInput" label="End Time" className="mb-3">
-        <Form.Control
-          type="datetime-local"
-          placeholder={getCurrentDateTime()}
-          defaultValue={getCurrentDateTime()}
-          ref={climbEndTimeRef}
-        />
-      </FloatingLabel>
+      <ClimbLocationIdInput
+        ref={locationIdRef}
+        session={session}
+        updateLocationId={() => {
+          setlocationId(locationIdRef.current.value)
+        }}
+      ></ClimbLocationIdInput>
+      <ClimbBoulderIdInput
+        ref={boulderIdRef}
+        session={session}
+        locationId={locationId}
+      ></ClimbBoulderIdInput>
+      <ClimbAttemptInput defaultValue={1} ref={attemptsRef}></ClimbAttemptInput>
+      <ClimbSendInput defaultValue={1} ref={sendsRef}></ClimbSendInput>
+      <ClimbStartTimeInput
+        defaultValue={getCurrentDateTime()}
+        ref={climbStartTimeRef}
+      ></ClimbStartTimeInput>
+      <ClimbEndTimeInput
+        defaultValue={getCurrentDateTime()}
+        ref={climbEndTimeRef}
+      ></ClimbEndTimeInput>
       <AddingButtonStack
         confirm={() => {
           handleClose()

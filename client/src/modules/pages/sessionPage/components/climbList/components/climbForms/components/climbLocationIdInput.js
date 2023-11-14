@@ -1,4 +1,4 @@
-import React, {forwardRef} from "react"
+import React, {forwardRef, useEffect} from "react"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import {useQuery} from "react-query"
@@ -6,7 +6,7 @@ import axios from "modules/api/axios"
 import {locationEndpoint} from "modules/api/endpoints"
 
 const ClimbLocationIdInput = forwardRef(function ClimbLocationIdInput(
-  {defaultValue = 0, disabled = false},
+  {defaultValue = 0, disabled = false, session, updateLocationId},
   ref
 ) {
   const {isLoading: isLoadingLocation, data: allLocationData} = useQuery(
@@ -14,10 +14,19 @@ const ClimbLocationIdInput = forwardRef(function ClimbLocationIdInput(
     () => axios.get(locationEndpoint)
   )
 
+  // Initialize the location to be the first item by default
+  useEffect(() => {
+    updateLocationId()
+  }, [allLocationData])
+
   // TODO: Make the loading look nicer
   if (isLoadingLocation) {
     return <div>Loading...</div>
   }
+
+  const filteredLocationData = [...allLocationData.data.data].filter(
+    (location) => location.gymId == session.gymId
+  )
 
   return (
     <FloatingLabel
@@ -29,9 +38,9 @@ const ClimbLocationIdInput = forwardRef(function ClimbLocationIdInput(
         ref={ref}
         defaultValue={defaultValue}
         disabled={disabled}
-        // onChange={(e) => getBoulders(e.target.value)}
+        onChange={updateLocationId}
       >
-        {allLocationData.data.data.map((location) => (
+        {filteredLocationData.map((location) => (
           <option key={location.id} value={location.id}>
             {location.name}
           </option>
