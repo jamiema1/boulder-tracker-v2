@@ -113,7 +113,8 @@ export function getQuery (res, tableName, query) {
 
 export function addOne (res, tableName, values, stringValues) {
   console.log(new Date().toLocaleTimeString(),
-    tableName + ': Add One - ' + values)
+    tableName + ': Add One')
+  console.log(values)
   if (validateValues(res, values, stringValues)) return
 
   const valueArray = []
@@ -142,7 +143,8 @@ export function addOne (res, tableName, values, stringValues) {
 
 export function updateOne (res, tableName, id, values, stringValues) {
   console.log(new Date().toLocaleTimeString(),
-    tableName + ': Update One - ' + id + ' | ' + values)
+    tableName + ': Update One - ' + id)
+  console.log(values)
   if (validateValues(res, values, stringValues)) return
 
   let query = 'UPDATE ' + tableName + ' SET '

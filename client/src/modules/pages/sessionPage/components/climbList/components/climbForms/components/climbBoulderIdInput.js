@@ -1,7 +1,10 @@
 import React, {forwardRef} from "react"
-import Form from "react-bootstrap/Form"
-import FloatingLabel from "react-bootstrap/FloatingLabel"
+
 import {useQuery} from "react-query"
+
+import FloatingLabel from "react-bootstrap/FloatingLabel"
+import Form from "react-bootstrap/Form"
+
 import axios from "modules/api/axios"
 import {boulderEndpoint} from "modules/api/endpoints"
 

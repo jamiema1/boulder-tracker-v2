@@ -1,26 +1,27 @@
-import React, {useEffect} from "react"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import Form from "react-bootstrap/Form"
-import FloatingLabel from "react-bootstrap/FloatingLabel"
-import EditingButtonStack from "modules/common/components/editingButtonStack.js"
-import {convertToEditDateTime} from "modules/common/helpers.js"
+import React, {useRef} from "react"
 
-export default function ClimbEditForm({
-  climb,
-  newLocationId,
-  getBoulders,
-  locationData,
-  newBoulderId,
-  boulderData,
-  allBoulderData,
-  newAttempts,
-  newSends,
-  newClimbStartTime,
-  newClimbEndTime,
-  editClimb,
-  changeStates,
-}) {
+import {useMutation, useQuery, useQueryClient} from "react-query"
+
+import Form from "react-bootstrap/Form"
+
+import axios from "modules/api/axios"
+import {
+  boulderEndpoint,
+  climbEndpoint,
+  handleError,
+} from "modules/api/endpoints"
+
+import {convertToEditDateTime} from "modules/common/helpers"
+import EditingButtonStack from "modules/common/components/editingButtonStack"
+
+import ClimbAttemptInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbAttemptInput"
+import ClimbBoulderIdInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbBoulderIdInput"
+import ClimbEndTimeInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbEndTimeInput"
+import ClimbLocationIdInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbLocationIdInput"
+import ClimbSendInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbSendInput"
+import ClimbStartTimeInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbStartTimeInput"
+
+export default function ClimbEditForm({session, climb, handleClose}) {
   /*
    * React Hooks:
    *
@@ -30,135 +31,106 @@ export default function ClimbEditForm({
    *  - newClimbEndTime: reference to new end time
    */
 
-  // const locationIdRef = useRef(0)
-  // const boulderIdRef = useRef(0)
-  // const attemptsRef = useRef(0)
-  // const sendsRef = useRef(0)
-  // const climbStartTimeRef = useRef("")
-  // const climbEndTimeRef = useRef("")
+  // const [locationId, setlocationId] = useState(0)
 
-  // TODO: options for boulders do not always load correctly
+  const locationIdRef = useRef(0)
+  const boulderIdRef = useRef(0)
+  const attemptsRef = useRef(0)
+  const sendsRef = useRef(0)
+  const climbStartTimeRef = useRef("")
+  const climbEndTimeRef = useRef("")
 
-  useEffect(() => {
-    getBoulders(getLocationId(climb.boulderId))
-  }, [])
+  const queryClient = useQueryClient()
 
-  function getLocationId(boulderId) {
-    const boulder = allBoulderData.find(
-      (boulder) => parseInt(boulder.id) === parseInt(boulderId)
-    )
+  const {isLoading: isLoadingClimb, data: allClimbData} = useQuery(
+    climbEndpoint,
+    () => axios.get(climbEndpoint),
+    {
+      onError: (error) => handleError(error),
+    }
+  )
 
-    return boulder.locationId
+  const {isLoading: isLoadingBoulder, data: allBoulderData} = useQuery(
+    boulderEndpoint,
+    () => axios.get(boulderEndpoint)
+  )
+
+  const editClimb = useMutation(
+    ({climbId, newClimb}) =>
+      axios.put(climbEndpoint + "/" + climbId, newClimb),
+    {
+      onSuccess: (data, {climbId, newClimb}) => {
+        queryClient.setQueryData(climbEndpoint, {
+          data: {
+            data: [...allClimbData.data.data].map((climb) => {
+              return climb.id === climbId ? {id: climbId, ...newClimb} : climb
+            }),
+          },
+        })
+      },
+      onError: (error) => handleError(error),
+    }
+  )
+
+  if (isLoadingClimb || isLoadingBoulder) {
+    return <div>Loading...</div>
   }
+
+  const locationId = [...allBoulderData.data.data].find((boulder) => {
+    return boulder.id == climb.boulderId
+  }).locationId
 
   return (
     <Form>
-      <Row>
-        <Col xl>
-          <FloatingLabel
-            controlId="LocationIDInput"
-            label="Location"
-            className="mb-3"
-          >
-            <Form.Select
-              ref={newLocationId}
-              onChange={(e) => getBoulders(e.target.value)}
-              defaultValue={getLocationId(climb.boulderId)}
-              disabled
-            >
-              {locationData.map((location) => (
-                <option key={location.id} value={location.id}>
-                  {location.name}
-                </option>
-              ))}
-            </Form.Select>
-          </FloatingLabel>
-        </Col>
-        <Col xl>
-          <FloatingLabel
-            controlId="BoulderIDInput"
-            label="Boulder"
-            className="mb-3"
-          >
-            <Form.Select
-              ref={newBoulderId}
-              defaultValue={climb.boulderId}
-              disabled
-            >
-              {boulderData.map((boulder) => (
-                <option key={boulder.id} value={boulder.id}>
-                  {boulder.rating +
-                    " | " +
-                    boulder.colour +
-                    " | " +
-                    boulder.boulderType +
-                    " | " +
-                    boulder.description.substring(0, 25)}
-                </option>
-              ))}
-            </Form.Select>
-          </FloatingLabel>
-        </Col>
-        <Col xl>
-          <FloatingLabel
-            controlId="AttemptInput"
-            label="Attempts"
-            className="mb-3"
-          >
-            <Form.Control
-              type="number"
-              placeholder={1}
-              ref={newAttempts}
-              defaultValue={climb.attempts}
-            />
-          </FloatingLabel>
-        </Col>
-        <Col xl>
-          <FloatingLabel controlId="SendInput" label="Sends" className="mb-3">
-            <Form.Control
-              type="number"
-              placeholder={1}
-              ref={newSends}
-              defaultValue={climb.sends}
-            />
-          </FloatingLabel>
-        </Col>
-        <Col xl>
-          <FloatingLabel
-            controlId="StartTimeInput"
-            label="Start Time"
-            className="mb-3"
-          >
-            <Form.Control
-              type="datetime-local"
-              placeholder={convertToEditDateTime(climb.climbStartTime)}
-              defaultValue={convertToEditDateTime(climb.climbStartTime)}
-              ref={newClimbStartTime}
-            />
-          </FloatingLabel>
-        </Col>
-        <Col xl>
-          <FloatingLabel
-            controlId="EndTimeInput"
-            label="End Time"
-            className="mb-3"
-          >
-            <Form.Control
-              type="datetime-local"
-              placeholder={convertToEditDateTime(climb.climbEndTime)}
-              defaultValue={convertToEditDateTime(climb.climbEndTime)}
-              ref={newClimbEndTime}
-            />
-          </FloatingLabel>
-        </Col>
-        <Col xl>
-          <EditingButtonStack
-            edit={editClimb}
-            id={climb.id}
-            changeStates={changeStates}
-          ></EditingButtonStack>
-        </Col>
-      </Row>
+      <ClimbLocationIdInput
+        ref={locationIdRef}
+        session={session}
+        updateLocationId={() => {}}
+        defaultValue={locationId}
+        disabled={true}
+      ></ClimbLocationIdInput>
+      <ClimbBoulderIdInput
+        ref={boulderIdRef}
+        session={session}
+        locationId={locationId}
+        defaultValue={climb.boulderId}
+        disabled={true}
+      ></ClimbBoulderIdInput>
+      <ClimbAttemptInput
+        defaultValue={climb.attempts}
+        ref={attemptsRef}
+      ></ClimbAttemptInput>
+      <ClimbSendInput
+        defaultValue={climb.sends}
+        ref={sendsRef}
+      ></ClimbSendInput>
+      <ClimbStartTimeInput
+        defaultValue={convertToEditDateTime(climb.climbStartTime)}
+        ref={climbStartTimeRef}
+      ></ClimbStartTimeInput>
+      <ClimbEndTimeInput
+        defaultValue={convertToEditDateTime(climb.climbEndTime)}
+        ref={climbEndTimeRef}
+      ></ClimbEndTimeInput>
+      <EditingButtonStack
+        confirm={() => {
+          editClimb.mutate({
+            climbId: climb.id,
+            newClimb: {
+              boulderId: parseInt(boulderIdRef.current.value),
+              sessionId: parseInt(session.id),
+              attempts: parseInt(attemptsRef.current.value),
+              sends: parseInt(sendsRef.current.value),
+              climbStartTime: climbStartTimeRef.current.value,
+              climbEndTime: climbEndTimeRef.current.value,
+            },
+          })
+          handleClose()
+        }}
+        cancel={() => {
+          handleClose()
+        }}
+      ></EditingButtonStack>
     </Form>
   )
 }

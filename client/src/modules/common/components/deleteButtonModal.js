@@ -1,9 +1,9 @@
 import React, {useState} from "react"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
-import images from "modules/images/images.js"
+import images from "modules/images/images"
 
-export default function DeleteButton({remove, title}) {
+export default function DeleteButtonModal({confirmAction, title}) {
   const [show, setShow] = useState(false)
 
   const handleClose = () => setShow(false)
@@ -14,13 +14,12 @@ export default function DeleteButton({remove, title}) {
       <Button variant="danger" onClick={handleShow}>
         <img src={images.deleteIcon}></img>
       </Button>
-
       <Modal show={show} onHide={handleClose} backdrop="static" centered>
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          This action is irreversible. Are you sure you want to delete this?
+          {"This action is irreversible. Are you sure you want to delete this?"}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -29,7 +28,7 @@ export default function DeleteButton({remove, title}) {
           <Button
             variant="primary"
             onClick={() => {
-              remove()
+              confirmAction()
               handleClose()
             }}
           >

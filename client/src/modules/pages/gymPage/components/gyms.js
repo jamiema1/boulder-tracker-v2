@@ -15,7 +15,6 @@ import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import AddingButtonStack from "modules/common/components/addingButtonStack"
-import SessionAddButtonModal from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionAddButtonModal"
 import EditingButtonStack from "modules/common/components/editingButtonStack"
 
 export default function Gyms(props) {
@@ -123,10 +122,7 @@ export default function Gyms(props) {
   return (
     <Container>
       {!addingGym && (
-        <SessionAddButtonModal
-          changeStates={changeStates}
-          message={"Add a Gym"}
-        ></SessionAddButtonModal>
+        <Button changeStates={changeStates} message={"Add a Gym"}></Button>
       )}
       <Row>
         <Accordion defaultActiveKey={0}>

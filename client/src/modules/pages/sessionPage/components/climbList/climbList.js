@@ -1,15 +1,23 @@
 import React from "react"
-import {climbEndpoint, handleError} from "modules/api/endpoints.js"
-import Accordion from "react-bootstrap/Accordion"
-import Container from "react-bootstrap/esm/Container.js"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import ClimbAddButtonModal from "./components/climbForms/components/climbAddButtonModal"
 
 import {useMutation, useQuery, useQueryClient} from "react-query"
-import ClimbInfo from "./components/climbInfo"
+
+import Accordion from "react-bootstrap/Accordion"
+import Col from "react-bootstrap/Col"
+import Container from "react-bootstrap/esm/Container"
+import Row from "react-bootstrap/Row"
+import Stack from "react-bootstrap/Stack"
+
 import axios from "modules/api/axios"
-import ClimbViewButtonStack from "./components/climbViewButtonStack"
+import {climbEndpoint, handleError} from "modules/api/endpoints"
+
+import AddButtonModal from "modules/common/components/addButtonModal"
+import DeleteButtonModal from "modules/common/components/deleteButtonModal"
+import EditButtonModal from "modules/common/components/editButtonModal"
+
+import ClimbAddForm from "modules/pages/sessionPage/components/climbList/components/climbForms/climbAddForm"
+import ClimbEditForm from "modules/pages/sessionPage/components/climbList/components/climbForms/climbEditForm"
+import ClimbInfo from "modules/pages/sessionPage/components/climbList/components/climbInfo"
 
 export default function ClimbList({session}) {
   /*
@@ -26,23 +34,6 @@ export default function ClimbList({session}) {
   } = useQuery(climbEndpoint, () => axios.get(climbEndpoint), {
     onError: (error) => handleError(error),
   })
-
-  // const editClimb = useMutation(
-  //   ({climbId, newClimb}) =>
-  //     axios.put(climbEndpoint + "/" + climbId, newClimb),
-  //   {
-  //     onSuccess: (data, {climbId, newClimb}) => {
-  //       queryClient.setQueryData(climbEndpoint, {
-  //         data: {
-  //           data: [...allClimbData.data.data].map((climb) => {
-  //            return climb.id === climbId ? {id: climbId, ...newClimb} : climb
-  //           }),
-  //         },
-  //       })
-  //     },
-  //     onError: (error) => handleError(error),
-  //   }
-  // )
 
   const deleteClimb = useMutation(
     (climbId) => axios.delete(climbEndpoint + "/" + climbId),
@@ -84,10 +75,10 @@ export default function ClimbList({session}) {
     <Container>
       <Row className="mb-3 ">
         <Col className="text-end">
-          <ClimbAddButtonModal
-            title={"Add a Climb"}
-            session={session}
-          ></ClimbAddButtonModal>
+          <AddButtonModal
+            title={"Add Climb"}
+            form={<ClimbAddForm session={session}></ClimbAddForm>}
+          ></AddButtonModal>
         </Col>
       </Row>
       <Row>
@@ -103,10 +94,21 @@ export default function ClimbList({session}) {
                   <ClimbInfo climb={climb}></ClimbInfo>
                 </Accordion.Header>
                 <Accordion.Body>
-                  <ClimbViewButtonStack
-                    climb={climb}
-                    remove={() => deleteClimb.mutate(climb.id)}
-                  ></ClimbViewButtonStack>
+                  <Stack direction="horizontal" gap={3}>
+                    <EditButtonModal
+                      title={"Edit Climb"}
+                      form={
+                        <ClimbEditForm
+                          climb={climb}
+                          session={session}
+                        ></ClimbEditForm>
+                      }
+                    ></EditButtonModal>
+                    <DeleteButtonModal
+                      confirmAction={() => deleteClimb.mutate(climb.id)}
+                      title={"Delete Climb"}
+                    ></DeleteButtonModal>
+                  </Stack>
                 </Accordion.Body>
               </Accordion.Item>
             )

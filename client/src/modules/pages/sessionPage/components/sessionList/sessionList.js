@@ -1,17 +1,26 @@
 import React from "react"
-import Accordion from "react-bootstrap/Accordion"
-import Container from "react-bootstrap/Container"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import {getCurrentDateTime} from "modules/common/helpers.js"
 
 import {useMutation, useQuery, useQueryClient} from "react-query"
-import axios from "modules/api/axios.js"
-import SessionAddButtonModal from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionAddButtonModal.js"
-import SessionInfo from "modules/pages/sessionPage/components/sessionList/components/sessionInfo.js"
-import {handleError, sessionEndpoint} from "modules/api/endpoints.js"
-import SessionViewButtonStack from "modules/pages/sessionPage/components/sessionList/components/sessionViewButtonStack.js"
-import ClimbList from "modules/pages/sessionPage/components/climbList/climbList.js"
+
+import Accordion from "react-bootstrap/Accordion"
+import Col from "react-bootstrap/Col"
+import Container from "react-bootstrap/Container"
+import Row from "react-bootstrap/Row"
+import Stack from "react-bootstrap/Stack"
+
+import axios from "modules/api/axios"
+import {handleError, sessionEndpoint} from "modules/api/endpoints"
+
+import {getCurrentDateTime} from "modules/common/helpers"
+import AddButtonModal from "modules/common/components/addButtonModal"
+import DeleteButtonModal from "modules/common/components/deleteButtonModal"
+import EditButtonModal from "modules/common/components/editButtonModal"
+import EndButtonModal from "modules/common/components/endButtonModal"
+
+import ClimbList from "modules/pages/sessionPage/components/climbList/climbList"
+import SessionAddForm from "modules/pages/sessionPage/components/sessionList/components/sessionForms/sessionAddForm"
+import SessionEditForm from "modules/pages/sessionPage/components/sessionList/components/sessionForms/sessionEditForm"
+import SessionInfo from "modules/pages/sessionPage/components/sessionList/components/sessionInfo"
 
 export default function SessionList() {
   /*
@@ -98,11 +107,12 @@ export default function SessionList() {
 
   return (
     <Container>
-      <Row className="mb-3 ">
+      <Row className="mb-3">
         <Col className="text-end">
-          <SessionAddButtonModal
-            title={"Add a Session"}
-          ></SessionAddButtonModal>
+          <AddButtonModal
+            title={"Add Session"}
+            form={<SessionAddForm></SessionAddForm>}
+          ></AddButtonModal>
         </Col>
       </Row>
       <Row>
@@ -117,13 +127,26 @@ export default function SessionList() {
                 <Accordion.Header>
                   <SessionInfo session={session}></SessionInfo>
                 </Accordion.Header>
-                <Accordion.Body className="px-2 accordionBody">
-                  <SessionViewButtonStack
-                    session={session}
-                    active={session.sessionEndTime === "0000-00-00 00:00:00"}
-                    deactivate={() => endSession(session)}
-                    remove={() => deleteSession.mutate(session.id)}
-                  ></SessionViewButtonStack>
+                <Accordion.Body className="px-2">
+                  <Stack direction="horizontal" gap={3}>
+                    {session.sessionEndTime === "0000-00-00 00:00:00" && (
+                      <EndButtonModal
+                        confirmAction={() => endSession(session)}
+                        title={"End Session"}
+                      ></EndButtonModal>
+                    )}
+                    <EditButtonModal
+                      title={"Edit Session"}
+                      form={
+                        <SessionEditForm session={session}></SessionEditForm>
+                      }
+                    ></EditButtonModal>
+                    <DeleteButtonModal
+                      confirmAction={() => deleteSession.mutate(session.id)}
+                      title={"Delete Session"}
+                    ></DeleteButtonModal>
+                  </Stack>
+
                   <ClimbList session={session}></ClimbList>
                 </Accordion.Body>
               </Accordion.Item>

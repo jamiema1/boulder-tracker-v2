@@ -1,14 +1,19 @@
 import React, {useRef} from "react"
-import {convertToEditDateTime} from "modules/common/helpers.js"
-import Form from "react-bootstrap/Form"
-import EditingButtonStack from "modules/common/components/editingButtonStack.js"
-import SessionGymIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionGymIdInput"
-import SessionUserIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionUserIdInput"
-import SessionStartTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionStartTimeInput"
-import SessionEndTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionEndTimeInput"
-import {handleError, sessionEndpoint} from "modules/api/endpoints"
-import axios from "modules/api/axios"
+
 import {useMutation, useQuery, useQueryClient} from "react-query"
+
+import Form from "react-bootstrap/Form"
+
+import axios from "modules/api/axios"
+import {handleError, sessionEndpoint} from "modules/api/endpoints"
+
+import {convertToEditDateTime} from "modules/common/helpers"
+import EditingButtonStack from "modules/common/components/editingButtonStack"
+
+import SessionEndTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionEndTimeInput"
+import SessionGymIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionGymIdInput"
+import SessionStartTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionStartTimeInput"
+import SessionUserIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionUserIdInput"
 
 export default function SessionEditForm({session, handleClose}) {
   /*
@@ -55,18 +60,6 @@ export default function SessionEditForm({session, handleClose}) {
     }
   )
 
-  function getNewSession() {
-    return {
-      gymId: parseInt(gymIdRef.current.value),
-      userId: parseInt(userIdRef.current.value),
-      sessionStartTime: sessionStartTimeRef.current.value,
-      sessionEndTime:
-        sessionEndTimeRef.current.value === ""
-          ? "0000-00-00 00:00:00"
-          : sessionEndTimeRef.current.value,
-    }
-  }
-
   /*
    * Return Value
    */
@@ -99,7 +92,15 @@ export default function SessionEditForm({session, handleClose}) {
         confirm={() => {
           editSession.mutate({
             sessionId: session.id,
-            newSession: getNewSession(),
+            newSession: {
+              gymId: parseInt(gymIdRef.current.value),
+              userId: parseInt(userIdRef.current.value),
+              sessionStartTime: sessionStartTimeRef.current.value,
+              sessionEndTime:
+                sessionEndTimeRef.current.value === ""
+                  ? "0000-00-00 00:00:00"
+                  : sessionEndTimeRef.current.value,
+            },
           })
           handleClose()
         }}

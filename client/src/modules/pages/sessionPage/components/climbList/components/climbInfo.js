@@ -1,12 +1,16 @@
-import {getBoulderTypeImage, getHexImage} from "modules/images/images"
 import React from "react"
-import Container from "react-bootstrap/esm/Container.js"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import Stack from "react-bootstrap/Stack"
-import {boulderEndpoint} from "modules/api/endpoints"
+
 import {useQuery} from "react-query"
+
+import Col from "react-bootstrap/Col"
+import Container from "react-bootstrap/esm/Container"
+import Row from "react-bootstrap/Row"
+import Stack from "react-bootstrap/Stack"
+
 import axios from "modules/api/axios"
+import {boulderEndpoint} from "modules/api/endpoints"
+
+import {getBoulderTypeImage, getHexImage} from "modules/images/images"
 
 export default function ClimbInfo({climb}) {
   const {isLoading: isLoadingBoulder, data: allBoulderData} = useQuery(
@@ -26,11 +30,7 @@ export default function ClimbInfo({climb}) {
   return (
     <Container>
       <Row>
-        <Col
-          // xs={1}
-          className="p-0"
-          style={{backgroundColor: boulder.colour}}
-        ></Col>
+        <Col className="p-0" style={{backgroundColor: boulder.colour}}></Col>
         <Col className="p-1">
           <img className="climbIcons" src={getHexImage(boulder.rating)}></img>
         </Col>

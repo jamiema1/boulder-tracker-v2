@@ -20,7 +20,6 @@ import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import AddingButtonStack from "modules/common/components/addingButtonStack"
 import EditingButtonStack from "modules/common/components/editingButtonStack"
-import SessionAddButtonModal from "../../sessionPage/components/sessionList/components/sessionForms/components/sessionAddButtonModal"
 
 export default function Locations(props) {
   /*
@@ -139,10 +138,7 @@ export default function Locations(props) {
   return (
     <Container>
       {!addingLocation && (
-        <SessionAddButtonModal
-          changeStates={changeStates}
-          message={"Add a Location"}
-        ></SessionAddButtonModal>
+        <Button changeStates={changeStates} message={"Add a Location"}></Button>
       )}
       <Row>
         <Accordion defaultActiveKey={0}>

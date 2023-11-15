@@ -1,17 +1,21 @@
 import React from "react"
-import Container from "react-bootstrap/Container"
-import Stack from "react-bootstrap/Stack"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
+
 import {useQuery} from "react-query"
+
+import Col from "react-bootstrap/Col"
+import Container from "react-bootstrap/Container"
+import Row from "react-bootstrap/Row"
+import Stack from "react-bootstrap/Stack"
+
+import axios from "modules/api/axios"
 import {
   boulderEndpoint,
   climbEndpoint,
   gymEndpoint,
   handleError,
 } from "modules/api/endpoints"
-import axios from "modules/api/axios"
-import {getTimeDifferenceString} from "modules/common/helpers.js"
+
+import {getTimeDifferenceString} from "modules/common/helpers"
 
 export default function SessionInfo({session}) {
   /*

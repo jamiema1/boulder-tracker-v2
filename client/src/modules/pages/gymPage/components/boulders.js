@@ -26,7 +26,6 @@ import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import AddingButtonStack from "modules/common/components/addingButtonStack"
 import EditingButtonStack from "modules/common/components/editingButtonStack"
-import SessionAddButtonModal from "../../sessionPage/components/sessionList/components/sessionForms/components/sessionAddButtonModal"
 
 export default function Boulders(props) {
   /*
@@ -243,10 +242,7 @@ export default function Boulders(props) {
   return (
     <Container>
       {!addingBoulder && (
-        <SessionAddButtonModal
-          changeStates={changeStates}
-          message={"Add a Boulder"}
-        ></SessionAddButtonModal>
+        <Button changeStates={changeStates} message={"Add a Boulder"}></Button>
       )}
       <Row>
         <Accordion defaultActiveKey={0}>
