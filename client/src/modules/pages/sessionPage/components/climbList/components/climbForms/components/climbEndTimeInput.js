@@ -3,8 +3,10 @@ import React, {forwardRef} from "react"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import Form from "react-bootstrap/Form"
 
+import {nullDateTime} from "modules/common/helpers"
+
 const ClimbEndTimeInput = forwardRef(function ClimbEndTimeInput(
-  {defaultValue = 0, disabled = false},
+  {defaultValue = nullDateTime, disabled = false},
   ref
 ) {
   return (

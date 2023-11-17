@@ -8,6 +8,8 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {boulderEndpoint} from "modules/api/endpoints"
 
+import {nullDate} from "modules/common/helpers"
+
 const ClimbBoulderIdInput = forwardRef(function ClimbBoulderIdInput(
   {defaultValue = 0, disabled = false, session, locationId},
   ref
@@ -29,7 +31,7 @@ const ClimbBoulderIdInput = forwardRef(function ClimbBoulderIdInput(
         new Date(session.sessionStartTime) > new Date(boulder.setStartDate)
       const setEndedAfterSession =
         new Date(session.sessionStartTime) < new Date(boulder.setEndDate) ||
-        boulder.setEndDate == "0000-00-00"
+        boulder.setEndDate == nullDate
       return sameLocation && setStartBeforeSession && setEndedAfterSession
     }
   )

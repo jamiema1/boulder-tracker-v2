@@ -1,9 +1,10 @@
-import React from "react"
+export const nullDate = "0000-00-00"
+export const nullDateTime = "0000-00-00 00:00:00"
 
 export function getTimeDifferenceString(startDateTime, endDateTime) {
   const startTime = new Date(startDateTime)
   const endTime =
-    endDateTime === "0000-00-00 00:00:00" ? new Date() : new Date(endDateTime)
+    endDateTime === nullDateTime ? new Date() : new Date(endDateTime)
   let minutes = Math.floor((endTime - startTime) / (1000 * 60))
   const hours = Math.floor(minutes / 60)
   minutes -= hours * 60
@@ -26,7 +27,7 @@ export function getCurrentDateTime() {
 export function convertToViewDate(startDate, endDate) {
   const startDateString = new Date(startDate).toLocaleString().split(",")[0]
   let endDateString = new Date(endDate).toLocaleString().split(",")[0]
-  if (endDate === "0000-00-00") {
+  if (endDate === nullDate) {
     endDateString = "Active"
   }
 
@@ -36,21 +37,21 @@ export function convertToViewDate(startDate, endDate) {
 export function convertToViewDateTime(startDateTime, endDateTime) {
   const startDateTimeString = new Date(startDateTime).toLocaleString()
   let endDateTimeString = new Date(endDateTime).toLocaleTimeString()
-  if (endDateTime === "0000-00-00 00:00:00") {
+  if (endDateTime === nullDateTime) {
     endDateTimeString = "Active"
   }
   return startDateTimeString.concat(" - ").concat(endDateTimeString)
 }
 
 export function convertToEditDate(editDate) {
-  if (editDate === "0000-00-00") {
+  if (editDate === nullDate) {
     return null
   }
   return getDateString(new Date(editDate))
 }
 
 export function convertToEditDateTime(dateTime) {
-  if (dateTime === "0000-00-00 00:00:00") {
+  if (dateTime === nullDateTime) {
     return null
   }
   return getDateTimeString(new Date(dateTime))
@@ -66,25 +67,4 @@ function getDateTimeString(date) {
   const timezoneOffset = date.getTimezoneOffset() / 60
   date.setHours(date.getHours() - timezoneOffset)
   return date.toISOString().substring(0, 16)
-}
-
-/*
- * React
- */
-
-export function getInput(name, type, ref, defaultValue) {
-  return (
-    <div className="field">
-      <label>{name}:</label>
-      <input type={type} ref={ref} defaultValue={defaultValue}></input>
-    </div>
-  )
-}
-
-export function isEmpty(obj) {
-  for (var prop in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, prop)) return false
-  }
-
-  return true
 }

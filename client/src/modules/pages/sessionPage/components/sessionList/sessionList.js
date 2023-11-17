@@ -146,7 +146,6 @@ export default function SessionList() {
                       title={"Delete Session"}
                     ></DeleteButtonModal>
                   </Stack>
-
                   <ClimbList session={session}></ClimbList>
                 </Accordion.Body>
               </Accordion.Item>

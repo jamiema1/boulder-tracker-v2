@@ -3,8 +3,10 @@ import React, {forwardRef} from "react"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import Form from "react-bootstrap/Form"
 
+import {nullDateTime} from "modules/common/helpers"
+
 const SessionEndTimeInput = forwardRef(function SessionEndTimeInput(
-  {defaultValue, disabled},
+  {defaultValue = nullDateTime, disabled = false},
   ref
 ) {
   return (

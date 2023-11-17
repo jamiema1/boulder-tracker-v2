@@ -3,16 +3,16 @@ import React, {forwardRef} from "react"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import Form from "react-bootstrap/Form"
 
-const SessionUserIdInput = forwardRef(function SessionUserIdInput(
-  {defaultValue = 0, disabled = false},
+const GymNameInput = forwardRef(function GymNameInput(
+  {defaultValue = "", disabled = false},
   ref
 ) {
   return (
-    <FloatingLabel controlId="UserIDInput" label="User" className="mb-3">
+    <FloatingLabel controlId="NameInput" label="Name" className="mb-3">
       <Form.Control
-        type="number"
+        type="text"
         ref={ref}
-        placeholder={1}
+        placeholder={defaultValue}
         defaultValue={defaultValue}
         disabled={disabled}
       />
@@ -20,4 +20,4 @@ const SessionUserIdInput = forwardRef(function SessionUserIdInput(
   )
 })
 
-export default SessionUserIdInput
+export default GymNameInput
