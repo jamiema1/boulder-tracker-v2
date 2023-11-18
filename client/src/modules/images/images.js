@@ -1,19 +1,19 @@
-import editIcon from "./editIcon.png"
-import deleteIcon from "./deleteIcon.png"
-import cancelIcon from "./cancelIcon.png"
-import confirmIcon from "./confirmIcon.png"
-import addIcon from "./addIcon.png"
+import editIcon from "modules/images/assets/editIcon.png"
+import deleteIcon from "modules/images/assets/deleteIcon.png"
+import cancelIcon from "modules/images/assets/cancelIcon.png"
+import confirmIcon from "modules/images/assets/confirmIcon.png"
+import addIcon from "modules/images/assets/addIcon.png"
 
-import unrated from "./6hex.png"
-import oneHex from "./1hex2.png"
-import twoHex from "./2hex2.png"
-import threeHex from "./3hex2.png"
-import fourHex from "./4hex2.png"
-import fiveHex from "./5hex2.png"
-import sixHex from "./6hex2.png"
+import unrated from "modules/images/assets/6hex.png"
+import oneHex from "modules/images/assets/1hex2.png"
+import twoHex from "modules/images/assets/2hex2.png"
+import threeHex from "modules/images/assets/3hex2.png"
+import fourHex from "modules/images/assets/4hex2.png"
+import fiveHex from "modules/images/assets/5hex2.png"
+import sixHex from "modules/images/assets/6hex2.png"
 
-import slab from "./slab.png"
-import overhang from "./overhang.png"
+import slab from "modules/images/assets/slab.png"
+import overhang from "modules/images/assets/overhang.png"
 
 const images = {
   editIcon,

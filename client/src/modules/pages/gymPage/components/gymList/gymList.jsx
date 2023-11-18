@@ -15,8 +15,8 @@ import AddButtonModal from "modules/common/components/addButtonModal"
 import DeleteButtonModal from "modules/common/components/deleteButtonModal"
 import EditButtonModal from "modules/common/components/editButtonModal"
 
-import GymAddForm from "modules/pages/gymPage/components/gymList/components/climbForms/gymAddForm"
-import GymEditForm from "modules/pages/gymPage/components/gymList/components/climbForms/gymEditForm"
+import GymAddForm from "modules/pages/gymPage/components/gymList/components/gymForms/gymAddForm"
+import GymEditForm from "modules/pages/gymPage/components/gymList/components/gymForms/gymEditForm"
 import GymInfo from "modules/pages/gymPage/components/gymList/components/gymInfo"
 
 export default function GymList() {

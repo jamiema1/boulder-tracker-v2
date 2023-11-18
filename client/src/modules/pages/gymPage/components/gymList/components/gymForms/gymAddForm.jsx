@@ -9,9 +9,9 @@ import {gymEndpoint, handleError} from "modules/api/endpoints"
 
 import AddingButtonStack from "modules/common/components/addingButtonStack"
 
-import GymNameInput from "modules/pages/gymPage/components/gymList/components/climbForms/components/gymNameInput"
-import GymAddressInput from "modules/pages/gymPage/components/gymList/components/climbForms/components/gymAddressInput"
-import GymCityInput from "modules/pages/gymPage/components/gymList/components/climbForms/components/gymCityInput"
+import GymNameInput from "modules/pages/gymPage/components/gymList/components/gymForms/components/gymNameInput"
+import GymAddressInput from "modules/pages/gymPage/components/gymList/components/gymForms/components/gymAddressInput"
+import GymCityInput from "modules/pages/gymPage/components/gymList/components/gymForms/components/gymCityInput"
 
 export default function GymAddForm({handleClose}) {
   /*

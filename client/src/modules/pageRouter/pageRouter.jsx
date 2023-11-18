@@ -1,11 +1,14 @@
 import React from "react"
+
 import {HashRouter as Router, Routes, Route} from "react-router-dom"
-import Homepage from "modules/pages/homePage/homepage"
-import GymPage from "modules/pages/gymPage/gymPage"
-import SessionPage from "modules/pages/sessionPage/sessionPage"
+
+import {useAuth0} from "@auth0/auth0-react"
 
 import Profile from "modules/auth0/profile"
-import {useAuth0} from "@auth0/auth0-react"
+
+import GymPage from "modules/pages/gymPage/gymPage"
+import Homepage from "modules/pages/homePage/homepage"
+import SessionPage from "modules/pages/sessionPage/sessionPage"
 
 export default function PageRouter() {
   const {isAuthenticated, loginWithRedirect} = useAuth0()
