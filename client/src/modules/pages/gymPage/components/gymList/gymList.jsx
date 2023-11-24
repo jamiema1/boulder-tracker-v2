@@ -18,6 +18,7 @@ import EditButtonModal from "modules/common/components/editButtonModal"
 import GymAddForm from "modules/pages/gymPage/components/gymList/components/gymForms/gymAddForm"
 import GymEditForm from "modules/pages/gymPage/components/gymList/components/gymForms/gymEditForm"
 import GymInfo from "modules/pages/gymPage/components/gymList/components/gymInfo"
+import LocationList from "modules/pages/gymPage/components/locationList/locationList"
 
 export default function GymList() {
   /*
@@ -96,7 +97,7 @@ export default function GymList() {
                       title={"Delete Gym"}
                     ></DeleteButtonModal>
                   </Stack>
-                  {/* <LocationList gym={gym}></LocationList> */}
+                  <LocationList gym={gym}></LocationList>
                 </Accordion.Body>
               </Accordion.Item>
             )
