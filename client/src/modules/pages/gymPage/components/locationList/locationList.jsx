@@ -18,6 +18,7 @@ import EditButtonModal from "modules/common/components/editButtonModal"
 import LocationAddForm from "modules/pages/gymPage/components/locationList/components/locationForms/locationAddForm"
 import LocationEditForm from "modules/pages/gymPage/components/locationList/components/locationForms/locationEditForm"
 import LocationInfo from "modules/pages/gymPage/components/locationList/components/locationInfo"
+import BoulderList from "modules/pages/gymPage/components/boulderList/boulderList"
 
 export default function LocationList({gym}) {
   /*
@@ -109,6 +110,7 @@ export default function LocationList({gym}) {
                       title={"Delete Location"}
                     ></DeleteButtonModal>
                   </Stack>
+                  <BoulderList location={location}></BoulderList>
                 </Accordion.Body>
               </Accordion.Item>
             )

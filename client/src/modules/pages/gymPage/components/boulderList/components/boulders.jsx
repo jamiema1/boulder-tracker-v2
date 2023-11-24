@@ -1,21 +1,21 @@
 /* eslint-disable max-len */
 /* eslint-disable max-lines */
 import React, {useEffect, useState, useRef} from "react"
-import Climbs from "./climbs"
-import images from "../../../images/images.js"
+import Climbs from "../../climbs"
+import images from "../../../../../images/images.js"
 import {
   getCurrentDate,
   getCurrentDateTime,
   convertToViewDate,
   convertToEditDate,
-} from "../../../common/helpers.js"
+} from "../../../../../common/helpers.js"
 import {
   get,
   add,
   edit,
   remove,
   boulderEndpoint,
-} from "../../../api/endpoints.js"
+} from "../../../../../api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
