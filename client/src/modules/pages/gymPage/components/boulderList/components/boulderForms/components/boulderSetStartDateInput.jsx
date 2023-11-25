@@ -3,20 +3,20 @@ import React, {forwardRef} from "react"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import Form from "react-bootstrap/Form"
 
-import {nullDateTime} from "modules/common/helpers"
+import {nullDate} from "modules/common/helpers"
 
-const ClimbStartTimeInput = forwardRef(function ClimbStartTimeInput(
-  {defaultValue = nullDateTime, disabled = false},
+const BoulderSetStartDateInput = forwardRef(function BoulderSetStartDateInput(
+  {defaultValue = nullDate, disabled = false},
   ref
 ) {
   return (
     <FloatingLabel
-      controlId="StartTimeInput"
-      label="Start Time"
+      controlId="SetStartDate"
+      label="Set Start Date"
       className="mb-3"
     >
       <Form.Control
-        type="datetime-local"
+        type="date"
         ref={ref}
         placeholder={defaultValue}
         defaultValue={defaultValue}
@@ -26,4 +26,4 @@ const ClimbStartTimeInput = forwardRef(function ClimbStartTimeInput(
   )
 })
 
-export default ClimbStartTimeInput
+export default BoulderSetStartDateInput

@@ -5,65 +5,57 @@ import {useMutation, useQuery, useQueryClient} from "react-query"
 import Form from "react-bootstrap/Form"
 
 import axios from "modules/api/axios"
-import {
-  boulderEndpoint,
-  climbEndpoint,
-  handleError,
-} from "modules/api/endpoints"
+import {boulderEndpoint, handleError} from "modules/api/endpoints"
 
-import {convertToEditDateTime} from "modules/common/helpers"
+import {convertToEditDate, nullDate} from "modules/common/helpers"
 import EditingButtonStack from "modules/common/components/editingButtonStack"
+import BoulderSetStartDateInput from "./components/boulderSetStartDateInput"
+import BoulderSetEndDateInput from "./components/boulderSetEndDateInput"
+import BoulderRatingInput from "./components/boulderRatingInput"
+import BoulderColourInput from "./components/boulderColourInput"
+import BoulderBoulderTypeInput from "./components/boulderBoulderTypeInput"
+import BoulderDescriptionInput from "./components/boulderDescriptionInput"
 
-import ClimbAttemptInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbAttemptInput"
-import ClimbBoulderIdInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbBoulderIdInput"
-import ClimbEndTimeInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbEndTimeInput"
-import ClimbLocationIdInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbLocationIdInput"
-import ClimbSendInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbSendInput"
-import ClimbStartTimeInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbStartTimeInput"
-
-export default function BoulderEditForm({session, climb, handleClose}) {
+export default function BoulderEditForm({location, boulder, handleClose}) {
   /*
    * React Hooks:
    *
    * Refs:
    *  - newBoulderId: reference to new boulder ID
-   *  - newClimbStartTime: reference to new start time
-   *  - newClimbEndTime: reference to new end time
+   *  - newBoulderStartTime: reference to new start time
+   *  - newBoulderEndTime: reference to new end time
    */
 
   // const [locationId, setlocationId] = useState(0)
 
-  const locationIdRef = useRef(0)
-  const boulderIdRef = useRef(0)
-  const attemptsRef = useRef(0)
-  const sendsRef = useRef(0)
-  const climbStartTimeRef = useRef("")
-  const climbEndTimeRef = useRef("")
+  const boulderRatingRef = useRef(0)
+  const boulderColourRef = useRef("")
+  const boulderBoulderTypeRef = useRef("")
+  const boulderDescriptionRef = useRef("")
+  const boulderSetStartDateRef = useRef("")
+  const boulderSetEndDateRef = useRef("")
 
   const queryClient = useQueryClient()
 
-  const {isLoading: isLoadingClimb, data: allClimbData} = useQuery(
-    climbEndpoint,
-    () => axios.get(climbEndpoint),
+  const {isLoading: isLoadingBoulder, data: allBoulderData} = useQuery(
+    boulderEndpoint,
+    () => axios.get(boulderEndpoint),
     {
       onError: (error) => handleError(error),
     }
   )
 
-  const {isLoading: isLoadingBoulder, data: allBoulderData} = useQuery(
-    boulderEndpoint,
-    () => axios.get(boulderEndpoint)
-  )
-
-  const editClimb = useMutation(
-    ({climbId, newClimb}) =>
-      axios.put(climbEndpoint + "/" + climbId, newClimb),
+  const editBoulder = useMutation(
+    ({boulderId, newBoulder}) =>
+      axios.put(boulderEndpoint + "/" + boulderId, newBoulder),
     {
-      onSuccess: (data, {climbId, newClimb}) => {
-        queryClient.setQueryData(climbEndpoint, {
+      onSuccess: (data, {boulderId, newBoulder}) => {
+        queryClient.setQueryData(boulderEndpoint, {
           data: {
-            data: [...allClimbData.data.data].map((climb) => {
-              return climb.id === climbId ? {id: climbId, ...newClimb} : climb
+            data: [...allBoulderData.data.data].map((boulder) => {
+              return boulder.id === boulderId
+                ? {id: boulderId, ...newBoulder}
+                : boulder
             }),
           },
         })
@@ -72,57 +64,51 @@ export default function BoulderEditForm({session, climb, handleClose}) {
     }
   )
 
-  if (isLoadingClimb || isLoadingBoulder) {
+  if (isLoadingBoulder) {
     return <div>Loading...</div>
   }
 
-  const locationId = [...allBoulderData.data.data].find((boulder) => {
-    return boulder.id == climb.boulderId
-  }).locationId
-
   return (
     <Form>
-      <ClimbLocationIdInput
-        ref={locationIdRef}
-        session={session}
-        updateLocationId={() => {}}
-        defaultValue={locationId}
-        disabled={true}
-      ></ClimbLocationIdInput>
-      <ClimbBoulderIdInput
-        ref={boulderIdRef}
-        session={session}
-        locationId={locationId}
-        defaultValue={climb.boulderId}
-        disabled={true}
-      ></ClimbBoulderIdInput>
-      <ClimbAttemptInput
-        defaultValue={climb.attempts}
-        ref={attemptsRef}
-      ></ClimbAttemptInput>
-      <ClimbSendInput
-        defaultValue={climb.sends}
-        ref={sendsRef}
-      ></ClimbSendInput>
-      <ClimbStartTimeInput
-        defaultValue={convertToEditDateTime(climb.climbStartTime)}
-        ref={climbStartTimeRef}
-      ></ClimbStartTimeInput>
-      <ClimbEndTimeInput
-        defaultValue={convertToEditDateTime(climb.climbEndTime)}
-        ref={climbEndTimeRef}
-      ></ClimbEndTimeInput>
+      <BoulderRatingInput
+        ref={boulderRatingRef}
+        defaultValue={boulder.rating}
+      />
+      <BoulderColourInput
+        ref={boulderColourRef}
+        defaultValue={boulder.colour}
+      />
+      <BoulderBoulderTypeInput
+        ref={boulderBoulderTypeRef}
+        defaultValue={boulder.boulderType}
+      />
+      <BoulderDescriptionInput
+        ref={boulderDescriptionRef}
+        defaultValue={boulder.description}
+      />
+      <BoulderSetStartDateInput
+        ref={boulderSetStartDateRef}
+        defaultValue={convertToEditDate(boulder.setStartDate)}
+      />
+      <BoulderSetEndDateInput
+        ref={boulderSetEndDateRef}
+        defaultValue={convertToEditDate(boulder.setEndDate)}
+      />
       <EditingButtonStack
         confirm={() => {
-          editClimb.mutate({
-            climbId: climb.id,
-            newClimb: {
-              boulderId: parseInt(boulderIdRef.current.value),
-              sessionId: parseInt(session.id),
-              attempts: parseInt(attemptsRef.current.value),
-              sends: parseInt(sendsRef.current.value),
-              climbStartTime: climbStartTimeRef.current.value,
-              climbEndTime: climbEndTimeRef.current.value,
+          editBoulder.mutate({
+            boulderId: boulder.id,
+            newBoulder: {
+              locationId: parseInt(location.id),
+              rating: parseInt(boulderRatingRef.current.value),
+              colour: boulderColourRef.current.value,
+              boulderType: boulderBoulderTypeRef.current.value,
+              description: boulderDescriptionRef.current.value,
+              setStartDate: boulderSetStartDateRef.current.value,
+              setEndDate:
+                boulderSetEndDateRef.current.value === ""
+                  ? nullDate
+                  : boulderSetEndDateRef.current.value,
             },
           })
           handleClose()

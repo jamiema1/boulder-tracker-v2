@@ -3,14 +3,18 @@ import React, {forwardRef} from "react"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import Form from "react-bootstrap/Form"
 
-const ClimbAttemptInput = forwardRef(function ClimbAttemptInput(
-  {defaultValue = 0, disabled = false},
+const BoulderDescriptionInput = forwardRef(function BoulderDescriptionInput(
+  {defaultValue = "", disabled = false},
   ref
 ) {
   return (
-    <FloatingLabel controlId="AttemptInput" label="Attempts" className="mb-3">
+    <FloatingLabel
+      controlId="DescriptionInput"
+      label="Description"
+      className="mb-3"
+    >
       <Form.Control
-        type="number"
+        type="text"
         ref={ref}
         placeholder={defaultValue}
         defaultValue={defaultValue}
@@ -20,4 +24,4 @@ const ClimbAttemptInput = forwardRef(function ClimbAttemptInput(
   )
 })
 
-export default ClimbAttemptInput
+export default BoulderDescriptionInput

@@ -5,11 +5,11 @@ import Nav from "react-bootstrap/Nav"
 // import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
 import Navbar from "react-bootstrap/Navbar"
-import NavDropdown from "react-bootstrap/NavDropdown"
+// import NavDropdown from "react-bootstrap/NavDropdown"
 
-import LoginButton from "../auth0/loginButton"
-import LogoutButton from "../auth0/logoutButton"
-import {useAuth0} from "@auth0/auth0-react"
+// import LoginButton from "../auth0/loginButton"
+// import LogoutButton from "../auth0/logoutButton"
+// import {useAuth0} from "@auth0/auth0-react"
 
 function NavBar() {
   // const [show, setShow] = useState(false)
@@ -25,7 +25,7 @@ function NavBar() {
   //   // console.log(window.location.href)
   // }
 
-  const {user, isAuthenticated} = useAuth0()
+  // const {user, isAuthenticated} = useAuth0()
   return (
     <>
       <Navbar
@@ -37,10 +37,10 @@ function NavBar() {
         <Container>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Brand href="#/">Boulder Tracker</Navbar.Brand>
-          <NavDropdown title="Profile">
-            {/* <NavDropdown.Item>
+          {/* <NavDropdown title="Profile">
+            <NavDropdown.Item>
               <img src={user.picture} alt={user.name} />
-            </NavDropdown.Item> */}
+            </NavDropdown.Item>
 
             {isAuthenticated && (
               <NavDropdown.Item>Welcome {user.name}</NavDropdown.Item>
@@ -57,15 +57,15 @@ function NavBar() {
                 <LogoutButton></LogoutButton>
               </NavDropdown.Item>
             )}
-          </NavDropdown>
+          </NavDropdown> */}
 
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav defaultActiveKey="#/">
               <Nav.Link href="#/">Home</Nav.Link>
               <Nav.Link href="#/sessions">Sessions</Nav.Link>
               <Nav.Link href="#/gyms">Gyms</Nav.Link>
-              <Nav.Link href="#/dashboard">Dashboard</Nav.Link>
-              <Nav.Link href="#/people">People</Nav.Link>
+              {/* <Nav.Link href="#/dashboard">Dashboard</Nav.Link>
+              <Nav.Link href="#/people">People</Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
         </Container>

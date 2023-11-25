@@ -18,6 +18,7 @@ import EditButtonModal from "modules/common/components/editButtonModal"
 import BoulderAddForm from "modules/pages/gymPage/components/boulderList/components/boulderForms/boulderAddForm"
 import BoulderEditForm from "modules/pages/gymPage/components/boulderList/components/boulderForms/boulderEditForm"
 import BoulderInfo from "modules/pages/gymPage/components/boulderList/components/boulderInfo"
+import {nullDate} from "modules/common/helpers"
 
 export default function BoulderList({location}) {
   /*
@@ -68,7 +69,11 @@ export default function BoulderList({location}) {
   }
 
   const filteredBoulderData = [...allBoulderData.data.data]
-    .filter((boulder) => boulder.locationId === location.id)
+    .filter((boulder) => {
+      return (
+        boulder.locationId === location.id && boulder.setEndDate === nullDate
+      )
+    })
     .reverse()
 
   return (

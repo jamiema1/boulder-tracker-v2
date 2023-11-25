@@ -8,6 +8,7 @@ import Row from "react-bootstrap/Row"
 
 import axios from "modules/api/axios"
 import {boulderEndpoint} from "modules/api/endpoints"
+import {nullDate} from "modules/common/helpers"
 
 export default function LocationInfo({location}) {
   const {isLoading: isLoadingBoulder, data: allBoulderData} = useQuery(
@@ -21,7 +22,8 @@ export default function LocationInfo({location}) {
   }
 
   const filteredBoulderData = [...allBoulderData.data.data].filter(
-    (boulder) => boulder.locationId === location.id
+    (boulder) =>
+      boulder.locationId === location.id && boulder.setEndDate === nullDate
   )
 
   return (
@@ -31,7 +33,7 @@ export default function LocationInfo({location}) {
           <div>{location.name}</div>
         </Col>
         <Col className="text-end">
-          <div>{filteredBoulderData.length} boulders</div>
+          <div>{filteredBoulderData.length} active boulder(s)</div>
         </Col>
       </Row>
     </Container>

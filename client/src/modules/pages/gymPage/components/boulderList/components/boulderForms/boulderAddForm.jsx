@@ -7,11 +7,18 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {boulderEndpoint, handleError} from "modules/api/endpoints"
 
-// import {
-//   convertToEditDateTime,
-//   getCurrentDateTime,
-// } from "modules/common/helpers"
+import {
+  convertToEditDate,
+  getCurrentDate,
+  nullDate,
+} from "modules/common/helpers"
 import AddingButtonStack from "modules/common/components/addingButtonStack"
+import BoulderSetStartDateInput from "./components/boulderSetStartDateInput"
+import BoulderSetEndDateInput from "./components/boulderSetEndDateInput"
+import BoulderRatingInput from "./components/boulderRatingInput"
+import BoulderColourInput from "./components/boulderColourInput"
+import BoulderBoulderTypeInput from "./components/boulderBoulderTypeInput"
+import BoulderDescriptionInput from "./components/boulderDescriptionInput"
 
 export default function BoulderAddForm({handleClose, location}) {
   /*
@@ -64,13 +71,19 @@ export default function BoulderAddForm({handleClose, location}) {
 
   return (
     <Form>
-      {/* <BoulderStartTimeInput
-        defaultValue={convertToEditDateTime(getCurrentDateTime())}
-        ref={boulderStartTimeRef}
-      ></BoulderStartTimeInput> */}
+      <BoulderRatingInput ref={boulderRatingRef} />
+      <BoulderColourInput ref={boulderColourRef} />
+      <BoulderBoulderTypeInput ref={boulderBoulderTypeRef} />
+      <BoulderDescriptionInput ref={boulderDescriptionRef} />
+      <BoulderSetStartDateInput
+        defaultValue={convertToEditDate(getCurrentDate())}
+        ref={boulderSetStartDateRef}
+      />
+      <BoulderSetEndDateInput ref={boulderSetEndDateRef} />
       <AddingButtonStack
         confirm={() => {
           handleClose()
+          console.log(boulderSetEndDateRef.current.value)
           addBoulder.mutate({
             locationId: parseInt(location.id),
             rating: parseInt(boulderRatingRef.current.value),
@@ -78,7 +91,10 @@ export default function BoulderAddForm({handleClose, location}) {
             boulderType: boulderBoulderTypeRef.current.value,
             description: boulderDescriptionRef.current.value,
             setStartDate: boulderSetStartDateRef.current.value,
-            setEndDate: boulderSetEndDateRef.current.value,
+            setEndDate:
+              boulderSetEndDateRef.current.value === ""
+                ? nullDate
+                : boulderSetEndDateRef.current.value,
           })
         }}
         cancel={() => {
