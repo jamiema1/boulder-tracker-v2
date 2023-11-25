@@ -7,11 +7,9 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {gymEndpoint, handleError} from "modules/api/endpoints"
 
-import AddingButtonStack from "modules/common/components/addingButtonStack"
+import AddingButtonStack from "modules/common/components/buttons/addingButtonStack"
 
-import GymNameInput from "modules/pages/gymPage/components/gymList/components/gymForms/components/gymNameInput"
-import GymAddressInput from "modules/pages/gymPage/components/gymList/components/gymForms/components/gymAddressInput"
-import GymCityInput from "modules/pages/gymPage/components/gymList/components/gymForms/components/gymCityInput"
+import TextInput from "modules/common/components/inputs/textInput"
 
 export default function GymAddForm({handleClose}) {
   /*
@@ -61,9 +59,9 @@ export default function GymAddForm({handleClose}) {
 
   return (
     <Form>
-      <GymNameInput ref={gymNameRef}></GymNameInput>
-      <GymAddressInput ref={gymAddressRef}></GymAddressInput>
-      <GymCityInput ref={gymCityRef}></GymCityInput>
+      <TextInput ref={gymNameRef} controlId="NameInput" label="Name" />
+      <TextInput ref={gymAddressRef} controlId="AddressInput" label="Address" />
+      <TextInput ref={gymCityRef} controlId="CityInput" label="City" />
       <AddingButtonStack
         confirm={() => {
           handleClose()

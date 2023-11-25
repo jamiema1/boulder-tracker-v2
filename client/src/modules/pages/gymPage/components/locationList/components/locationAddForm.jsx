@@ -7,9 +7,9 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {locationEndpoint, handleError} from "modules/api/endpoints"
 
-import AddingButtonStack from "modules/common/components/addingButtonStack"
+import AddingButtonStack from "modules/common/components/buttons/addingButtonStack"
 
-import LocationNameInput from "modules/pages/gymPage/components/locationList/components/locationForms/components/locationNameInput"
+import TextInput from "modules/common/components/inputs/textInput"
 
 export default function LocationAddForm({handleClose, gym}) {
   /*
@@ -55,7 +55,7 @@ export default function LocationAddForm({handleClose, gym}) {
 
   return (
     <Form>
-      <LocationNameInput ref={locationNameRef}></LocationNameInput>
+      <TextInput ref={locationNameRef} controlId="NameInput" label="Name" />
       <AddingButtonStack
         confirm={() => {
           handleClose()

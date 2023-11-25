@@ -11,12 +11,12 @@ import Stack from "react-bootstrap/Stack"
 import axios from "modules/api/axios"
 import {boulderEndpoint, handleError} from "modules/api/endpoints"
 
-import AddButtonModal from "modules/common/components/addButtonModal"
-import DeleteButtonModal from "modules/common/components/deleteButtonModal"
-import EditButtonModal from "modules/common/components/editButtonModal"
+import AddButtonModal from "modules/common/components/buttons/addButtonModal"
+import DeleteButtonModal from "modules/common/components/buttons/deleteButtonModal"
+import EditButtonModal from "modules/common/components/buttons/editButtonModal"
 
-import BoulderAddForm from "modules/pages/gymPage/components/boulderList/components/boulderForms/boulderAddForm"
-import BoulderEditForm from "modules/pages/gymPage/components/boulderList/components/boulderForms/boulderEditForm"
+import BoulderAddForm from "modules/pages/gymPage/components/boulderList/components/boulderAddForm"
+import BoulderEditForm from "modules/pages/gymPage/components/boulderList/components/boulderEditForm"
 import BoulderInfo from "modules/pages/gymPage/components/boulderList/components/boulderInfo"
 import {nullDate} from "modules/common/helpers"
 

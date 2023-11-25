@@ -3,14 +3,14 @@ import React, {forwardRef} from "react"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import Form from "react-bootstrap/Form"
 
-const GymAddressInput = forwardRef(function GymAddressInput(
-  {defaultValue = "", disabled = false},
+const TextInput = forwardRef(function TextInput(
+  {defaultValue = 0, disabled = false, controlId = "", label = ""},
   ref
 ) {
   return (
-    <FloatingLabel controlId="AddressInput" label="Address" className="mb-3">
+    <FloatingLabel controlId={controlId} label={label} className="mb-3">
       <Form.Control
-        type="text"
+        type="number"
         ref={ref}
         placeholder={defaultValue}
         defaultValue={defaultValue}
@@ -20,4 +20,4 @@ const GymAddressInput = forwardRef(function GymAddressInput(
   )
 })
 
-export default GymAddressInput
+export default TextInput

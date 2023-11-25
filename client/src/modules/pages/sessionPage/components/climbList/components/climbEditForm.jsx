@@ -1,17 +1,18 @@
-import React, {useRef, useState} from "react"
+import React, {useRef} from "react"
 
 import {useMutation, useQuery, useQueryClient} from "react-query"
 
 import Form from "react-bootstrap/Form"
 
 import axios from "modules/api/axios"
-import {climbEndpoint, handleError} from "modules/api/endpoints"
-
 import {
-  convertToEditDateTime,
-  getCurrentDateTime,
-} from "modules/common/helpers"
-import AddingButtonStack from "modules/common/components/addingButtonStack"
+  boulderEndpoint,
+  climbEndpoint,
+  handleError,
+} from "modules/api/endpoints"
+
+import {convertToEditDateTime} from "modules/common/helpers"
+import EditingButtonStack from "modules/common/components/buttons/editingButtonStack"
 
 import ClimbAttemptInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbAttemptInput"
 import ClimbBoulderIdInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbBoulderIdInput"
@@ -20,7 +21,7 @@ import ClimbLocationIdInput from "modules/pages/sessionPage/components/climbList
 import ClimbSendInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbSendInput"
 import ClimbStartTimeInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbStartTimeInput"
 
-export default function ClimbAddForm({handleClose, session}) {
+export default function ClimbEditForm({session, climb, handleClose}) {
   /*
    * React Hooks:
    *
@@ -30,7 +31,7 @@ export default function ClimbAddForm({handleClose, session}) {
    *  - newClimbEndTime: reference to new end time
    */
 
-  const [locationId, setlocationId] = useState(0)
+  // const [locationId, setlocationId] = useState(0)
 
   const locationIdRef = useRef(0)
   const boulderIdRef = useRef(0)
@@ -49,68 +50,87 @@ export default function ClimbAddForm({handleClose, session}) {
     }
   )
 
-  const addClimb = useMutation(
-    (newSession) => axios.post(climbEndpoint, newSession),
+  const {isLoading: isLoadingBoulder, data: allBoulderData} = useQuery(
+    boulderEndpoint,
+    () => axios.get(boulderEndpoint)
+  )
+
+  const editClimb = useMutation(
+    ({climbId, newClimb}) =>
+      axios.put(climbEndpoint + "/" + climbId, newClimb),
     {
-      onSuccess: (data, newSession) => {
+      onSuccess: (data, {climbId, newClimb}) => {
         queryClient.setQueryData(climbEndpoint, {
           data: {
-            data: [
-              ...allClimbData.data.data,
-              {id: data.data.data[0].id, ...newSession},
-            ],
+            data: [...allClimbData.data.data].map((climb) => {
+              return climb.id === climbId ? {id: climbId, ...newClimb} : climb
+            }),
           },
         })
       },
-
       onError: (error) => handleError(error),
     }
   )
 
-  if (isLoadingClimb) {
+  if (isLoadingClimb || isLoadingBoulder) {
     return <div>Loading...</div>
   }
+
+  const locationId = [...allBoulderData.data.data].find((boulder) => {
+    return boulder.id == climb.boulderId
+  }).locationId
 
   return (
     <Form>
       <ClimbLocationIdInput
         ref={locationIdRef}
         session={session}
-        updateLocationId={() => {
-          setlocationId(locationIdRef.current.value)
-        }}
+        updateLocationId={() => {}}
+        defaultValue={locationId}
+        disabled={true}
       ></ClimbLocationIdInput>
       <ClimbBoulderIdInput
         ref={boulderIdRef}
         session={session}
         locationId={locationId}
+        defaultValue={climb.boulderId}
+        disabled={true}
       ></ClimbBoulderIdInput>
-      <ClimbAttemptInput defaultValue={1} ref={attemptsRef}></ClimbAttemptInput>
-      <ClimbSendInput defaultValue={1} ref={sendsRef}></ClimbSendInput>
+      <ClimbAttemptInput
+        defaultValue={climb.attempts}
+        ref={attemptsRef}
+      ></ClimbAttemptInput>
+      <ClimbSendInput
+        defaultValue={climb.sends}
+        ref={sendsRef}
+      ></ClimbSendInput>
       <ClimbStartTimeInput
-        defaultValue={convertToEditDateTime(getCurrentDateTime())}
+        defaultValue={convertToEditDateTime(climb.climbStartTime)}
         ref={climbStartTimeRef}
       ></ClimbStartTimeInput>
       <ClimbEndTimeInput
-        defaultValue={convertToEditDateTime(getCurrentDateTime())}
+        defaultValue={convertToEditDateTime(climb.climbEndTime)}
         ref={climbEndTimeRef}
       ></ClimbEndTimeInput>
-      <AddingButtonStack
+      <EditingButtonStack
         confirm={() => {
-          handleClose()
-          addClimb.mutate({
-            boulderId: parseInt(boulderIdRef.current.value),
-            sessionId: parseInt(session.id),
-            attempts: parseInt(attemptsRef.current.value),
-            sends: parseInt(sendsRef.current.value),
-            climbStartTime: climbStartTimeRef.current.value,
-            climbEndTime: climbEndTimeRef.current.value,
+          editClimb.mutate({
+            climbId: climb.id,
+            newClimb: {
+              boulderId: parseInt(boulderIdRef.current.value),
+              sessionId: parseInt(session.id),
+              attempts: parseInt(attemptsRef.current.value),
+              sends: parseInt(sendsRef.current.value),
+              climbStartTime: climbStartTimeRef.current.value,
+              climbEndTime: climbEndTimeRef.current.value,
+            },
           })
+          handleClose()
         }}
         cancel={() => {
           handleClose()
         }}
-      ></AddingButtonStack>
+      ></EditingButtonStack>
     </Form>
   )
 }

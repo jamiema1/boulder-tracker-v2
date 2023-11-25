@@ -11,12 +11,12 @@ import Stack from "react-bootstrap/Stack"
 import axios from "modules/api/axios"
 import {locationEndpoint, handleError} from "modules/api/endpoints"
 
-import AddButtonModal from "modules/common/components/addButtonModal"
-import DeleteButtonModal from "modules/common/components/deleteButtonModal"
-import EditButtonModal from "modules/common/components/editButtonModal"
+import AddButtonModal from "modules/common/components/buttons/addButtonModal"
+import DeleteButtonModal from "modules/common/components/buttons/deleteButtonModal"
+import EditButtonModal from "modules/common/components/buttons/editButtonModal"
 
-import LocationAddForm from "modules/pages/gymPage/components/locationList/components/locationForms/locationAddForm"
-import LocationEditForm from "modules/pages/gymPage/components/locationList/components/locationForms/locationEditForm"
+import LocationAddForm from "modules/pages/gymPage/components/locationList/components/locationAddForm"
+import LocationEditForm from "modules/pages/gymPage/components/locationList/components/locationEditForm"
 import LocationInfo from "modules/pages/gymPage/components/locationList/components/locationInfo"
 import BoulderList from "modules/pages/gymPage/components/boulderList/boulderList"
 

@@ -12,14 +12,14 @@ import axios from "modules/api/axios"
 import {handleError, sessionEndpoint} from "modules/api/endpoints"
 
 import {getCurrentDateTime} from "modules/common/helpers"
-import AddButtonModal from "modules/common/components/addButtonModal"
-import DeleteButtonModal from "modules/common/components/deleteButtonModal"
-import EditButtonModal from "modules/common/components/editButtonModal"
-import EndButtonModal from "modules/common/components/endButtonModal"
+import AddButtonModal from "modules/common/components/buttons/addButtonModal"
+import DeleteButtonModal from "modules/common/components/buttons/deleteButtonModal"
+import EditButtonModal from "modules/common/components/buttons/editButtonModal"
+import EndButtonModal from "modules/common/components/buttons/endButtonModal"
 
 import ClimbList from "modules/pages/sessionPage/components/climbList/climbList"
-import SessionAddForm from "modules/pages/sessionPage/components/sessionList/components/sessionForms/sessionAddForm"
-import SessionEditForm from "modules/pages/sessionPage/components/sessionList/components/sessionForms/sessionEditForm"
+import SessionAddForm from "modules/pages/sessionPage/components/sessionList/components/sessionAddForm"
+import SessionEditForm from "modules/pages/sessionPage/components/sessionList/components/sessionEditForm"
 import SessionInfo from "modules/pages/sessionPage/components/sessionList/components/sessionInfo"
 
 export default function SessionList() {
@@ -97,6 +97,14 @@ export default function SessionList() {
     return <div>Loading...</div>
   }
 
+  const filteredSessionData = [...allSessionData.data.data]
+    .reverse()
+    .sort((session1, session2) =>
+      new Date(session1.sessionStartTime) < new Date(session2.sessionStartTime)
+        ? 1
+        : -1
+    )
+
   if (isErrorSession) {
     return (
       <div>
@@ -117,7 +125,7 @@ export default function SessionList() {
       </Row>
       <Row>
         <Accordion defaultActiveKey={0}>
-          {[...allSessionData.data.data].reverse().map((session) => {
+          {filteredSessionData.map((session) => {
             return (
               <Accordion.Item
                 eventKey={session.id}

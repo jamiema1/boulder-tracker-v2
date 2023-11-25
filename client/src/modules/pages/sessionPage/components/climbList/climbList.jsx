@@ -11,12 +11,12 @@ import Stack from "react-bootstrap/Stack"
 import axios from "modules/api/axios"
 import {climbEndpoint, handleError} from "modules/api/endpoints"
 
-import AddButtonModal from "modules/common/components/addButtonModal"
-import DeleteButtonModal from "modules/common/components/deleteButtonModal"
-import EditButtonModal from "modules/common/components/editButtonModal"
+import AddButtonModal from "modules/common/components/buttons/addButtonModal"
+import DeleteButtonModal from "modules/common/components/buttons/deleteButtonModal"
+import EditButtonModal from "modules/common/components/buttons/editButtonModal"
 
-import ClimbAddForm from "modules/pages/sessionPage/components/climbList/components/climbForms/climbAddForm"
-import ClimbEditForm from "modules/pages/sessionPage/components/climbList/components/climbForms/climbEditForm"
+import ClimbAddForm from "modules/pages/sessionPage/components/climbList/components/climbAddForm"
+import ClimbEditForm from "modules/pages/sessionPage/components/climbList/components/climbEditForm"
 import ClimbInfo from "modules/pages/sessionPage/components/climbList/components/climbInfo"
 
 export default function ClimbList({session}) {

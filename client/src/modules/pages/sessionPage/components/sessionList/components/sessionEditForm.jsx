@@ -8,7 +8,7 @@ import axios from "modules/api/axios"
 import {handleError, sessionEndpoint} from "modules/api/endpoints"
 
 import {convertToEditDateTime} from "modules/common/helpers"
-import EditingButtonStack from "modules/common/components/editingButtonStack"
+import EditingButtonStack from "modules/common/components/buttons/editingButtonStack"
 
 import SessionEndTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionEndTimeInput"
 import SessionGymIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionGymIdInput"

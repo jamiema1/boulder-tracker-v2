@@ -7,11 +7,9 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {gymEndpoint, handleError} from "modules/api/endpoints"
 
-import EditingButtonStack from "modules/common/components/editingButtonStack"
+import EditingButtonStack from "modules/common/components/buttons/editingButtonStack"
 
-import GymNameInput from "modules/pages/gymPage/components/gymList/components/gymForms/components/gymNameInput"
-import GymAddressInput from "modules/pages/gymPage/components/gymList/components/gymForms/components/gymAddressInput"
-import GymCityInput from "modules/pages/gymPage/components/gymList/components/gymForms/components/gymCityInput"
+import TextInput from "modules/common/components/inputs/textInput"
 
 export default function GymEditForm({gym, handleClose}) {
   /*
@@ -59,13 +57,24 @@ export default function GymEditForm({gym, handleClose}) {
 
   return (
     <Form>
-      <GymNameInput ref={gymNameRef} defaultValue={gym.name}></GymNameInput>
-      <GymAddressInput
+      <TextInput
+        ref={gymNameRef}
+        defaultValue={gym.name}
+        controlId="NameInput"
+        label="Name"
+      />
+      <TextInput
         ref={gymAddressRef}
         defaultValue={gym.address}
-      ></GymAddressInput>
-      <GymCityInput ref={gymCityRef} defaultValue={gym.city}></GymCityInput>
-
+        controlId="AddressInput"
+        label="Address"
+      />
+      <TextInput
+        ref={gymCityRef}
+        defaultValue={gym.city}
+        controlId="CityInput"
+        label="City"
+      />
       <EditingButtonStack
         confirm={() => {
           editGym.mutate({

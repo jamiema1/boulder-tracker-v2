@@ -44,9 +44,12 @@ export function convertToViewDateTime(startDateTime, endDateTime) {
 }
 
 export function convertToEditDate(editDate) {
+  console.log(new Date(editDate))
+
   if (editDate === nullDate) {
     return null
   }
+  console.log(new Date(editDate).getTimezoneOffset() / 60)
   return getDateString(new Date(editDate))
 }
 

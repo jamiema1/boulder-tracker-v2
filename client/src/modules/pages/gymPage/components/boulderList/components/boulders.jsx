@@ -24,8 +24,8 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
-import AddingButtonStack from "modules/common/components/addingButtonStack"
-import EditingButtonStack from "modules/common/components/editingButtonStack"
+import AddingButtonStack from "modules/common/components/buttons/addingButtonStack"
+import EditingButtonStack from "modules/common/components/buttons/editingButtonStack"
 
 export default function Boulders(props) {
   /*

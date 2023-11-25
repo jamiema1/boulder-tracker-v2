@@ -11,12 +11,12 @@ import Stack from "react-bootstrap/Stack"
 import axios from "modules/api/axios"
 import {gymEndpoint, handleError} from "modules/api/endpoints"
 
-import AddButtonModal from "modules/common/components/addButtonModal"
-import DeleteButtonModal from "modules/common/components/deleteButtonModal"
-import EditButtonModal from "modules/common/components/editButtonModal"
+import AddButtonModal from "modules/common/components/buttons/addButtonModal"
+import DeleteButtonModal from "modules/common/components/buttons/deleteButtonModal"
+import EditButtonModal from "modules/common/components/buttons/editButtonModal"
 
-import GymAddForm from "modules/pages/gymPage/components/gymList/components/gymForms/gymAddForm"
-import GymEditForm from "modules/pages/gymPage/components/gymList/components/gymForms/gymEditForm"
+import GymAddForm from "modules/pages/gymPage/components/gymList/components/gymAddForm"
+import GymEditForm from "modules/pages/gymPage/components/gymList/components/gymEditForm"
 import GymInfo from "modules/pages/gymPage/components/gymList/components/gymInfo"
 import LocationList from "modules/pages/gymPage/components/locationList/locationList"
 

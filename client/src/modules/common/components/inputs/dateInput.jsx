@@ -5,16 +5,12 @@ import Form from "react-bootstrap/Form"
 
 import {nullDate} from "modules/common/helpers"
 
-const BoulderSetStartDateInput = forwardRef(function BoulderSetStartDateInput(
-  {defaultValue = nullDate, disabled = false},
+const DateInput = forwardRef(function DateInput(
+  {defaultValue = nullDate, disabled = false, controlId = "", label = ""},
   ref
 ) {
   return (
-    <FloatingLabel
-      controlId="SetStartDate"
-      label="Set Start Date"
-      className="mb-3"
-    >
+    <FloatingLabel controlId={controlId} label={label} className="mb-3">
       <Form.Control
         type="date"
         ref={ref}
@@ -26,4 +22,4 @@ const BoulderSetStartDateInput = forwardRef(function BoulderSetStartDateInput(
   )
 })
 
-export default BoulderSetStartDateInput
+export default DateInput

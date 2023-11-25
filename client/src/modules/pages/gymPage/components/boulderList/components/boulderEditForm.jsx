@@ -7,14 +7,12 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {boulderEndpoint, handleError} from "modules/api/endpoints"
 
+import {BOULDER_TYPE, COLOURS, RATINGS} from "modules/common/constants"
 import {convertToEditDate, nullDate} from "modules/common/helpers"
-import EditingButtonStack from "modules/common/components/editingButtonStack"
-import BoulderSetStartDateInput from "./components/boulderSetStartDateInput"
-import BoulderSetEndDateInput from "./components/boulderSetEndDateInput"
-import BoulderRatingInput from "./components/boulderRatingInput"
-import BoulderColourInput from "./components/boulderColourInput"
-import BoulderBoulderTypeInput from "./components/boulderBoulderTypeInput"
-import BoulderDescriptionInput from "./components/boulderDescriptionInput"
+import DateInput from "modules/common/components/inputs/dateInput"
+import TextInput from "modules/common/components/inputs/textInput"
+import ChoiceInput from "modules/common/components/inputs/choiceInput"
+import EditingButtonStack from "modules/common/components/buttons/editingButtonStack"
 
 export default function BoulderEditForm({location, boulder, handleClose}) {
   /*
@@ -70,30 +68,46 @@ export default function BoulderEditForm({location, boulder, handleClose}) {
 
   return (
     <Form>
-      <BoulderRatingInput
+      <ChoiceInput
         ref={boulderRatingRef}
         defaultValue={boulder.rating}
+        controlId="RatingInput"
+        label="Rating"
+        choices={Array.from(RATINGS)}
       />
-      <BoulderColourInput
+      <ChoiceInput
         ref={boulderColourRef}
         defaultValue={boulder.colour}
+        controlId="ColourInput"
+        label="Colour"
+        choices={Array.from(COLOURS)}
       />
-      <BoulderBoulderTypeInput
+      <ChoiceInput
         ref={boulderBoulderTypeRef}
         defaultValue={boulder.boulderType}
+        controlId="BoulderTypeInput"
+        label="Boulder Type"
+        choices={Array.from(BOULDER_TYPE)}
       />
-      <BoulderDescriptionInput
+      <TextInput
         ref={boulderDescriptionRef}
         defaultValue={boulder.description}
+        controlId="DescriptionInput"
+        label="Description"
       />
-      <BoulderSetStartDateInput
-        ref={boulderSetStartDateRef}
+      <DateInput
         defaultValue={convertToEditDate(boulder.setStartDate)}
+        ref={boulderSetStartDateRef}
+        controlId="SetStartDate"
+        label="Set Start Date"
       />
-      <BoulderSetEndDateInput
-        ref={boulderSetEndDateRef}
+      <DateInput
         defaultValue={convertToEditDate(boulder.setEndDate)}
+        ref={boulderSetEndDateRef}
+        controlId="SetEndDate"
+        label="Set End Date"
       />
+
       <EditingButtonStack
         confirm={() => {
           editBoulder.mutate({

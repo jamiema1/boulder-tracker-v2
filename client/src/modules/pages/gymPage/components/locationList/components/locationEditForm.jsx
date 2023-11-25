@@ -7,9 +7,9 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {locationEndpoint, handleError} from "modules/api/endpoints"
 
-import EditingButtonStack from "modules/common/components/editingButtonStack"
+import EditingButtonStack from "modules/common/components/buttons/editingButtonStack"
 
-import LocationNameInput from "modules/pages/gymPage/components/locationList/components/locationForms/components/locationNameInput"
+import TextInput from "modules/common/components/inputs/textInput"
 
 export default function LocationEditForm({gym, location, handleClose}) {
   /*
@@ -56,10 +56,12 @@ export default function LocationEditForm({gym, location, handleClose}) {
 
   return (
     <Form>
-      <LocationNameInput
+      <TextInput
         ref={locationNameRef}
         defaultValue={location.name}
-      ></LocationNameInput>
+        controlId="NameInput"
+        label="Name"
+      />
       <EditingButtonStack
         confirm={() => {
           editLocation.mutate({

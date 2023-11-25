@@ -11,12 +11,11 @@ import {
   convertToEditDateTime,
   getCurrentDateTime,
 } from "modules/common/helpers"
-import AddingButtonStack from "modules/common/components/addingButtonStack"
+import AddingButtonStack from "modules/common/components/buttons/addingButtonStack"
 
-import SessionEndTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionEndTimeInput"
 import SessionGymIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionGymIdInput"
-import SessionStartTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionStartTimeInput"
 import SessionUserIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionUserIdInput"
+import DateTimeInput from "modules/common/components/inputs/dateTimeInput"
 
 export default function SessionAddForm({handleClose}) {
   /*
@@ -73,11 +72,17 @@ export default function SessionAddForm({handleClose}) {
     <Form>
       <SessionGymIdInput ref={gymIdRef}></SessionGymIdInput>
       <SessionUserIdInput defaultValue={1} ref={userIdRef}></SessionUserIdInput>
-      <SessionStartTimeInput
+      <DateTimeInput
         defaultValue={convertToEditDateTime(getCurrentDateTime())}
         ref={sessionStartTimeRef}
-      ></SessionStartTimeInput>
-      <SessionEndTimeInput ref={sessionEndTimeRef}></SessionEndTimeInput>
+        controlId="StartTimeInput"
+        label="Start Time"
+      />
+      <DateTimeInput
+        ref={sessionEndTimeRef}
+        controlId="EndTimeInput"
+        label="End Time"
+      />
       <AddingButtonStack
         confirm={() => {
           handleClose()
