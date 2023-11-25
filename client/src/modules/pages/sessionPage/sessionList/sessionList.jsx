@@ -17,10 +17,10 @@ import DeleteButtonModal from "modules/common/components/buttons/deleteButtonMod
 import EditButtonModal from "modules/common/components/buttons/editButtonModal"
 import EndButtonModal from "modules/common/components/buttons/endButtonModal"
 
-import ClimbList from "modules/pages/sessionPage/components/climbList/climbList"
-import SessionAddForm from "modules/pages/sessionPage/components/sessionList/components/sessionAddForm"
-import SessionEditForm from "modules/pages/sessionPage/components/sessionList/components/sessionEditForm"
-import SessionInfo from "modules/pages/sessionPage/components/sessionList/components/sessionInfo"
+import ClimbList from "modules/pages/sessionPage/climbList/climbList"
+import SessionAddForm from "modules/pages/sessionPage/sessionList/components/sessionAddForm"
+import SessionEditForm from "modules/pages/sessionPage/sessionList/components/sessionEditForm"
+import SessionInfo from "modules/pages/sessionPage/sessionList/components/sessionInfo"
 
 export default function SessionList() {
   /*

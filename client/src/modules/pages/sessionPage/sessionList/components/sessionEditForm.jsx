@@ -10,10 +10,10 @@ import {handleError, sessionEndpoint} from "modules/api/endpoints"
 import {convertToEditDateTime} from "modules/common/helpers"
 import EditingButtonStack from "modules/common/components/buttons/editingButtonStack"
 
-import SessionEndTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionEndTimeInput"
-import SessionGymIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionGymIdInput"
-import SessionStartTimeInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionStartTimeInput"
-import SessionUserIdInput from "modules/pages/sessionPage/components/sessionList/components/sessionForms/components/sessionUserIdInput"
+import SessionEndTimeInput from "modules/pages/sessionPage/sessionList/components/forms/sessionEndTimeInput"
+import SessionGymIdInput from "modules/pages/sessionPage/sessionList/components/forms/sessionGymIdInput"
+import SessionStartTimeInput from "modules/pages/sessionPage/sessionList/components/forms/sessionStartTimeInput"
+import SessionUserIdInput from "modules/pages/sessionPage/sessionList/components/forms/sessionUserIdInput"
 
 export default function SessionEditForm({session, handleClose}) {
   /*

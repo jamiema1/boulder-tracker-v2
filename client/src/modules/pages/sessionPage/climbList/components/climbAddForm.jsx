@@ -13,12 +13,12 @@ import {
 } from "modules/common/helpers"
 import AddingButtonStack from "modules/common/components/buttons/addingButtonStack"
 
-import ClimbAttemptInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbAttemptInput"
-import ClimbBoulderIdInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbBoulderIdInput"
-import ClimbEndTimeInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbEndTimeInput"
-import ClimbLocationIdInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbLocationIdInput"
-import ClimbSendInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbSendInput"
-import ClimbStartTimeInput from "modules/pages/sessionPage/components/climbList/components/climbForms/components/climbStartTimeInput"
+import ClimbAttemptInput from "modules/pages/sessionPage/climbList/components/forms/climbAttemptInput"
+import ClimbBoulderIdInput from "modules/pages/sessionPage/climbList/components/forms/climbBoulderIdInput"
+import ClimbEndTimeInput from "modules/pages/sessionPage/climbList/components/forms/climbEndTimeInput"
+import ClimbLocationIdInput from "modules/pages/sessionPage/climbList/components/forms/climbLocationIdInput"
+import ClimbSendInput from "modules/pages/sessionPage/climbList/components/forms/climbSendInput"
+import ClimbStartTimeInput from "modules/pages/sessionPage/climbList/components/forms/climbStartTimeInput"
 
 export default function ClimbAddForm({handleClose, session}) {
   /*

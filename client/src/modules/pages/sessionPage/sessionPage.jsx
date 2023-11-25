@@ -1,6 +1,6 @@
 import React from "react"
 
-import SessionList from "modules/pages/sessionPage/components/sessionList/sessionList"
+import SessionList from "modules/pages/sessionPage/sessionList/sessionList"
 
 export default function SessionPage() {
   return (

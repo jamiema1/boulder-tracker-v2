@@ -15,9 +15,9 @@ import AddButtonModal from "modules/common/components/buttons/addButtonModal"
 import DeleteButtonModal from "modules/common/components/buttons/deleteButtonModal"
 import EditButtonModal from "modules/common/components/buttons/editButtonModal"
 
-import BoulderAddForm from "modules/pages/gymPage/components/boulderList/components/boulderAddForm"
-import BoulderEditForm from "modules/pages/gymPage/components/boulderList/components/boulderEditForm"
-import BoulderInfo from "modules/pages/gymPage/components/boulderList/components/boulderInfo"
+import BoulderAddForm from "modules/pages/gymPage/boulderList/components/boulderAddForm"
+import BoulderEditForm from "modules/pages/gymPage/boulderList/components/boulderEditForm"
+import BoulderInfo from "modules/pages/gymPage/boulderList/components/boulderInfo"
 import {nullDate} from "modules/common/helpers"
 
 export default function BoulderList({location}) {

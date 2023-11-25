@@ -15,9 +15,9 @@ import AddButtonModal from "modules/common/components/buttons/addButtonModal"
 import DeleteButtonModal from "modules/common/components/buttons/deleteButtonModal"
 import EditButtonModal from "modules/common/components/buttons/editButtonModal"
 
-import ClimbAddForm from "modules/pages/sessionPage/components/climbList/components/climbAddForm"
-import ClimbEditForm from "modules/pages/sessionPage/components/climbList/components/climbEditForm"
-import ClimbInfo from "modules/pages/sessionPage/components/climbList/components/climbInfo"
+import ClimbAddForm from "modules/pages/sessionPage/climbList/components/climbAddForm"
+import ClimbEditForm from "modules/pages/sessionPage/climbList/components/climbEditForm"
+import ClimbInfo from "modules/pages/sessionPage/climbList/components/climbInfo"
 
 export default function ClimbList({session}) {
   /*

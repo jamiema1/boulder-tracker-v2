@@ -1,5 +1,5 @@
 import React from "react"
-import GymList from "modules/pages/gymPage/components/gymList/gymList"
+import GymList from "modules/pages/gymPage/gymList/gymList"
 
 export default function GymPage() {
   return (

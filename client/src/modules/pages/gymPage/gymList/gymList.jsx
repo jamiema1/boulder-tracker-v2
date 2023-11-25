@@ -15,10 +15,10 @@ import AddButtonModal from "modules/common/components/buttons/addButtonModal"
 import DeleteButtonModal from "modules/common/components/buttons/deleteButtonModal"
 import EditButtonModal from "modules/common/components/buttons/editButtonModal"
 
-import GymAddForm from "modules/pages/gymPage/components/gymList/components/gymAddForm"
-import GymEditForm from "modules/pages/gymPage/components/gymList/components/gymEditForm"
-import GymInfo from "modules/pages/gymPage/components/gymList/components/gymInfo"
-import LocationList from "modules/pages/gymPage/components/locationList/locationList"
+import GymAddForm from "modules/pages/gymPage/gymList/components/gymAddForm"
+import GymEditForm from "modules/pages/gymPage/gymList/components/gymEditForm"
+import GymInfo from "modules/pages/gymPage/gymList/components/gymInfo"
+import LocationList from "modules/pages/gymPage/locationList/locationList"
 
 export default function GymList() {
   /*
