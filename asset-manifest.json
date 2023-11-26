@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/boulder-tracker-v2/static/css/main.5edaca00.css",
-    "main.js": "/boulder-tracker-v2/static/js/main.b430f116.js",
+    "main.js": "/boulder-tracker-v2/static/js/main.733035da.js",
     "static/media/confirmIcon.png": "/boulder-tracker-v2/static/media/confirmIcon.71f7ed54feb9e28c8bf2.png",
     "static/media/cancelIcon.png": "/boulder-tracker-v2/static/media/cancelIcon.b6899e6c84b97dcc941c.png",
     "static/media/addIcon.png": "/boulder-tracker-v2/static/media/addIcon.50eb5d06afd5b96abcb2.png",
@@ -9,10 +9,10 @@
     "static/media/6hex.png": "/boulder-tracker-v2/static/media/6hex.cee551893015af92b195.png",
     "index.html": "/boulder-tracker-v2/index.html",
     "main.5edaca00.css.map": "/boulder-tracker-v2/static/css/main.5edaca00.css.map",
-    "main.b430f116.js.map": "/boulder-tracker-v2/static/js/main.b430f116.js.map"
+    "main.733035da.js.map": "/boulder-tracker-v2/static/js/main.733035da.js.map"
   },
   "entrypoints": [
     "static/css/main.5edaca00.css",
-    "static/js/main.b430f116.js"
+    "static/js/main.733035da.js"
   ]
 }
