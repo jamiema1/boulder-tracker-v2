@@ -7,12 +7,13 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {boulderEndpoint, handleError} from "modules/api/endpoints"
 
-import {BOULDER_TYPE, COLOURS, RATINGS} from "modules/common/constants"
 import {
-  convertToEditDate,
-  getCurrentDate,
+  BOULDER_TYPE,
+  COLOURS,
+  RATINGS,
   nullDate,
-} from "modules/common/helpers"
+} from "modules/common/constants"
+import {convertToEditDate, currentDate} from "modules/common/helpers"
 import AddingButtonStack from "modules/common/components/buttons/addingButtonStack"
 import DateInput from "modules/common/components/inputs/dateInput"
 import TextInput from "modules/common/components/inputs/textInput"
@@ -93,7 +94,7 @@ export default function BoulderAddForm({handleClose, location}) {
         label="Description"
       />
       <DateInput
-        defaultValue={convertToEditDate(getCurrentDate())}
+        defaultValue={convertToEditDate(currentDate())}
         ref={boulderSetStartDateRef}
         controlId="SetStartDate"
         label="Set Start Date"
@@ -106,7 +107,6 @@ export default function BoulderAddForm({handleClose, location}) {
       <AddingButtonStack
         confirm={() => {
           handleClose()
-          console.log(boulderSetEndDateRef.current.value)
           addBoulder.mutate({
             locationId: parseInt(location.id),
             rating: parseInt(boulderRatingRef.current.value),

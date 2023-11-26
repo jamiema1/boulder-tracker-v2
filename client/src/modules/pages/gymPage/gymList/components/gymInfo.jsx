@@ -14,7 +14,8 @@ import {
   locationEndpoint,
   sessionEndpoint,
 } from "modules/api/endpoints"
-import {convertToEditDate, nullDate} from "modules/common/helpers"
+import {convertToEditDate} from "modules/common/helpers"
+import {nullDate} from "modules/common/constants"
 
 export default function GymInfo({gym}) {
   /*

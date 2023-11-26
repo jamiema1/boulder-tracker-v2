@@ -7,8 +7,13 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {boulderEndpoint, handleError} from "modules/api/endpoints"
 
-import {BOULDER_TYPE, COLOURS, RATINGS} from "modules/common/constants"
-import {convertToEditDate, nullDate} from "modules/common/helpers"
+import {
+  BOULDER_TYPE,
+  COLOURS,
+  RATINGS,
+  nullDate,
+} from "modules/common/constants"
+import {convertToEditDate} from "modules/common/helpers"
 import DateInput from "modules/common/components/inputs/dateInput"
 import TextInput from "modules/common/components/inputs/textInput"
 import ChoiceInput from "modules/common/components/inputs/choiceInput"

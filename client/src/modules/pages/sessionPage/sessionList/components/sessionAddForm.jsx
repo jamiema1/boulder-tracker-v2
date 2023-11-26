@@ -7,10 +7,7 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {handleError, sessionEndpoint} from "modules/api/endpoints"
 
-import {
-  convertToEditDateTime,
-  getCurrentDateTime,
-} from "modules/common/helpers"
+import {convertToEditDateTime, currentDateTime} from "modules/common/helpers"
 import AddingButtonStack from "modules/common/components/buttons/addingButtonStack"
 
 import SessionGymIdInput from "modules/pages/sessionPage/sessionList/components/inputs/sessionGymIdInput"
@@ -73,7 +70,7 @@ export default function SessionAddForm({handleClose}) {
       <SessionGymIdInput ref={gymIdRef}></SessionGymIdInput>
       <SessionUserIdInput defaultValue={1} ref={userIdRef}></SessionUserIdInput>
       <DateTimeInput
-        defaultValue={convertToEditDateTime(getCurrentDateTime())}
+        defaultValue={convertToEditDateTime(currentDateTime())}
         ref={sessionStartTimeRef}
         controlId="StartTimeInput"
         label="Start Time"

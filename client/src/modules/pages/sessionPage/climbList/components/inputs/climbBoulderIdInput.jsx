@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form"
 import axios from "modules/api/axios"
 import {boulderEndpoint} from "modules/api/endpoints"
 
-import {nullDate} from "modules/common/helpers"
+import {nullDate} from "modules/common/constants"
 
 const ClimbBoulderIdInput = forwardRef(function ClimbBoulderIdInput(
   {defaultValue = 0, disabled = false, session, locationId},

@@ -4,18 +4,19 @@ import React, {useEffect, useState, useRef} from "react"
 import Climbs from "../../climbs"
 import images from "../../../../images/images.js"
 import {
-  getCurrentDate,
-  getCurrentDateTime,
+  currentDate,
+  currentDateTime,
   convertToViewDate,
   convertToEditDate,
-} from "../../../../common/helpers.js"
+  formatStringDate,
+} from "modules/common/helpers"
 import {
   get,
   add,
   edit,
   remove,
   boulderEndpoint,
-} from "../../../../api/endpoints.js"
+} from "modules/api/endpoints.js"
 import Accordion from "react-bootstrap/Accordion"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
@@ -198,7 +199,7 @@ export default function Boulders(props) {
         boulderType: boulder.boulderType,
         description: boulder.description,
         setStartDate: boulder.setStartDate,
-        setEndDate: getCurrentDateTime(),
+        setEndDate: currentDateTime(),
       },
       setAllBoulderData,
       () => {}
@@ -317,8 +318,8 @@ export default function Boulders(props) {
                       >
                         <Form.Control
                           type="date"
-                          placeholder={getCurrentDate()}
-                          defaultValue={getCurrentDate()}
+                          placeholder={formatStringDate(currentDate())}
+                          defaultValue={formatStringDate(currentDate())}
                           ref={newBoulderSetStartDate}
                         />
                       </FloatingLabel>
@@ -331,7 +332,7 @@ export default function Boulders(props) {
                       >
                         <Form.Control
                           type="date"
-                          placeholder={getCurrentDate()}
+                          placeholder={formatStringDate(currentDate())}
                           ref={newBoulderSetEndDate}
                         />
                       </FloatingLabel>

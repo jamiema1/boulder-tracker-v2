@@ -18,8 +18,9 @@ import EditButtonModal from "modules/common/components/buttons/editButtonModal"
 import BoulderAddForm from "modules/pages/gymPage/boulderList/components/boulderAddForm"
 import BoulderEditForm from "modules/pages/gymPage/boulderList/components/boulderEditForm"
 import BoulderInfo from "modules/pages/gymPage/boulderList/components/boulderInfo"
-import {getCurrentDate, nullDate} from "modules/common/helpers"
+import {currentDate, formatStringDate} from "modules/common/helpers"
 import EndButtonModal from "modules/common/components/buttons/endButtonModal"
+import {nullDate} from "modules/common/constants"
 
 export default function BoulderList({location}) {
   /*
@@ -82,7 +83,7 @@ export default function BoulderList({location}) {
         boulderType: boulder.boulderType,
         description: boulder.description,
         setStartDate: boulder.setStartDate,
-        setEndDate: getCurrentDate(),
+        setEndDate: formatStringDate(currentDate()),
       },
     })
   }

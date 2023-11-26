@@ -3,7 +3,7 @@ import React, {forwardRef} from "react"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import Form from "react-bootstrap/Form"
 
-import {nullDateTime} from "modules/common/helpers"
+import {nullDateTime} from "modules/common/constants"
 
 const DateTimeInput = forwardRef(function DateInput(
   {defaultValue = nullDateTime, disabled = false, controlId = "", label = ""},

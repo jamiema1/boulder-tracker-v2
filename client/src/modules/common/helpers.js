@@ -1,5 +1,4 @@
-export const nullDate = "0000-00-00"
-export const nullDateTime = "0000-00-00 00:00:00"
+import {nullDate, nullDateTime} from "modules/common/constants"
 
 export function getTimeDifferenceString(startDateTime, endDateTime) {
   const startTime = new Date(startDateTime)
@@ -16,12 +15,12 @@ export function getTimeDifferenceString(startDateTime, endDateTime) {
   return timeString
 }
 
-export function getCurrentDate() {
-  return getDateString(new Date())
+export function currentDate() {
+  return new Date()
 }
 
-export function getCurrentDateTime() {
-  return getDateTimeString(new Date())
+export function currentDateTime() {
+  return new Date()
 }
 
 export function convertToViewDate(startDate, endDate) {
@@ -44,29 +43,26 @@ export function convertToViewDateTime(startDateTime, endDateTime) {
 }
 
 export function convertToEditDate(editDate) {
-  console.log(new Date(editDate))
-
   if (editDate === nullDate) {
     return null
   }
-  console.log(new Date(editDate).getTimezoneOffset() / 60)
-  return getDateString(new Date(editDate))
+  return formatStringDate(new Date(editDate))
 }
 
 export function convertToEditDateTime(dateTime) {
   if (dateTime === nullDateTime) {
     return null
   }
-  return getDateTimeString(new Date(dateTime))
+  return formatStringDateTime(new Date(dateTime))
 }
 
-function getDateString(date) {
+export function formatStringDate(date) {
   const timezoneOffset = date.getTimezoneOffset() / 60
   date.setHours(date.getHours() - timezoneOffset)
   return date.toISOString().substring(0, 10)
 }
 
-function getDateTimeString(date) {
+export function formatStringDateTime(date) {
   const timezoneOffset = date.getTimezoneOffset() / 60
   date.setHours(date.getHours() - timezoneOffset)
   return date.toISOString().substring(0, 16)

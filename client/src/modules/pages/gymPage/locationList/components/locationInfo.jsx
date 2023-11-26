@@ -8,7 +8,7 @@ import Row from "react-bootstrap/Row"
 
 import axios from "modules/api/axios"
 import {boulderEndpoint} from "modules/api/endpoints"
-import {nullDate} from "modules/common/helpers"
+import {nullDate} from "modules/common/constants"
 
 export default function LocationInfo({location}) {
   const {isLoading: isLoadingBoulder, data: allBoulderData} = useQuery(

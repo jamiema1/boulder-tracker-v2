@@ -11,7 +11,7 @@ import Stack from "react-bootstrap/Stack"
 import axios from "modules/api/axios"
 import {handleError, sessionEndpoint} from "modules/api/endpoints"
 
-import {getCurrentDateTime, nullDateTime} from "modules/common/helpers"
+import {currentDateTime} from "modules/common/helpers"
 import AddButtonModal from "modules/common/components/buttons/addButtonModal"
 import DeleteButtonModal from "modules/common/components/buttons/deleteButtonModal"
 import EditButtonModal from "modules/common/components/buttons/editButtonModal"
@@ -21,6 +21,7 @@ import ClimbList from "modules/pages/sessionPage/climbList/climbList"
 import SessionAddForm from "modules/pages/sessionPage/sessionList/components/sessionAddForm"
 import SessionEditForm from "modules/pages/sessionPage/sessionList/components/sessionEditForm"
 import SessionInfo from "modules/pages/sessionPage/sessionList/components/sessionInfo"
+import {nullDateTime} from "modules/common/constants"
 
 export default function SessionList() {
   /*
@@ -84,7 +85,7 @@ export default function SessionList() {
         gymId: parseInt(session.gymId),
         userId: parseInt(session.userId),
         sessionStartTime: session.sessionStartTime,
-        sessionEndTime: getCurrentDateTime(),
+        sessionEndTime: currentDateTime(),
       },
     })
   }
