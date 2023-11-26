@@ -10,10 +10,9 @@ import {handleError, sessionEndpoint} from "modules/api/endpoints"
 import {convertToEditDateTime} from "modules/common/helpers"
 import EditingButtonStack from "modules/common/components/buttons/editingButtonStack"
 
-import SessionEndTimeInput from "modules/pages/sessionPage/sessionList/components/forms/sessionEndTimeInput"
-import SessionGymIdInput from "modules/pages/sessionPage/sessionList/components/forms/sessionGymIdInput"
-import SessionStartTimeInput from "modules/pages/sessionPage/sessionList/components/forms/sessionStartTimeInput"
-import SessionUserIdInput from "modules/pages/sessionPage/sessionList/components/forms/sessionUserIdInput"
+import SessionGymIdInput from "modules/pages/sessionPage/sessionList/components/inputs/sessionGymIdInput"
+import SessionUserIdInput from "modules/pages/sessionPage/sessionList/components/inputs/sessionUserIdInput"
+import DateTimeInput from "modules/common/components/inputs/dateTimeInput"
 
 export default function SessionEditForm({session, handleClose}) {
   /*
@@ -80,14 +79,18 @@ export default function SessionEditForm({session, handleClose}) {
         disabled={true}
         ref={userIdRef}
       ></SessionUserIdInput>
-      <SessionStartTimeInput
+      <DateTimeInput
         defaultValue={convertToEditDateTime(session.sessionStartTime)}
         ref={sessionStartTimeRef}
-      ></SessionStartTimeInput>
-      <SessionEndTimeInput
+        controlId="StartTimeInput"
+        label="Start Time"
+      />
+      <DateTimeInput
         defaultValue={convertToEditDateTime(session.sessionEndTime)}
         ref={sessionEndTimeRef}
-      ></SessionEndTimeInput>
+        controlId="EndTimeInput"
+        label="End Time"
+      />
       <EditingButtonStack
         confirm={() => {
           editSession.mutate({

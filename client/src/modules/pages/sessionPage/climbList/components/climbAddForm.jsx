@@ -13,12 +13,12 @@ import {
 } from "modules/common/helpers"
 import AddingButtonStack from "modules/common/components/buttons/addingButtonStack"
 
-import ClimbAttemptInput from "modules/pages/sessionPage/climbList/components/forms/climbAttemptInput"
-import ClimbBoulderIdInput from "modules/pages/sessionPage/climbList/components/forms/climbBoulderIdInput"
-import ClimbEndTimeInput from "modules/pages/sessionPage/climbList/components/forms/climbEndTimeInput"
-import ClimbLocationIdInput from "modules/pages/sessionPage/climbList/components/forms/climbLocationIdInput"
-import ClimbSendInput from "modules/pages/sessionPage/climbList/components/forms/climbSendInput"
-import ClimbStartTimeInput from "modules/pages/sessionPage/climbList/components/forms/climbStartTimeInput"
+import ClimbBoulderIdInput from "modules/pages/sessionPage/climbList/components/inputs/climbBoulderIdInput"
+import ClimbLocationIdInput from "modules/pages/sessionPage/climbList/components/inputs/climbLocationIdInput"
+import AddButtonModal from "modules/common/components/buttons/addButtonModal"
+import BoulderAddForm from "modules/pages/gymPage/boulderList/components/boulderAddForm"
+import DateTimeInput from "modules/common/components/inputs/dateTimeInput"
+import NumberInput from "modules/common/components/inputs/numberInput"
 
 export default function ClimbAddForm({handleClose, session}) {
   /*
@@ -85,16 +85,39 @@ export default function ClimbAddForm({handleClose, session}) {
         session={session}
         locationId={locationId}
       ></ClimbBoulderIdInput>
-      <ClimbAttemptInput defaultValue={1} ref={attemptsRef}></ClimbAttemptInput>
-      <ClimbSendInput defaultValue={1} ref={sendsRef}></ClimbSendInput>
-      <ClimbStartTimeInput
+
+      <AddButtonModal
+        title={"Add Boulder"}
+        form={
+          <BoulderAddForm
+            location={{id: locationId, gymId: session.gymId, name: ""}}
+          ></BoulderAddForm>
+        }
+      ></AddButtonModal>
+      <NumberInput
+        defaultValue={1}
+        ref={attemptsRef}
+        controlId="AttemptInput"
+        label="Attempts"
+      />
+      <NumberInput
+        defaultValue={1}
+        ref={sendsRef}
+        controlId="SendInput"
+        label="Sends"
+      />
+      <DateTimeInput
         defaultValue={convertToEditDateTime(getCurrentDateTime())}
         ref={climbStartTimeRef}
-      ></ClimbStartTimeInput>
-      <ClimbEndTimeInput
+        controlId="StartTimeInput"
+        label="Start Time"
+      />
+      <DateTimeInput
         defaultValue={convertToEditDateTime(getCurrentDateTime())}
         ref={climbEndTimeRef}
-      ></ClimbEndTimeInput>
+        controlId="EndTimeInput"
+        label="End Time"
+      />
       <AddingButtonStack
         confirm={() => {
           handleClose()

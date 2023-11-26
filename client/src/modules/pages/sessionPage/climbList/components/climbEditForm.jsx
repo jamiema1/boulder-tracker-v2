@@ -14,12 +14,10 @@ import {
 import {convertToEditDateTime} from "modules/common/helpers"
 import EditingButtonStack from "modules/common/components/buttons/editingButtonStack"
 
-import ClimbAttemptInput from "modules/pages/sessionPage/climbList/components/forms/climbAttemptInput"
-import ClimbBoulderIdInput from "modules/pages/sessionPage/climbList/components/forms/climbBoulderIdInput"
-import ClimbEndTimeInput from "modules/pages/sessionPage/climbList/components/forms/climbEndTimeInput"
-import ClimbLocationIdInput from "modules/pages/sessionPage/climbList/components/forms/climbLocationIdInput"
-import ClimbSendInput from "modules/pages/sessionPage/climbList/components/forms/climbSendInput"
-import ClimbStartTimeInput from "modules/pages/sessionPage/climbList/components/forms/climbStartTimeInput"
+import ClimbBoulderIdInput from "modules/pages/sessionPage/climbList/components/inputs/climbBoulderIdInput"
+import ClimbLocationIdInput from "modules/pages/sessionPage/climbList/components/inputs/climbLocationIdInput"
+import DateTimeInput from "modules/common/components/inputs/dateTimeInput"
+import NumberInput from "modules/common/components/inputs/numberInput"
 
 export default function ClimbEditForm({session, climb, handleClose}) {
   /*
@@ -96,22 +94,30 @@ export default function ClimbEditForm({session, climb, handleClose}) {
         defaultValue={climb.boulderId}
         disabled={true}
       ></ClimbBoulderIdInput>
-      <ClimbAttemptInput
+      <NumberInput
         defaultValue={climb.attempts}
         ref={attemptsRef}
-      ></ClimbAttemptInput>
-      <ClimbSendInput
+        controlId="AttemptInput"
+        label="Attempts"
+      />
+      <NumberInput
         defaultValue={climb.sends}
         ref={sendsRef}
-      ></ClimbSendInput>
-      <ClimbStartTimeInput
+        controlId="SendInput"
+        label="Sends"
+      />
+      <DateTimeInput
         defaultValue={convertToEditDateTime(climb.climbStartTime)}
         ref={climbStartTimeRef}
-      ></ClimbStartTimeInput>
-      <ClimbEndTimeInput
+        controlId="StartTimeInput"
+        label="Start Time"
+      />
+      <DateTimeInput
         defaultValue={convertToEditDateTime(climb.climbEndTime)}
         ref={climbEndTimeRef}
-      ></ClimbEndTimeInput>
+        controlId="EndTimeInput"
+        label="End Time"
+      />
       <EditingButtonStack
         confirm={() => {
           editClimb.mutate({

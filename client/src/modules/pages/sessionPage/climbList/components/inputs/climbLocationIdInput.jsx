@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect} from "react"
+import React, {forwardRef} from "react"
 
 import {useQuery} from "react-query"
 
@@ -17,15 +17,13 @@ const ClimbLocationIdInput = forwardRef(function ClimbLocationIdInput(
     () => axios.get(locationEndpoint)
   )
 
-  // Initialize the location to be the first item by default
-  useEffect(() => {
-    updateLocationId()
-  }, [allLocationData])
-
   // TODO: Make the loading look nicer
   if (isLoadingLocation) {
     return <div>Loading...</div>
   }
+
+  // Initialize the location to be the first item by default
+  updateLocationId()
 
   const filteredLocationData = [...allLocationData.data.data].filter(
     (location) => location.gymId == session.gymId

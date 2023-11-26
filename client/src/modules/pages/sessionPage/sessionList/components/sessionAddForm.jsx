@@ -13,8 +13,8 @@ import {
 } from "modules/common/helpers"
 import AddingButtonStack from "modules/common/components/buttons/addingButtonStack"
 
-import SessionGymIdInput from "modules/pages/sessionPage/sessionList/components/forms/sessionGymIdInput"
-import SessionUserIdInput from "modules/pages/sessionPage/sessionList/components/forms/sessionUserIdInput"
+import SessionGymIdInput from "modules/pages/sessionPage/sessionList/components/inputs/sessionGymIdInput"
+import SessionUserIdInput from "modules/pages/sessionPage/sessionList/components/inputs/sessionUserIdInput"
 import DateTimeInput from "modules/common/components/inputs/dateTimeInput"
 
 export default function SessionAddForm({handleClose}) {

@@ -11,7 +11,7 @@ import Stack from "react-bootstrap/Stack"
 import axios from "modules/api/axios"
 import {handleError, sessionEndpoint} from "modules/api/endpoints"
 
-import {getCurrentDateTime} from "modules/common/helpers"
+import {getCurrentDateTime, nullDateTime} from "modules/common/helpers"
 import AddButtonModal from "modules/common/components/buttons/addButtonModal"
 import DeleteButtonModal from "modules/common/components/buttons/deleteButtonModal"
 import EditButtonModal from "modules/common/components/buttons/editButtonModal"
@@ -137,10 +137,11 @@ export default function SessionList() {
                 </Accordion.Header>
                 <Accordion.Body className="px-2">
                   <Stack direction="horizontal" gap={3}>
-                    {session.sessionEndTime === "0000-00-00 00:00:00" && (
+                    {session.sessionEndTime === nullDateTime && (
                       <EndButtonModal
                         confirmAction={() => endSession(session)}
                         title={"End Session"}
+                        description={"Done already?"}
                       ></EndButtonModal>
                     )}
                     <EditButtonModal

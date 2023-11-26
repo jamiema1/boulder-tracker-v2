@@ -18,7 +18,8 @@ import EditButtonModal from "modules/common/components/buttons/editButtonModal"
 import BoulderAddForm from "modules/pages/gymPage/boulderList/components/boulderAddForm"
 import BoulderEditForm from "modules/pages/gymPage/boulderList/components/boulderEditForm"
 import BoulderInfo from "modules/pages/gymPage/boulderList/components/boulderInfo"
-import {nullDate} from "modules/common/helpers"
+import {getCurrentDate, nullDate} from "modules/common/helpers"
+import EndButtonModal from "modules/common/components/buttons/endButtonModal"
 
 export default function BoulderList({location}) {
   /*
@@ -36,6 +37,25 @@ export default function BoulderList({location}) {
     onError: (error) => handleError(error),
   })
 
+  const editBoulder = useMutation(
+    ({boulderId, newBoulder}) =>
+      axios.put(boulderEndpoint + "/" + boulderId, newBoulder),
+    {
+      onSuccess: (data, {boulderId, newBoulder}) => {
+        queryClient.setQueryData(boulderEndpoint, {
+          data: {
+            data: [...allBoulderData.data.data].map((boulder) => {
+              return boulder.id === boulderId
+                ? {id: boulderId, ...newBoulder}
+                : boulder
+            }),
+          },
+        })
+      },
+      onError: (error) => handleError(error),
+    }
+  )
+
   const deleteBoulder = useMutation(
     (boulderId) => axios.delete(boulderEndpoint + "/" + boulderId),
     {
@@ -51,6 +71,21 @@ export default function BoulderList({location}) {
       onError: (error) => handleError(error),
     }
   )
+
+  function endBoulder(boulder) {
+    editBoulder.mutate({
+      boulderId: boulder.id,
+      newBoulder: {
+        locationId: parseInt(location.id),
+        rating: parseInt(boulder.rating),
+        colour: boulder.colour,
+        boulderType: boulder.boulderType,
+        description: boulder.description,
+        setStartDate: boulder.setStartDate,
+        setEndDate: getCurrentDate(),
+      },
+    })
+  }
 
   /*
    * Return value
@@ -100,6 +135,13 @@ export default function BoulderList({location}) {
                 </Accordion.Header>
                 <Accordion.Body>
                   <Stack direction="horizontal" gap={3}>
+                    {boulder.setEndDate === nullDate && (
+                      <EndButtonModal
+                        confirmAction={() => endBoulder(boulder)}
+                        title={"End Boulder"}
+                        description={"Are you sure it's gone?"}
+                      ></EndButtonModal>
+                    )}
                     <EditButtonModal
                       title={"Edit Boulder"}
                       form={

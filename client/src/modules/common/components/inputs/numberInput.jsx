@@ -3,7 +3,7 @@ import React, {forwardRef} from "react"
 import FloatingLabel from "react-bootstrap/FloatingLabel"
 import Form from "react-bootstrap/Form"
 
-const TextInput = forwardRef(function TextInput(
+const NumberInput = forwardRef(function NumberInput(
   {defaultValue = 0, disabled = false, controlId = "", label = ""},
   ref
 ) {
@@ -20,4 +20,4 @@ const TextInput = forwardRef(function TextInput(
   )
 })
 
-export default TextInput
+export default NumberInput
