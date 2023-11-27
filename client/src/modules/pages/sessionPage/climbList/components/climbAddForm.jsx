@@ -82,7 +82,6 @@ export default function ClimbAddForm({handleClose, session}) {
         session={session}
         locationId={locationId}
       ></ClimbBoulderIdInput>
-
       <AddButtonModal
         title={"Add Boulder"}
         form={

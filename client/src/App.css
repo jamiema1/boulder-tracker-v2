@@ -1,5 +1,7 @@
 .page {
   background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
 }
 
 .accordionBody {
@@ -8,9 +10,29 @@
 
 .pageTitle {
   font-size: xxx-large;
-  /* font-weight: 600; */
+  align-self: center;
 }
 
 img {
   height: 25px;
+}
+
+.calendar {
+  border: black solid 1px;
+  border-radius: 5%;
+  scale: 1.5;
+}
+
+.dateCalendarSpacer {
+  height: 120px;
+}
+
+@media (max-width: 800px) {
+  .calendar {
+    scale: 1;
+  }
+
+  .dateCalendarSpacer {
+    height: 60px;
+  }
 }
