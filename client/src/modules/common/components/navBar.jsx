@@ -64,6 +64,7 @@ function NavBar() {
               <Nav.Link href="#/">Home</Nav.Link>
               <Nav.Link href="#/sessions">Sessions</Nav.Link>
               <Nav.Link href="#/gyms">Gyms</Nav.Link>
+              <Nav.Link href="#/dashboard">Dashboard</Nav.Link>
               {/* <Nav.Link href="#/dashboard">Dashboard</Nav.Link>
               <Nav.Link href="#/people">People</Nav.Link> */}
             </Nav>

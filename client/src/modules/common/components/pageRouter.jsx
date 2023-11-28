@@ -4,11 +4,12 @@ import {HashRouter as Router, Routes, Route} from "react-router-dom"
 
 import {useAuth0} from "@auth0/auth0-react"
 
-import Profile from "modules/auth0/profile"
+import Profile from "modules/common/components/auth0/profile"
 
 import GymPage from "modules/pages/gymPage/gymPage"
 import Homepage from "modules/pages/homePage/homepage"
 import SessionPage from "modules/pages/sessionPage/sessionPage"
+import DashboardPage from "modules/pages/dashboardPage/dashboardPage"
 
 export default function PageRouter() {
   const {isAuthenticated, loginWithRedirect} = useAuth0()
@@ -34,6 +35,9 @@ export default function PageRouter() {
         )}
         {isAuthenticated && (
           <Route exact path="/sessions" element={<SessionPage />}></Route>
+        )}
+        {isAuthenticated && (
+          <Route exact path="/dashboard" element={<DashboardPage />}></Route>
         )}
         {/* {!isLoading && isAuthenticated && (
           <Route path="/*" loader={() => redirect("/")} />
