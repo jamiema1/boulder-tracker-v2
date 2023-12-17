@@ -2,7 +2,10 @@ import React, {useRef, useState} from "react"
 
 import {useMutation, useQuery, useQueryClient} from "react-query"
 
+import Col from "react-bootstrap/Col"
+import Container from "react-bootstrap/esm/Container"
 import Form from "react-bootstrap/Form"
+import Row from "react-bootstrap/Row"
 
 import axios from "modules/api/axios"
 import {climbEndpoint, handleError} from "modules/api/endpoints"
@@ -82,38 +85,58 @@ export default function ClimbAddForm({handleClose, session}) {
         session={session}
         locationId={locationId}
       ></ClimbBoulderIdInput>
-      <AddButtonModal
-        title={"Add Boulder"}
-        form={
-          <BoulderAddForm
-            location={{id: locationId, gymId: session.gymId, name: ""}}
-          ></BoulderAddForm>
-        }
-      ></AddButtonModal>
-      <NumberInput
-        defaultValue={1}
-        ref={attemptsRef}
-        controlId="AttemptInput"
-        label="Attempts"
-      />
-      <NumberInput
-        defaultValue={1}
-        ref={sendsRef}
-        controlId="SendInput"
-        label="Sends"
-      />
-      <DateTimeInput
-        defaultValue={convertToEditDateTime(currentDateTime())}
-        ref={climbStartTimeRef}
-        controlId="StartTimeInput"
-        label="Start Time"
-      />
-      <DateTimeInput
-        defaultValue={convertToEditDateTime(currentDateTime())}
-        ref={climbEndTimeRef}
-        controlId="EndTimeInput"
-        label="End Time"
-      />
+      <Container>
+        <Row className="mb-3 ">
+          <Col className="text-end">
+            <AddButtonModal
+              title={"Add Boulder"}
+              form={
+                <BoulderAddForm
+                  location={{id: locationId, gymId: session.gymId, name: ""}}
+                />
+              }
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col className="ps-0">
+            <NumberInput
+              defaultValue={1}
+              ref={attemptsRef}
+              controlId="AttemptInput"
+              label="Attempts"
+            />
+          </Col>
+          <Col className="pe-0">
+            <NumberInput
+              defaultValue={1}
+              ref={sendsRef}
+              controlId="SendInput"
+              label="Sends"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col className="p-0">
+            <DateTimeInput
+              defaultValue={convertToEditDateTime(currentDateTime())}
+              ref={climbStartTimeRef}
+              controlId="StartTimeInput"
+              label="Start Time"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col className="p-0">
+            <DateTimeInput
+              defaultValue={convertToEditDateTime(currentDateTime())}
+              ref={climbEndTimeRef}
+              controlId="EndTimeInput"
+              label="End Time"
+            />
+          </Col>
+        </Row>
+      </Container>
       <AddingButtonStack
         confirm={() => {
           handleClose()
@@ -129,7 +152,7 @@ export default function ClimbAddForm({handleClose, session}) {
         cancel={() => {
           handleClose()
         }}
-      ></AddingButtonStack>
+      />
     </Form>
   )
 }
