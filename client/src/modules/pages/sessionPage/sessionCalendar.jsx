@@ -28,9 +28,9 @@ export default function SessionCalendar() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="dateCalendarSpacer"></div>
+      <div className="h-32"></div>
       <DateCalendar
-        className="calendar"
+        className="scale-150"
         views={["day"]}
         shouldDisableDate={(date) => {
           return (
@@ -60,7 +60,7 @@ export default function SessionCalendar() {
           },
         }}
       />
-      <div className="dateCalendarSpacer"></div>
+      <div className="h-32"></div>
     </LocalizationProvider>
   )
 }

@@ -1,27 +1,12 @@
-.page {
-  background-color: rgb(238, 238, 238);
-  display: flex;
-  flex-direction: column;
-}
 
-.accordionBody {
-  background-color: rgb(247, 247, 247);
-}
-
-.pageTitle {
-  font-size: xxx-large;
-  align-self: center;
-}
-
-img {
-  height: 25px;
-}
-
+/* 
 .calendar {
   border: black solid 1px;
   border-radius: 5%;
   scale: 1.5;
 }
+
+
 
 .dateCalendarSpacer {
   height: 120px;
@@ -35,4 +20,4 @@ img {
   .dateCalendarSpacer {
     height: 60px;
   }
-}
+} */

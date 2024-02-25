@@ -1,3 +1,11 @@
 @tailwind base;
+
+/* @layer base {
+  html {
+    @apply text-green-200;
+  } 
+} */
+
 @tailwind components;
 @tailwind utilities;
+

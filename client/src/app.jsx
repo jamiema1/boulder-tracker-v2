@@ -20,17 +20,20 @@ const queryClient = new QueryClient({
 
 export default function App() {
   return (
-    <Auth0Provider
-      domain={DOMAIN}
-      clientId={CLIENT_ID}
-      authorizationParams={{
-        redirect_uri: ROOT_NAME,
-      }}
-    >
-      <QueryClientProvider client={queryClient}>
-        <NavBar />
-        <PageRouter />
-      </QueryClientProvider>
-    </Auth0Provider>
+    <div className="text-customDark">
+      <Auth0Provider
+        domain={DOMAIN}
+        clientId={CLIENT_ID}
+        authorizationParams={{
+          redirect_uri: ROOT_NAME,
+        }}
+      >
+        <QueryClientProvider client={queryClient}>
+          <NavBar />
+          <PageRouter />
+        </QueryClientProvider>
+      </Auth0Provider>
+
+    </div>
   )
 }
