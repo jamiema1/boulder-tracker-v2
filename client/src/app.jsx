@@ -6,7 +6,6 @@ import NavBar from "modules/common/components/navBar/navBar"
 import PageRouter from "modules/common/components/pageRouter"
 import "app.css"
 import {QueryClient, QueryClientProvider} from "react-query"
-import "app.css"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,7 +19,7 @@ const queryClient = new QueryClient({
 
 export default function App() {
   return (
-    <div className="text-customDark">
+    <div className="text-customDark font-montserrat">
       <Auth0Provider
         domain={DOMAIN}
         clientId={CLIENT_ID}

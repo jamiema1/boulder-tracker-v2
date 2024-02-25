@@ -1,17 +1,20 @@
 import React from "react"
 
+import SessionCalendar from "modules/pages/sessionPage/components/sessionCalendar"
+import SessionInfo from "modules/pages/sessionPage/components/sessionInfo"
 import SessionList from "modules/pages/sessionPage/sessionList/sessionList"
-import SessionCalendar from "modules/pages/sessionPage/sessionCalendar"
 
 export default function SessionPage() {
   return (
     <div className="flex">
       <div className="flex-grow flex flex-col">
         <SessionCalendar />
-        <div>Recent Sessions</div>
+        <div>
+          <SessionList />
+        </div>
       </div>
-      <div className="flex-grow-[5] bg-customSecondary">
-        <SessionList />
+      <div className="flex-grow-[5]">
+        <SessionInfo />
       </div>
     </div>
   )

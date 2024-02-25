@@ -28,14 +28,14 @@ export default function SessionCalendar() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="h-32"></div>
+      <div className="h-20"></div>
       <DateCalendar
-        className="scale-150"
+        className="scale-125 border-1 border-customDark rounded-3xl"
         views={["day"]}
         shouldDisableDate={(date) => {
           return (
-            new Date().toISOString().split("T")[0] <=
-            new Date(date).toISOString().split("T")[0]
+            new Date(date).toISOString().split("T")[0] >
+            new Date().toISOString().split("T")[0]
           )
         }}
         slots={{
@@ -60,7 +60,7 @@ export default function SessionCalendar() {
           },
         }}
       />
-      <div className="h-32"></div>
+      <div className="h-20"></div>
     </LocalizationProvider>
   )
 }

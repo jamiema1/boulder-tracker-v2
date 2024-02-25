@@ -12,7 +12,7 @@ function NavBar() {
      bg-customPrimary">
       <div className="flex flex-grow justify-start items-center">
         <img className="w-8 h-8 mr-4" src={logo}></img>
-        <div>Boulder Tracker</div>
+        <div className="font-bold text-4xl">Boulder Tracker</div>
       </div>
       <div className="flex flex-grow justify-around">
         <Link title="Home" path="#/"/>
@@ -21,7 +21,7 @@ function NavBar() {
         <Link title="Dashboard" path="#/dashboard"/>
       </div>
       <div className="flex flex-grow justify-end items-center">
-        <div>My Profile</div>
+        <div className="font-medium text-xl">My Profile</div>
         <img className="w-8 h-8 ml-4" src={profileLogo}></img>
       </div>
     </div>

@@ -17,7 +17,7 @@ import {
 
 import {getTimeDifferenceString} from "modules/common/helpers"
 
-export default function SessionInfo({session}) {
+export default function SessionStats({session}) {
   /*
    * React Query Hooks & APIs
    */

@@ -1,18 +1,6 @@
 
-/* 
-.calendar {
-  border: black solid 1px;
-  border-radius: 5%;
-  scale: 1.5;
-}
 
-
-
-.dateCalendarSpacer {
-  height: 120px;
-}
-
-@media (max-width: 800px) {
+/* @media (max-width: 800px) {
   .calendar {
     scale: 1;
   }
@@ -20,4 +8,4 @@
   .dateCalendarSpacer {
     height: 60px;
   }
-} */
+}  */

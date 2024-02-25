@@ -14,8 +14,8 @@ import {
 import {convertToEditDateTime} from "modules/common/helpers"
 import EditingButtonStack from "modules/common/components/buttons/editingButtonStack"
 
-import ClimbBoulderIdInput from "modules/pages/sessionPage/climbList/components/inputs/climbBoulderIdInput"
-import ClimbLocationIdInput from "modules/pages/sessionPage/climbList/components/inputs/climbLocationIdInput"
+import ClimbBoulderIdInput from "modules/pages/sessionPage/components/climbsList/components/inputs/climbBoulderIdInput"
+import ClimbLocationIdInput from "modules/pages/sessionPage/components/climbsList/components/inputs/climbLocationIdInput"
 import DateTimeInput from "modules/common/components/inputs/dateTimeInput"
 import NumberInput from "modules/common/components/inputs/numberInput"
 
