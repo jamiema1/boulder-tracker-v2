@@ -1,19 +1,14 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 
 import {handleError, sessionEndpoint} from 'modules/api/endpoints'
 import axios from 'modules/api/axios'
 import {useQuery} from 'react-query'
 
-import AddButtonModal from 'modules/common/components/buttons/addButtonModal'
-import SessionAddForm from '../sessionList/components/sessionAddForm'
-
 import SessionStats from "modules/pages/sessionPage/sessionList/components/sessionStats"
 import SessionView from 'modules/pages/sessionPage/components/sessionView'
 
-export default function SessionInfo() {
+export default function SessionInfo({session, setSession}) {
 
-  const [session, setSession] = useState()
-  
   const {
     isLoading: isLoadingSession,
     isError: isErrorSession,
@@ -22,9 +17,6 @@ export default function SessionInfo() {
   } = useQuery(sessionEndpoint, () => axios.get(sessionEndpoint), {
     onError: (error) => handleError(error),
   })
-
-  
-
 
   useEffect(() => {
     if (!isLoadingSession) {
@@ -36,7 +28,7 @@ export default function SessionInfo() {
             ? 1
             : -1
         )
-      setSession(filteredSessionData[1])
+      setSession(filteredSessionData[0])
     }
   }, [isLoadingSession])
   
@@ -61,10 +53,6 @@ export default function SessionInfo() {
       <div className='flex justify-between'>
         <h1>Current Session</h1>  
         
-        <AddButtonModal
-          title={"Add Session"}
-          form={<SessionAddForm></SessionAddForm>}
-        ></AddButtonModal>
         <div>End Session</div>
       </div>
       <div className='flex'>

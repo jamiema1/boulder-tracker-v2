@@ -105,9 +105,9 @@ export default function SessionStats({session}) {
             <div>{new Date(session.sessionStartTime).toLocaleDateString()}</div>
             <div>
               {
-                allGymData.data.data.find((gym) => {
-                  return parseInt(gym.id) === parseInt(session.gymId)
-                })?.city
+                allGymData.data.data.find((gym) => 
+                  parseInt(gym.id) === parseInt(session.gymId)
+                )?.city
               }
             </div>
             <div>
