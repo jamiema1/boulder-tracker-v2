@@ -6,7 +6,6 @@
 h1 {
   font-weight: 600;
   font-size: x-large;
-  margin: 15px
 }
 
 h2 {
@@ -14,9 +13,6 @@ h2 {
   font-size: x-large;
   margin: 10px
 }
-
-
-
 
 /* Define scrollbar width and color */
 :root {

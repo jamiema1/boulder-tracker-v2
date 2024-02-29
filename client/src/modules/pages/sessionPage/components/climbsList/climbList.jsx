@@ -3,11 +3,6 @@ import React from "react"
 import {useQuery} from "react-query"
 // import {useMutation, useQuery, useQueryClient} from "react-query"
 
-
-import Accordion from "react-bootstrap/Accordion"
-import Container from "react-bootstrap/esm/Container"
-import Row from "react-bootstrap/Row"
-
 import axios from "modules/api/axios"
 import {climbEndpoint, handleError} from "modules/api/endpoints"
 
@@ -73,42 +68,38 @@ export default function ClimbList({session}) {
     .reverse()
 
   return (
-    <Container>
-      <Row>
-        <Accordion defaultActiveKey={0}>
-          {filteredClimbData.map((climb) => {
-            return (
-              <ClimbInfo key={climb.id} climb={climb}></ClimbInfo>
-              // <Accordion.Item
-              //   eventKey={climb.id}
-              //   key={climb.id}
-              //   className="mb-3"
-              // >
-              //   <Accordion.Header>
-              //     <ClimbInfo climb={climb}></ClimbInfo>
-              //   </Accordion.Header>
-              //   <Accordion.Body>
-              //     <Stack direction="horizontal" gap={3}>
-              //       <EditButtonModal
-              //         title={"Edit Climb"}
-              //         form={
-              //           <ClimbEditForm
-              //             climb={climb}
-              //             session={session}
-              //           ></ClimbEditForm>
-              //         }
-              //       ></EditButtonModal>
-              //       <DeleteButtonModal
-              //         confirmAction={() => deleteClimb.mutate(climb.id)}
-              //         title={"Delete Climb"}
-              //       ></DeleteButtonModal>
-              //     </Stack>
-              //   </Accordion.Body>
-              // </Accordion.Item>
-            )
-          })}
-        </Accordion>
-      </Row>
-    </Container>
+    <div>
+      {filteredClimbData.map((climb) => {
+        return (
+          <ClimbInfo key={climb.id} climb={climb}></ClimbInfo>
+        // <Accordion.Item
+        //   eventKey={climb.id}
+        //   key={climb.id}
+        //   className="mb-3"
+        // >
+        //   <Accordion.Header>
+        //     <ClimbInfo climb={climb}></ClimbInfo>
+        //   </Accordion.Header>
+        //   <Accordion.Body>
+        //     <Stack direction="horizontal" gap={3}>
+        //       <EditButtonModal
+        //         title={"Edit Climb"}
+        //         form={
+        //           <ClimbEditForm
+        //             climb={climb}
+        //             session={session}
+        //           ></ClimbEditForm>
+        //         }
+        //       ></EditButtonModal>
+        //       <DeleteButtonModal
+        //         confirmAction={() => deleteClimb.mutate(climb.id)}
+        //         title={"Delete Climb"}
+        //       ></DeleteButtonModal>
+        //     </Stack>
+        //   </Accordion.Body>
+        // </Accordion.Item>
+        )
+      })}
+    </div>
   )
 }

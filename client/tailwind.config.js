@@ -11,7 +11,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        customPrimary: "#8ECAE6",
+        customLight: "#FCFCFC",
+        customGrayDark: "#EDEDE9",
+        customPrimary: "#C6EDFF",
         customSecondary: "#219EBC",
         customDark: "#023047",
         customSuccess: "#02C037",

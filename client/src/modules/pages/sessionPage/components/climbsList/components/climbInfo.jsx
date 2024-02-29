@@ -25,8 +25,8 @@ export default function ClimbInfo({climb}) {
   })
 
   return (
-    <div className="flex justify-between items-center 
-    rounded-2xl my-3 bg-customPrimary">
+    <div className="flex justify-between items-center h-16
+    rounded-2xl my-3 bg-customGrayDark mr-2">
       <div className="flex">
         <div className="w-8 rounded-l-2xl" 
           style={{backgroundColor: boulder.colour}} />
@@ -44,23 +44,5 @@ export default function ClimbInfo({climb}) {
         }
       </div>
     </div>
-  //   <Container>
-  //     <Row>
-  //       <Col xs={6} md={10}>
-  //         <Stack>
-  //           <div className="text">
-  //             {climb.sends} / {climb.attempts}
-  //           </div>
-  //           <div className="text">{boulder.description}</div>
-  //         </Stack>
-  //         {/* <div className="text">
-  //   {convertToViewDateTime(
-  //     climb.climbStartTime,
-  //     climb.climbEndTime
-  //   )}
-  // </div> */}
-  //       </Col>
-  //     </Row>
-  //   </Container>
   )
 }
