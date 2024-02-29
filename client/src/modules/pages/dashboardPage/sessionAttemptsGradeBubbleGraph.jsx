@@ -53,8 +53,6 @@ export default function SessionAttemptsGradeBubbleGraph() {
     return <div>Loading...</div>
   }
 
-  console.log(allBoulderData)
-
   const options = {
     scales: {
       y: {

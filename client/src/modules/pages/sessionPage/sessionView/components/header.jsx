@@ -33,7 +33,7 @@ export default function Header({session}) {
 
   return (
     <div 
-      style={{width: "calc(100vw - 280px)"}}
+      style={{width: "calc(100vw - 256px)"}}
       className="flex justify-between items-center h-[8vh] 
       border-b border-solid border-customDark bg-customLight"
     >
