@@ -1,9 +1,9 @@
 import React from "react"
 
 import {
+  boulderEndpoint,
   climbEndpoint,
   handleError,
-  sessionEndpoint,
 } from "modules/api/endpoints"
 import axios from "modules/api/axios"
 import {useQuery} from "react-query"
@@ -19,7 +19,7 @@ import {
   Legend,
 } from "chart.js"
 import {Line} from "react-chartjs-2"
-import {formatStringDate, getTimeDifferenceString} from "modules/common/helpers"
+import {getTimeDifferenceString} from "modules/common/helpers"
 
 ChartJS.register(
   CategoryScale,
@@ -32,12 +32,10 @@ ChartJS.register(
 )
 
 export default function Timeline({session}) {
-  
-  console.log(session)
 
-  const {isLoading: isLoadingSession, data: allSessionData} = useQuery(
-    sessionEndpoint,
-    () => axios.get(sessionEndpoint),
+  const {isLoading: isLoadingBoulder, data: allBoulderData} = useQuery(
+    boulderEndpoint,
+    () => axios.get(boulderEndpoint),
     {
       onError: (error) => handleError(error),
     }
@@ -55,72 +53,95 @@ export default function Timeline({session}) {
    * Return value
    */
 
-  if (isLoadingSession || isLoadingClimb) {
+  if (isLoadingBoulder || isLoadingClimb) {
     return <div>Loading...</div>
   }
 
-  const options = {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
+
+  const dataMap = new Map()
+
+  function getMinutesSinceStart(startTime, endTime) {
+    const duration = endTime - startTime
+    const minutes = Math.floor(duration / (1000 * 60))
+    return minutes
   }
-
-  const sortedSessionData = [...allSessionData.data.data].sort(
-    (session1, session2) =>
-      new Date(session1.sessionStartTime) < new Date(session2.sessionStartTime)
-        ? -1
-        : 1
+  
+  const filteredClimbs = [...allClimbData.data.data].filter(
+    (climb) => climb.sessionId === session.id
   )
 
-  const labels = sortedSessionData.map((session) =>
-    formatStringDate(new Date(session.sessionStartTime))
-  )
 
-  const climbsDatasetData = sortedSessionData.map((session) =>
-    allClimbData.data.data.reduce((sum, climb) => {
-      return climb.sessionId === session.id ? sum + 1 : sum
-    }, 0)
-  )
+  filteredClimbs.forEach((climb) => {
+    const boulder = allBoulderData.data.data.find(
+      (boulder) => boulder.id === climb.boulderId
+    )
+    
+    const minutes = getMinutesSinceStart(
+      new Date(session.sessionStartTime), 
+      new Date(climb.climbStartTime)
+    )
+    dataMap.set(minutes, boulder.rating)
+  })
 
-  const attemptsDatasetData = sortedSessionData.map((session) =>
-    allClimbData.data.data.reduce((sum, climb) => {
-      return climb.sessionId === session.id ? sum + climb.attempts : sum
-    }, 0)
-  )
+  // const labels = times()
 
-  const sendsDatasetData = sortedSessionData.map((session) =>
-    allClimbData.data.data.reduce((sum, climb) => {
-      return climb.sessionId === session.id ? sum + climb.sends : sum
-    }, 0)
-  )
+  
+  const sortedDataMap = new Map([...dataMap.entries()].sort((a, b) => {
+    // Compare keys (a[0] and b[0])
+    if (a[0] < b[0]) {
+      return -1
+    }
+    if (a[0] > b[0]) {
+      return 1
+    }
+    return 0
+  }))
+
+  const labels = [...sortedDataMap.keys()]
+
+
+  const climbData = [...sortedDataMap.values()]
+
 
   const data = {
     labels: labels,
     datasets: [
       {
         label: "Climbs",
-        data: climbsDatasetData,
+        data: climbData,
         fill: false,
         borderColor: "rgb(75, 192, 192)",
         tension: 0.1,
-      },
-      {
-        label: "Attempts",
-        data: attemptsDatasetData,
-        fill: false,
-        borderColor: "#FF7474",
-        tension: 0.1,
-      },
-      {
-        label: "Sends",
-        data: sendsDatasetData,
-        fill: false,
-        borderColor: "#66E000",
-        tension: 0.1,
-      },
+      }
     ],
+  }
+
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: "Grade"
+        },
+        ticks: {
+          stepSize: 1 // Set the step size for the X-axis
+        },
+        beginAtZero: true,
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Time Since Start"
+        },
+        type: 'linear',
+        ticks: {
+          stepSize: 10
+        }
+      },
+    },
   }
 
   return (
@@ -132,7 +153,9 @@ export default function Timeline({session}) {
           session.sessionEndTime)}
         </h2>
       </div>
-      <Line options={options} data={data} />
+      <div className="w-full h-full">
+        <Line options={options} data={data} />
+      </div>
     </div>
   )
 }

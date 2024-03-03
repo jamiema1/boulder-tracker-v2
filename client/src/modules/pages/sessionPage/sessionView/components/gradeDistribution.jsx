@@ -60,7 +60,7 @@ export default function GradeDistribution({session}) {
     (climb) => climb.sessionId === session.id
   )
 
-  filteredClimbs.map((climb) => {
+  filteredClimbs.forEach((climb) => {
     const boulder = allBoulderData.data.data.find(
       (boulder) => boulder.id === climb.boulderId
     )
@@ -118,6 +118,8 @@ export default function GradeDistribution({session}) {
   }
 
   const options = {
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
       yAxes: [
         {
@@ -127,9 +129,17 @@ export default function GradeDistribution({session}) {
         },
       ],
       x: {
+        title: {
+          display: true,
+          text: "Grade"
+        },
         stacked: true
       },
       y: {
+        title: {
+          display: true,
+          text: "Count"
+        },
         stacked: true
       }
     },
@@ -138,19 +148,21 @@ export default function GradeDistribution({session}) {
   return (
     <div className='content flex-grow flex flex-col justify-between'>
       <h1>Grade Distribution</h1>
-      <Bar
-        data={{
-          labels: data.labels,
-          datasets: data.datasets.map((dataset) => ({
-            label: dataset.label,
-            data: dataset.data,
-            backgroundColor: dataset.backgroundColour,
-            borderColor: dataset.borderColour,
-            borderWidth: 1,
-          }))
-        }}
-        options={options}
-      />
+      <div className='w-full h-full'>
+        <Bar
+          data={{
+            labels: data.labels,
+            datasets: data.datasets.map((dataset) => ({
+              label: dataset.label,
+              data: dataset.data,
+              backgroundColor: dataset.backgroundColour,
+              borderColor: dataset.borderColour,
+              borderWidth: 1,
+            }))
+          }}
+          options={options}
+        />
+      </div>
     </div>
   )
 }
