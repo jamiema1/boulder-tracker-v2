@@ -9,11 +9,14 @@ import {
 } from "modules/api/endpoints"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons"
+import {useNavigate} from "react-router-dom"
 
 export default function Header({session}) {
   /*
    * React Query Hooks & APIs
    */
+
+  const navigate = useNavigate()
 
   const {isLoading: isLoadingGym, data: allGymData} = useQuery(
     gymEndpoint,
@@ -22,6 +25,14 @@ export default function Header({session}) {
       onError: (error) => handleError(error),
     }
   )
+  
+  /*
+   * Helper Functions
+   */
+
+  function navigateSession() {
+    navigate("/sessions")
+  }
 
   /*
    * Return Value
@@ -38,7 +49,10 @@ export default function Header({session}) {
       border-b border-solid border-customDark bg-customLight"
     >
       <div className="flex items-center ml-[30px]">
-        <FontAwesomeIcon icon={faChevronLeft} size={"lg"}/>
+        <FontAwesomeIcon
+          icon={faChevronLeft}
+          size={"lg"}
+          onClick={() => navigateSession()}/>
         <div className="font-medium text-4xl mx-3">
           Today's Session
         </div>

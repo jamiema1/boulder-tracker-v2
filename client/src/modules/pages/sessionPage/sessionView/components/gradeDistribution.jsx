@@ -136,7 +136,7 @@ export default function GradeDistribution({session}) {
   }
 
   return (
-    <div className='content flex flex-col justify-between'>
+    <div className='content flex-grow flex flex-col justify-between'>
       <h1>Grade Distribution</h1>
       <Bar
         data={{
@@ -147,7 +147,6 @@ export default function GradeDistribution({session}) {
             backgroundColor: dataset.backgroundColour,
             borderColor: dataset.borderColour,
             borderWidth: 1,
-
           }))
         }}
         options={options}

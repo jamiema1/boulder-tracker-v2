@@ -16,7 +16,7 @@ import {handleError, sessionEndpoint} from "modules/api/endpoints"
 // import ClimbList from "modules/pages/sessionPage/climbList/climbList"
 // import SessionEditForm 
 // from "modules/pages/sessionPage/sessionList/components/sessionEditForm"
-import SessionRecents from "modules/pages/sessionPage/sessionList/sessionRecents"
+import SessionInfo from "modules/pages/sessionPage/sessionList/sessionInfo"
 // import {nullDateTime} from "modules/common/constants"
 
 export default function SessionList() {
@@ -111,12 +111,11 @@ export default function SessionList() {
   }
 
   return (
-    <div className='flex flex-col m-8 rounded-3xl bg-customPrimary'>
-      <h1>Recent Sessions</h1>
-      <div className="flex flex-col h-[28vh] overflow-y-auto">
-        {filteredSessionData.map((session) => {
-          return (
-            <SessionRecents key={session.id} session={session} />
+
+    <div>
+      {filteredSessionData.map((session) => {
+        return (
+          <SessionInfo key={session.id} session={session} />
           /* <Accordion.Body className="px-2">
                 <Stack direction="horizontal" gap={3}>
                   {session.sessionEndTime === nullDateTime && (
@@ -139,9 +138,8 @@ export default function SessionList() {
                 </Stack>
                 <ClimbList session={session}></ClimbList>
               </Accordion.Body> */
-          )
-        })}
-      </div>
+        )
+      })}
     </div>
   )
 }

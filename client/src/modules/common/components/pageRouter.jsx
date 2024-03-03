@@ -11,6 +11,7 @@ import SessionPage from "modules/pages/sessionPage/sessionPage"
 // import DashboardPage from "modules/pages/dashboardPage/dashboardPage"
 
 import NavBar from "./navBar/navBar"
+import SessionView from "modules/pages/sessionPage/sessionView/sessionView"
 
 export default function PageRouter() {
   const {isAuthenticated, loginWithRedirect} = useAuth0()
@@ -40,6 +41,9 @@ export default function PageRouter() {
           )}
           {isAuthenticated && (
             <Route exact path="/sessions" element={<SessionPage />}></Route>
+          )}
+          {isAuthenticated && (
+            <Route path="/sessions/*" element={<SessionView />}></Route>
           )}
           {/* {isAuthenticated && (
           <Route exact path="/dashboard" element={<DashboardPage />}></Route>
