@@ -4,6 +4,8 @@ import SessionList from "./sessionList/sessionList"
 import SessionAddForm from "./sessionList/components/sessionAddForm"
 
 export default function SessionHistory() {
+  
+
   return (
     <div>
       <div className="flex justify-between">

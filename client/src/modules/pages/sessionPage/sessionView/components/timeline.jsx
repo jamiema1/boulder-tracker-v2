@@ -129,7 +129,6 @@ export default function Timeline({session}) {
         ticks: {
           stepSize: 1 // Set the step size for the X-axis
         },
-        beginAtZero: true,
       },
       x: {
         title: {

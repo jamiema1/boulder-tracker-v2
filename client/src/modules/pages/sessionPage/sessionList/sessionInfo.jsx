@@ -43,8 +43,9 @@ export default function SessionInfo({session}) {
   }
 
   return (
-    <div className="flex justify-between items-center h-16
-    rounded-2xl my-3 bg-customGrayDark mr-2">
+    <div className="flex justify-between items-center h-16 my-3 mr-2 
+     rounded-2xl drop-shadow-md bg-customGrayDark scale-90 hover:scale-100
+     transition duration-700 ease-out">
       <div className="flex-grow flex justify-between mx-4" 
         onClick={() => navigateSession()}>
         <div>{new Date(session.sessionStartTime).toLocaleDateString()}</div>

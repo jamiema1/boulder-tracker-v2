@@ -49,10 +49,16 @@ export default function Header({session}) {
       border-b border-solid border-customDark bg-customLight"
     >
       <div className="flex items-center ml-[30px]">
-        <FontAwesomeIcon
-          icon={faChevronLeft}
-          size={"lg"}
-          onClick={() => navigateSession()}/>
+        <div 
+          className="flex items-center justify-center w-10 h-10
+          transition duration-700 ease-in-out
+          rounded-full hover:bg-customGrayDark"
+          onClick={() => navigateSession()}>
+          <FontAwesomeIcon
+            icon={faChevronLeft}
+            size={"lg"}
+          />
+        </div>
         <div className="font-medium text-4xl mx-3">
           Today's Session
         </div>

@@ -25,8 +25,9 @@ export default function ClimbInfo({climb}) {
   })
 
   return (
-    <div className="flex justify-between items-center h-16
-    rounded-2xl my-3 bg-customGrayDark mr-2">
+    <div className="flex justify-between items-center h-16 mr-2 my-3
+     rounded-2xl bg-customGrayDark drop-shadow scale-90 hover:scale-100
+     transition duration-700 ease-out">
       <div className="flex">
         <div className="w-8 rounded-l-2xl" 
           style={{backgroundColor: boulder.colour}} />
