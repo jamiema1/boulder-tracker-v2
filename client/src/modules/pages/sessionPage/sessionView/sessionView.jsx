@@ -67,7 +67,7 @@ export default function SessionView() {
         <div className='flex-grow-[7] grid grid-rows-2'>
           <div className='grid grid-cols-2'>
             <GradeDistribution session={session} />
-            <div className='flex-grow flex flex-col'>
+            <div className='flex flex-col'>
               <Cards session={session} />
               <Timeline session={session}/>
             </div>
@@ -76,9 +76,7 @@ export default function SessionView() {
             <h1>Map</h1>
           </div>
         </div>
-        <div className='content flex-grow-[3]'>
-          <ClimbHistory session={session}/>
-        </div>
+        <ClimbHistory session={session}/>
       </div>
     </div>
   )

@@ -1,34 +1,26 @@
-import AddButtonModal from 'modules/common/components/buttons/addButtonModal'
-import React, {useState} from 'react'
+import React from 'react'
 import ClimbList from '../../components/climbsList/climbList'
 import ClimbAddForm from '../../components/climbsList/components/climbAddForm'
-import Modal from './modal'
+import {useModal} from '../../../../common/components/modal/modalContext'
 
 export default function ClimbHistory({session}) {
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const {isModalOpen, openModal} = useModal()
 
-  const handleOpenModal = () => {
-    console.log("click")
-    setIsModalOpen(true)
-  }
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-  }
+  console.log(isModalOpen)
 
   return (
-    <div>
+    <div className='content flex-grow-[3] flex flex-col'>
       <div className="flex justify-between">
         <h1>Climb History</h1>
-        <button onClick={handleOpenModal}>Open Modal</button>
-        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-          <div>Test</div>
-        </Modal>
-        <AddButtonModal
-          title={"Add Climb"}
-          form={<ClimbAddForm session={session}></ClimbAddForm>}
-        ></AddButtonModal>
+        <button 
+          className='p-4'
+          onClick={
+            () => openModal(<ClimbAddForm session={session} />)
+          }
+        >
+          Add Climb
+        </button>
       </div>
       <div className="flex flex-col h-[78vh] overflow-y-auto">
         <ClimbList session={session}></ClimbList>

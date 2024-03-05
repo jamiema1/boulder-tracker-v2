@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import PageRouter from "modules/common/components/pageRouter"
 import "app.css"
 import {QueryClient, QueryClientProvider} from "react-query"
+import {ModalProvider} from "modules/common/components/modal/modalContext"
+import Modal from "modules/common/components/modal/modal"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,7 +29,10 @@ export default function App() {
         }}
       >
         <QueryClientProvider client={queryClient}>
-          <PageRouter />
+          <ModalProvider>
+            <Modal />
+            <PageRouter />
+          </ModalProvider>
         </QueryClientProvider>
       </Auth0Provider>
 

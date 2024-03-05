@@ -146,7 +146,7 @@ export default function GradeDistribution({session}) {
   }
 
   return (
-    <div className='content flex-grow flex flex-col justify-between'>
+    <div className='content flex flex-col justify-between'>
       <h1>Grade Distribution</h1>
       <div className='w-full h-full'>
         <Bar

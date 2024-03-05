@@ -83,22 +83,15 @@ export default function Timeline({session}) {
     dataMap.set(minutes, boulder.rating)
   })
 
-  // const labels = times()
 
   
   const sortedDataMap = new Map([...dataMap.entries()].sort((a, b) => {
-    // Compare keys (a[0] and b[0])
-    if (a[0] < b[0]) {
-      return -1
-    }
-    if (a[0] > b[0]) {
-      return 1
-    }
+    if (a[0] < b[0]) return -1
+    if (a[0] > b[0]) return 1
     return 0
   }))
 
   const labels = [...sortedDataMap.keys()]
-
 
   const climbData = [...sortedDataMap.values()]
 
@@ -127,7 +120,7 @@ export default function Timeline({session}) {
           text: "Grade"
         },
         ticks: {
-          stepSize: 1 // Set the step size for the X-axis
+          stepSize: 1
         },
       },
       x: {
@@ -147,7 +140,7 @@ export default function Timeline({session}) {
     
     <div className='content flex-grow flex flex-col justify-between'>
       <div className="flex justify-between">
-        <h1>Grade Distribution</h1>
+        <h1>Timeline</h1>
         <h2>Duration: {getTimeDifferenceString(session.sessionStartTime, 
           session.sessionEndTime)}
         </h2>
