@@ -52,7 +52,7 @@ export default function Header({session}) {
         <div 
           className="flex items-center justify-center w-10 h-10
           transition duration-700 ease-in-out
-          rounded-full hover:bg-customGrayDark"
+          rounded-full hover:bg-customGrayDark hover:cursor-pointer"
           onClick={() => navigateSession()}>
           <FontAwesomeIcon
             icon={faChevronLeft}
@@ -60,7 +60,8 @@ export default function Header({session}) {
           />
         </div>
         <div className="font-medium text-4xl mx-3">
-          Today's Session
+          Session 
+          {/* TODO: jma - text should vary based on how long ago session was */}
         </div>
         <div className="text-2xl mx-2">
           {new Date(session.sessionStartTime).toLocaleDateString()}
@@ -74,8 +75,10 @@ export default function Header({session}) {
         }
 
       </div>
+      <div></div>
+      {/* TODO: jma - re-implement later
       <div>End Session
-      </div>
+      </div> */}
     </div>
   )
 }

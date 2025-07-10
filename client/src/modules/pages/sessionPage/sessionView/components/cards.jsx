@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React from "react"
 
 import {useQuery} from "react-query"
 
@@ -15,9 +15,9 @@ export default function Cards({session}) {
    * React Query Hooks & APIs
    */
 
-  const [sends, setSends] = useState(0)
-  const [attempts, setAttempts] = useState(0)
-  const [climbs, setClimbs] = useState(0)
+  // const [sends, setSends] = useState(0)
+  // const [attempts, setAttempts] = useState(0)
+  // const [climbs, setClimbs] = useState(0)
 
   const {isLoading: isLoadingClimb, data: allClimbData} = useQuery(
     climbEndpoint,
@@ -27,28 +27,30 @@ export default function Cards({session}) {
     }
   )
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    const filteredClimbData = isLoadingClimb ? [] : 
-      [...allClimbData.data.data].filter((climb) => {
-        return parseInt(climb.sessionId) === parseInt(session.id)
-      })
-
-    let climbs = 0, 
-      attempts = 0,
-      sends = 0
-
-    filteredClimbData.forEach((climb) => {
-      climbs += 1
-      attempts += climb.attempts
-      sends += climb.sends
+  //   console.log("compute")
+  const filteredClimbData = isLoadingClimb ? [] : 
+    [...allClimbData.data.data].filter((climb) => {
+      return parseInt(climb.sessionId) === parseInt(session.id)
     })
 
-    setAttempts(attempts)
-    setClimbs(climbs)
-    setSends(sends)
-  }, [isLoadingClimb, session])
+  let climbs = 0, 
+    attempts = 0,
+    sends = 0
 
+  filteredClimbData.forEach((climb) => {
+    climbs += 1
+    attempts += climb.attempts
+    sends += climb.sends
+  })
+
+  // setAttempts(attempts)
+  // setClimbs(climbs)
+  // setSends(sends)
+  // }, [isLoadingClimb, session])
+  // TODO: jma - removing useEffect and useState to ensure cards update
+  //  when climbs within a session change
 
   /*
    * Return Value

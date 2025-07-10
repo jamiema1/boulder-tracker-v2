@@ -42,7 +42,7 @@ export default function SessionView() {
       setSession(newSession)
     }
 
-  }, isLoadingSession)
+  }, [isLoadingSession])
 
   /*
    * Return value
