@@ -2,17 +2,16 @@ import React, {useRef} from "react"
 
 import {useMutation, useQuery, useQueryClient} from "react-query"
 
-import Form from "react-bootstrap/Form"
-
 import axios from "modules/api/axios"
 import {handleError, sessionEndpoint} from "modules/api/endpoints"
 
 import {convertToEditDateTime, currentDateTime} from "modules/common/helpers"
-import AddingButtonStack from "modules/common/components/buttons/addingButtonStack"
 
 import SessionGymIdInput from "modules/pages/sessionPage/sessionList/components/inputs/sessionGymIdInput"
 import SessionUserIdInput from "modules/pages/sessionPage/sessionList/components/inputs/sessionUserIdInput"
 import DateTimeInput from "modules/common/components/inputs/dateTimeInput"
+import Button from "modules/common/components/buttons/button"
+import {nullDateTime} from "modules/common/constants"
 
 export default function SessionAddForm({handleClose}) {
   /*
@@ -66,37 +65,51 @@ export default function SessionAddForm({handleClose}) {
   }
 
   return (
-    <Form>
-      <SessionGymIdInput ref={gymIdRef}></SessionGymIdInput>
-      <SessionUserIdInput defaultValue={1} ref={userIdRef}></SessionUserIdInput>
-      <DateTimeInput
-        defaultValue={convertToEditDateTime(currentDateTime())}
-        ref={sessionStartTimeRef}
-        controlId="StartTimeInput"
-        label="Start Time"
-      />
-      <DateTimeInput
-        ref={sessionEndTimeRef}
-        controlId="EndTimeInput"
-        label="End Time"
-      />
-      <AddingButtonStack
-        confirm={() => {
-          handleClose()
-          addSession.mutate({
-            gymId: parseInt(gymIdRef.current.value),
-            userId: parseInt(userIdRef.current.value),
-            sessionStartTime: sessionStartTimeRef.current.value,
-            sessionEndTime:
+    <div>
+      <h2 className="ml-2 mb-4">
+        Add Session
+      </h2>
+      <form className="grid grid-cols-2 gap-4">
+        <SessionGymIdInput ref={gymIdRef}></SessionGymIdInput>
+        <SessionUserIdInput
+          defaultValue={1}
+          ref={userIdRef}>
+        </SessionUserIdInput>
+        <DateTimeInput
+          defaultValue={convertToEditDateTime(currentDateTime())}
+          ref={sessionStartTimeRef}
+          controlId="StartTimeInput"
+          label="Start Time"
+        />
+        <DateTimeInput
+          ref={sessionEndTimeRef}
+          controlId="EndTimeInput"
+          label="End Time"
+        />
+      </form>
+      <div className="flex justify-end gap-x-2">
+        <Button
+          text={"Add"}
+          isSuccess={true}
+          onClick={() => {
+            handleClose()
+            addSession.mutate({
+              gymId: parseInt(gymIdRef.current.value),
+              userId: parseInt(userIdRef.current.value),
+              sessionStartTime: sessionStartTimeRef.current.value,
+              sessionEndTime:
               sessionEndTimeRef.current.value === ""
-                ? "0000-00-00 00:00:00"
+                ? nullDateTime
                 : sessionEndTimeRef.current.value,
-          })
-        }}
-        cancel={() => {
-          handleClose()
-        }}
-      ></AddingButtonStack>
-    </Form>
+            })
+          }}
+        />
+        <Button
+          text={"Cancel"}
+          isSuccess={false}
+          onClick={handleClose}
+        />
+      </div>
+    </div>
   )
 }

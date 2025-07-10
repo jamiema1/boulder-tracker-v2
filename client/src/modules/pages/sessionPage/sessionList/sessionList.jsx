@@ -1,30 +1,16 @@
 import React from "react"
 
 import {useQuery} from "react-query"
-// import {useMutation, useQuery, useQueryClient} from "react-query"
 
 import axios from "modules/api/axios"
 import {handleError, sessionEndpoint} from "modules/api/endpoints"
 
-// import {currentDateTime} from "modules/common/helpers"
-// import DeleteButtonModal
-//  from "modules/common/components/buttons/deleteButtonModal"
-// import EditButtonModal 
-// from "modules/common/components/buttons/editButtonModal"
-// import EndButtonModal from "modules/common/components/buttons/endButtonModal"
-
-// import ClimbList from "modules/pages/sessionPage/climbList/climbList"
-// import SessionEditForm 
-// from "modules/pages/sessionPage/sessionList/components/sessionEditForm"
 import SessionInfo from "modules/pages/sessionPage/sessionList/sessionInfo"
-// import {nullDateTime} from "modules/common/constants"
 
 export default function SessionList() {
   /*
    * React Query Hooks & APIs
    */
-
-  // const queryClient = useQueryClient()
 
   const {
     isLoading: isLoadingSession,
@@ -34,57 +20,6 @@ export default function SessionList() {
   } = useQuery(sessionEndpoint, () => axios.get(sessionEndpoint), {
     onError: (error) => handleError(error),
   })
-
-  // const editSession = useMutation(
-  //   ({sessionId, newSession}) =>
-  //     axios.put(sessionEndpoint + "/" + sessionId, newSession),
-  //   {
-  //     onSuccess: (data, {sessionId, newSession}) => {
-  //       queryClient.setQueryData(sessionEndpoint, {
-  //         data: {
-  //           data: [...allSessionData.data.data].map((session) => {
-  //             return session.id === sessionId
-  //               ? {id: sessionId, ...newSession}
-  //               : session
-  //           }),
-  //         },
-  //       })
-  //     },
-  //     onError: (error) => handleError(error),
-  //   }
-  // )
-
-  // const deleteSession = useMutation(
-  //   (sessionId) => axios.delete(sessionEndpoint + "/" + sessionId),
-  //   {
-  //     onSuccess: (data, sessionId) => {
-  //       queryClient.setQueryData(sessionEndpoint, {
-  //         data: {
-  //           data: [...allSessionData.data.data].filter((session) => {
-  //             return session.id !== sessionId
-  //           }),
-  //         },
-  //       })
-  //     },
-  //     onError: (error) => handleError(error),
-  //   }
-  // )
-
-  /*
-   * Helper functions
-   */
-
-  // function endSession(session) {
-  //   editSession.mutate({
-  //     sessionId: session.id,
-  //     newSession: {
-  //       gymId: parseInt(session.gymId),
-  //       userId: parseInt(session.userId),
-  //       sessionStartTime: session.sessionStartTime,
-  //       sessionEndTime: currentDateTime(),
-  //     },
-  //   })
-  // }
 
   /*
    * Return value
@@ -113,33 +48,9 @@ export default function SessionList() {
   return (
 
     <div>
-      {filteredSessionData.map((session) => {
-        return (
-          <SessionInfo key={session.id} session={session} />
-          /* <Accordion.Body className="px-2">
-                <Stack direction="horizontal" gap={3}>
-                  {session.sessionEndTime === nullDateTime && (
-                    <EndButtonModal
-                      confirmAction={() => endSession(session)}
-                      title={"End Session"}
-                      description={"Done already?"}
-                    ></EndButtonModal>
-                  )}
-                  <EditButtonModal
-                    title={"Edit Session"}
-                    form={
-                      <SessionEditForm session={session}></SessionEditForm>
-                    }
-                  ></EditButtonModal>
-                  <DeleteButtonModal
-                    confirmAction={() => deleteSession.mutate(session.id)}
-                    title={"Delete Session"}
-                  ></DeleteButtonModal>
-                </Stack>
-                <ClimbList session={session}></ClimbList>
-              </Accordion.Body> */
-        )
-      })}
+      {filteredSessionData.map((session) =>
+        <SessionInfo key={session.id} session={session} />
+      )}
     </div>
   )
 }

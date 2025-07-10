@@ -111,11 +111,12 @@ export function getQuery (res, tableName, query) {
   })
 }
 
-export function addOne (res, tableName, values, stringValues) {
+export function addOne (res, tableName, values, stringValues,
+  nullableValues = []) {
   console.log(new Date().toLocaleTimeString(),
     tableName + ': Add One')
   console.log(values)
-  if (validateValues(res, values, stringValues)) return
+  if (validateValues(res, values, stringValues, nullableValues)) return
 
   const valueArray = []
   let valueNames = '('
@@ -141,11 +142,12 @@ export function addOne (res, tableName, values, stringValues) {
   })
 }
 
-export function updateOne (res, tableName, id, values, stringValues) {
+export function updateOne (res, tableName, id, values, stringValues,
+  nullableValues = []) {
   console.log(new Date().toLocaleTimeString(),
     tableName + ': Update One - ' + id)
   console.log(values)
-  if (validateValues(res, values, stringValues)) return
+  if (validateValues(res, values, stringValues, nullableValues)) return
 
   let query = 'UPDATE ' + tableName + ' SET '
 
@@ -189,10 +191,12 @@ export function deleteOne (res, tableName, id) {
   })
 }
 
-function validateValues (res, values, stringValues) {
+function validateValues (res, values, stringValues, nullableValues) {
   let invalid = false
   values.forEach((value, key) => {
-    if (invalid) return
+    if (invalid) return // return after first fail
+    if (nullableValues.includes(key) && value === null) return
+
     if (stringValues.includes(key) && typeof value !== 'string') {
       invalid = true
       return res.status(400).json(

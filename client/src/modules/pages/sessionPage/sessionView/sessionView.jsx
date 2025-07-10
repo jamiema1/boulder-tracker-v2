@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react'
+import {useQuery} from 'react-query'
+import {useLocation, useNavigate} from 'react-router-dom'
 
 import {handleError, sessionEndpoint} from 'modules/api/endpoints'
 import axios from 'modules/api/axios'
-import {useQuery} from 'react-query'
 
 import ClimbHistory from 'modules/pages/sessionPage/sessionView/components/climbHistory'
-import Header from './components/header'
-import Cards from './components/cards'
-import GradeDistribution from './components/gradeDistribution'
-import {useLocation, useNavigate} from 'react-router-dom'
-import Timeline from './components/timeline'
+import Header from 'modules/pages/sessionPage/sessionView/components/header'
+import Cards from 'modules/pages/sessionPage/sessionView/components/cards'
+import GradeDistribution from 'modules/pages/sessionPage/sessionView/components/gradeDistribution'
+import Timeline from 'modules/pages/sessionPage/sessionView/components/timeline'
 
 export default function SessionView() {
 

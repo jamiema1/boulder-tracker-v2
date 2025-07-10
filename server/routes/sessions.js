@@ -6,6 +6,7 @@ import { getOne, getAll, addOne, updateOne, deleteOne, getQuery }
 dotenv.config()
 
 const stringValues = ['sessionStartTime', 'sessionEndTime']
+const nullableValues = ['sessionEndTime']
 
 function getValuesMap (req) {
   return new Map([
@@ -31,12 +32,13 @@ sessionRouter.get('/query/:query', (req, res) => {
 })
 
 sessionRouter.post('/', (req, res) => {
-  addOne(res, process.env.SESSION_TABLE_NAME, getValuesMap(req), stringValues)
+  addOne(res, process.env.SESSION_TABLE_NAME, getValuesMap(req),
+    stringValues, nullableValues)
 })
 
 sessionRouter.put('/:id', (req, res) => {
   updateOne(res, process.env.SESSION_TABLE_NAME, req.params.id,
-    getValuesMap(req), stringValues)
+    getValuesMap(req), stringValues, nullableValues)
 })
 
 sessionRouter.delete('/:id', (req, res) => {

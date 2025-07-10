@@ -1,5 +1,5 @@
 export const nullDate = "0000-00-00"
-export const nullDateTime = "0000-00-00 00:00:00"
+export const nullDateTime = null //"0000-00-00 00:00:00"
 
 export const RATINGS = new Map([
   ["Unrated", -1],

@@ -8,6 +8,8 @@ dotenv.config()
 const stringValues = ['colour', 'boulderType', 'description',
   'setStartDate', 'setEndDate']
 
+const nullableValues = ['setEndDate']
+
 function getValuesMap (req) {
   return new Map([
     ['locationId', req.body.locationId],
@@ -35,12 +37,13 @@ boulderRouter.get('/query/:query', (req, res) => {
 })
 
 boulderRouter.post('/', (req, res) => {
-  addOne(res, process.env.BOULDER_TABLE_NAME, getValuesMap(req), stringValues)
+  addOne(res, process.env.BOULDER_TABLE_NAME, getValuesMap(req),
+    stringValues, nullableValues)
 })
 
 boulderRouter.put('/:id', (req, res) => {
   updateOne(res, process.env.BOULDER_TABLE_NAME, req.params.id,
-    getValuesMap(req), stringValues)
+    getValuesMap(req), stringValues, nullableValues)
 })
 
 boulderRouter.delete('/:id', (req, res) => {
