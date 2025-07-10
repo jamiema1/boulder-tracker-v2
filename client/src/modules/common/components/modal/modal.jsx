@@ -4,7 +4,7 @@ import {useModal} from './modalContext'
 export default function Modal() {
   const {isModalOpen, closeModal, modalContent} = useModal()
 
-  console.log(isModalOpen)
+  // console.log(isModalOpen)
 
   if (!isModalOpen || !modalContent) return null
 
