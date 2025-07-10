@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src"
+  },
+  "include": ["src", "src/modules/pages/sessionPage/sessionView/components/.jsx"]
+}

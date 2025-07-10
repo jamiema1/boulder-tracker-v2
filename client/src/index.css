@@ -1,0 +1,48 @@
+@tailwind base;
+
+@tailwind components;
+@tailwind utilities;
+
+h1 {
+  font-weight: 600;
+  font-size: x-large;
+}
+
+h2 {
+  font-weight: 500;
+  font-size: large;
+}
+
+.content {
+  @apply m-[15px] p-[15px] rounded-[20px] bg-customLight drop-shadow-md;
+}
+
+
+/* Define scrollbar width and color */
+:root {
+  --scrollbar-width: 10px;
+  --scrollbar-track-color: #00000000;
+  --scrollbar-thumb-color: #888;
+}
+
+/* Define scrollbar appearance for WebKit browsers */
+/* For other browsers, you may need vendor prefixes */
+/* You can also use ::-webkit-scrollbar-thumb:hover to style scrollbar thumb on hover */
+/* ::-webkit-scrollbar-corner can be used to style the scrollbar corner */
+/* ::-webkit-scrollbar-track-piece:start and ::-webkit-scrollbar-track-piece:end can be used to style the start and end of the scrollbar track */
+
+/* Scrollbar Track */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track-color);
+  margin: 10px;
+}
+
+/* Scrollbar Thumb */
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-color);
+  border-radius: 5px; /* Adjust to change thumb appearance */
+}

@@ -1,45 +1,11 @@
-html {
-  font-family: Arial, Helvetica, sans-serif;
-  /* font-family: "Courier New", Courier, monospace; */
-  background-color: rgb(230, 230, 230);
-  /* border: 2px solid black; */
-}
 
-.pages {
-  --width: 3px;
-  --radius: 10px;
-  --colour: black;
-  --margin: 15px;
 
-  border-bottom: var(--width) solid var(--colour);
-  list-style-type: none;
-  display: flex;
-  padding: 0px;
-}
-
-@media (max-width: 600px) {
-  .pages {
-    --margin: 0px;
-    justify-content: space-around;
+/* @media (max-width: 800px) {
+  .calendar {
+    scale: 1;
   }
-}
 
-.pages > * {
-  border-top: var(--width) solid var(--colour);
-  border-left: var(--width) solid var(--colour);
-  border-right: var(--width) solid var(--colour);
-  border-top-right-radius: var(--radius);
-  border-top-left-radius: var(--radius);
-
-  padding: 5px 10px 5px 10px;
-  margin-left: var(--margin);
-  margin-right: var(--margin);
-
-  font-size: 36px;
-}
-
-@media (max-width: 600px) {
-  .pages > * {
-    font-size: 24px;
+  .dateCalendarSpacer {
+    height: 60px;
   }
-}
+}  */

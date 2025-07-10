@@ -13,7 +13,14 @@
   "rules": {
     "indent": ["error", 2],
     "max-lines": ["error", 300],
-    "max-len": ["error", 80],
+    "max-len": [
+      "error",
+      80,
+      {
+        "ignorePattern": "^import\\s.+\\sfrom\\s.+$",
+        "ignoreUrls": true
+      }
+    ],
     "react/prop-types": 0,
     "object-curly-spacing": "error",
     "react/no-unescaped-entities": 0,
